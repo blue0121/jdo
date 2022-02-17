@@ -13,37 +13,37 @@ public interface SqlConfig {
 	void check();
 
 	/**
-	 * select * from [table] where id=?
+	 * SQL: select * from [table] where id=?
 	 */
 	SqlItem getSelectById();
 
 	/**
-	 * select * from [table] where id in (?,?,?)
+	 * SQL: select * from [table] where id in (?,?,?)
 	 */
 	SqlItem getSelectByIdList();
 
 	/**
-	 * insert into [table] (id,x) values (?,?)
+	 * SQL: insert into [table] (id,x) values (?,?)
 	 */
 	SqlItem getInsert();
 
 	/**
-	 * update [table] set x=? where id=?
+	 * SQL: update [table] set x=? where id=?
 	 */
 	SqlItem getUpdateById();
 
 	/**
-	 * update [table] set x=? where id=? and version=?
+	 * SQL: update [table] set x=? where id=? and version=?
 	 */
 	SqlItem getUpdateByIdAndVersion();
 
 	/**
-	 * delete from [table] where id=?
+	 * SQL: delete from [table] where id=?
 	 */
 	SqlItem getDeleteById();
 
 	/**
-	 * delete from [table] where id in (?,?,?)
+	 * SQL: delete from [table] where id in (?,?,?)
 	 */
 	SqlItem getDeleteByIdList();
 

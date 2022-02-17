@@ -1,6 +1,6 @@
 package io.jutil.jdo.core.parser;
 
-import blue.base.core.reflect.BeanField;
+import io.jutil.jdo.core.reflect.BeanField;
 
 /**
  * 字段配置

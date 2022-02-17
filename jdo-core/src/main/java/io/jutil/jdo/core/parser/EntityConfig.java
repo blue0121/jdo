@@ -1,6 +1,6 @@
 package io.jutil.jdo.core.parser;
 
-import blue.base.core.reflect.JavaBean;
+import io.jutil.jdo.core.reflect.JavaBean;
 
 import java.util.Map;
 

@@ -17,7 +17,7 @@ public class AssertUtil {
 		}
 
 		if (object == null) {
-			throw new NullPointerException(name + " is null.");
+			throw new NullPointerException(name + " 不能为空");
 		}
 	}
 
@@ -27,7 +27,7 @@ public class AssertUtil {
 		}
 
 		if (num <= 0) {
-			throw new IllegalArgumentException(name + " is non-positive number");
+			throw new IllegalArgumentException(name + " 小于等于0");
 		}
 	}
 
@@ -37,7 +37,7 @@ public class AssertUtil {
 		}
 
 		if (num < 0) {
-			throw new IllegalArgumentException(name + " is negative number");
+			throw new IllegalArgumentException(name + " 小于0");
 		}
 	}
 
@@ -47,7 +47,7 @@ public class AssertUtil {
 		}
 
 		if (str == null || str.isEmpty()) {
-			throw new NullPointerException(name + " is empty.");
+			throw new NullPointerException(name + " 不能为空");
 		}
 	}
 
@@ -57,7 +57,7 @@ public class AssertUtil {
 		}
 
 		if (list == null || list.isEmpty()) {
-			throw new NullPointerException(name + " is empty.");
+			throw new NullPointerException(name + " 不能为空");
 		}
 	}
 
@@ -67,7 +67,7 @@ public class AssertUtil {
 		}
 
 		if (map == null || map.isEmpty()) {
-			throw new NullPointerException(name + " is empty.");
+			throw new NullPointerException(name + " 不能为空");
 		}
 	}
 
@@ -77,7 +77,7 @@ public class AssertUtil {
 		}
 
 		if (array == null || array.length == 0) {
-			throw new NullPointerException(name + " is empty.");
+			throw new NullPointerException(name + " 不能为空");
 		}
 	}
 
@@ -87,7 +87,7 @@ public class AssertUtil {
 		}
 
 		if (array == null || array.length == 0) {
-			throw new NullPointerException(name + " is empty.");
+			throw new NullPointerException(name + " 不能为空");
 		}
 	}
 
