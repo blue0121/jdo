@@ -1,4 +1,4 @@
-package io.jutil.jdo.internal.core.parser;
+package io.jutil.jdo.internal.core.parser.model;
 
 import io.jutil.jdo.core.parser.FieldConfig;
 import io.jutil.jdo.core.reflect.BeanField;

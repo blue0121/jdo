@@ -28,10 +28,10 @@
 		<spring.boot.version>2.6.3</spring.boot.version>
 
 		<!-- test -->
-		<hsqldb.version>2.6.0</hsqldb.version>
-		<junit.platform.version>1.8.0</junit.platform.version>
-		<junit.jupiter.version>5.8.0</junit.jupiter.version>
-		<mockito.version>3.12.4</mockito.version>
+		<hsqldb.version>2.6.1</hsqldb.version>
+		<junit.platform.version>1.8.2</junit.platform.version>
+		<junit.jupiter.version>5.8.2</junit.jupiter.version>
+		<mockito.version>4.3.1</mockito.version>
 		
 		<!-- maven plugins -->
 		<compiler.version>3.8.1</compiler.version>
