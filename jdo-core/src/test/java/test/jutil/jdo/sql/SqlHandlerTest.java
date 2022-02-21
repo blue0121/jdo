@@ -24,7 +24,7 @@ public abstract class SqlHandlerTest {
 
 	public SqlHandlerTest() {
 		this.dialect = new MySQLDialect();
-		this.parseFactory = new ParserFactory(dialect);
+		this.parseFactory = new ParserFactory(dialect, true);
 		this.entityConfigCache = parseFactory.getEntityConfigCache();
 		this.mapperConfigCache = parseFactory.getMapperConfigCache();
 		this.factory = new SqlHandlerFactory();

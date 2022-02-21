@@ -20,8 +20,8 @@ public class MapperParser extends AbstractParser {
 
 	private final MapperConfigCache cache;
 
-	public MapperParser(Dialect dialect, MapperConfigCache cache) {
-		super(dialect);
+	public MapperParser(Dialect dialect, boolean escape, MapperConfigCache cache) {
+		super(dialect, escape);
 		this.cache = cache;
 	}
 

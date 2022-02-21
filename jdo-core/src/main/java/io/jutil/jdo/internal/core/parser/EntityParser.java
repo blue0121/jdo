@@ -36,8 +36,8 @@ public class EntityParser extends AbstractParser {
 
 	private final EntityConfigCache cache;
 
-	public EntityParser(Dialect dialect, EntityConfigCache cache) {
-		super(dialect);
+	public EntityParser(Dialect dialect, boolean escape, EntityConfigCache cache) {
+		super(dialect, escape);
 		this.cache = cache;
 	}
 
@@ -48,8 +48,8 @@ public class EntityParser extends AbstractParser {
 		if (tableName.isEmpty()) {
 			tableName = bean.getColumnName();
 		}
-		String escapeTableName = dialect.escape(tableName);
 
+		String escapeTableName = escape ? dialect.escape(tableName) : tableName;
 		logger.info("实体类映射: {} <==> {}", bean.getTargetClass().getName(), tableName);
 		DefaultEntityConfig config = new DefaultEntityConfig();
 		config.setTableName(tableName);

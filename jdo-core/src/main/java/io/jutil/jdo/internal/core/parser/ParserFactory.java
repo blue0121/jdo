@@ -26,10 +26,10 @@ public class ParserFactory {
 	private final EntityConfigCache entityConfigCache = new EntityConfigCache();
 	private final MapperConfigCache mapperConfigCache = new MapperConfigCache();
 
-	public ParserFactory(Dialect dialect) {
+	public ParserFactory(Dialect dialect, boolean escape) {
 		this.dialect = dialect;
-		parserMap.put(Entity.class, new EntityParser(dialect, entityConfigCache));
-		parserMap.put(Mapper.class, new MapperParser(dialect, mapperConfigCache));
+		parserMap.put(Entity.class, new EntityParser(dialect, escape, entityConfigCache));
+		parserMap.put(Mapper.class, new MapperParser(dialect, escape, mapperConfigCache));
 	}
 
 	public void parse(Class<?> clazz) {

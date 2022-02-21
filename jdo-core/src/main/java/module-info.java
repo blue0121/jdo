@@ -1,6 +1,9 @@
 module jdo.core {
 	requires java.sql;
+	requires java.naming;
+	requires java.management;
 	requires org.slf4j;
+	requires druid;
 	requires spring.core;
 
 	requires static lombok;

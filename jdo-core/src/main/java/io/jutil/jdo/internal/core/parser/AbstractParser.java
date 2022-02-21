@@ -20,16 +20,17 @@ public abstract class AbstractParser implements Parser {
     private static Logger logger = LoggerFactory.getLogger(AbstractParser.class);
 
     protected final Dialect dialect;
+    protected final boolean escape;
     protected final Set<Class<?>> parserClassSet = new HashSet<>();
 
-    public AbstractParser(Dialect dialect) {
+    public AbstractParser(Dialect dialect, boolean escape) {
         this.dialect = dialect;
+        this.escape = escape;
     }
 
     @Override
     public final void parse(JavaBean bean) {
         if (parserClassSet.contains(bean.getTargetClass())) {
-            logger.warn("{} has bean parsed", bean.getTargetClass().getName());
             return;
         }
         this.parseInternal(bean);
@@ -41,10 +42,10 @@ public abstract class AbstractParser implements Parser {
 
     protected String getColumnName(BeanField field) {
         if (field.getGetterMethod() == null) {
-            throw new JdbcException("Not found Getter Method: " + field.getField().getName());
+            throw new JdbcException("找不到Getter方法: " + field.getField().getName());
         }
         if (field.getSetterMethod() == null) {
-            throw new JdbcException("Not found Setter Method: " + field.getField().getName());
+            throw new JdbcException("找不到Setter方法: " + field.getField().getName());
         }
 
         Column annotation = field.getDeclaredAnnotation(Column.class);
@@ -56,7 +57,7 @@ public abstract class AbstractParser implements Parser {
 
     protected void setFieldConfig(BeanField field, DefaultFieldConfig config) {
         String columnName = this.getColumnName(field);
-        String escapeColumnName = dialect.escape(columnName);
+        String escapeColumnName = escape ? dialect.escape(columnName) : columnName;
         config.setColumnName(columnName);
         config.setEscapeColumnName(escapeColumnName);
         config.setBeanField(field);

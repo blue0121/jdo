@@ -31,7 +31,7 @@ public class JdbcUtil {
 			try {
 				res.close();
 			} catch (Exception e) {
-				logger.warn("Close error, ", e);
+				logger.warn("资源关闭错误, ", e);
 			}
 		}
 	}
