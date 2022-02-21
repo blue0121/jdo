@@ -44,7 +44,7 @@ public class ExistSqlHandler implements SqlHandler {
 			}
 		}
 		if (columnList.isEmpty()) {
-			throw new JdbcException("普通字段或主键字段不能为空");
+			throw new JdbcException("@Column 或 @Id 不能为空");
 		}
 		var sql = String.format(COUNT_TPL, config.getEscapeTableName(), StringUtil.join(columnList, AND));
 		return new DefaultSqlItem(sql, fieldList);

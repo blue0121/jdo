@@ -1,0 +1,17 @@
+module jdo.core {
+	requires java.sql;
+	requires org.slf4j;
+	requires spring.core;
+
+	requires static lombok;
+
+	exports io.jutil.jdo.core.annotation;
+	exports io.jutil.jdo.core.collection;
+	exports io.jutil.jdo.core.convert;
+	exports io.jutil.jdo.core.engine;
+	exports io.jutil.jdo.core.exception;
+	exports io.jutil.jdo.core.parser;
+	exports io.jutil.jdo.core.reflect;
+
+
+}

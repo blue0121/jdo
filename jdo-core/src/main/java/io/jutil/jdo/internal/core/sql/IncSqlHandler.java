@@ -30,10 +30,10 @@ public class IncSqlHandler implements SqlHandler {
 		for (var entry : map.entrySet()) {
 			var column = this.getColumn(entry.getKey(), columnMap);
 			if (!NumberUtil.isNumber(column.getBeanField().getField().getType())) {
-				throw new JdbcException("Field [" + entry.getKey() + "] is not number");
+				throw new JdbcException("字段 [" + entry.getKey() + "] 不是数字");
 			}
 			if (!NumberUtil.isNumber(entry.getValue().getClass())) {
-				throw new JdbcException("Parameter [" + entry.getKey() + "] is not number");
+				throw new JdbcException("参数 [" + entry.getKey() + "] 不是数字");
 			}
 			columnList.add(column.getEscapeColumnName() + "=" + column.getEscapeColumnName() + "+?");
 			fieldList.add(entry.getKey());
