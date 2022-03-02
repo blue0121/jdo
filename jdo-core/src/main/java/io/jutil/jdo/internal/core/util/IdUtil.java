@@ -32,8 +32,10 @@ public class IdUtil {
 	public static void generateId(Map<String, Object> map, Map<String, IdConfig> idMap, SnowflakeId snowflakeId) {
 		for (var entry : idMap.entrySet()) {
 			var id = entry.getValue();
-			if (id.getGeneratorType() == GeneratorType.INCREMENT) {
-				map.remove(id.getFieldName());
+			if (id.getGeneratorType() == GeneratorType.AUTO) {
+				if (id.getIdType() == IdType.STRING) {
+					map.put(id.getFieldName(), IdGenerator.uuid32bit());
+				}
 			} else if (id.getGeneratorType() == GeneratorType.UUID) {
 				if (id.getIdType() == IdType.STRING) {
 					map.put(id.getFieldName(), IdGenerator.uuid32bit());
