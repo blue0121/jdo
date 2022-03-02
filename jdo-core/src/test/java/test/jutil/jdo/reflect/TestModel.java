@@ -1,4 +1,4 @@
-package test.jutil.jdo.model;
+package test.jutil.jdo.reflect;
 
 /**
  * @author Jin Zheng

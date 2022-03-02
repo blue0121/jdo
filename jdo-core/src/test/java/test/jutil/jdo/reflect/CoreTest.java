@@ -1,4 +1,4 @@
-package test.jutil.jdo.model;
+package test.jutil.jdo.reflect;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

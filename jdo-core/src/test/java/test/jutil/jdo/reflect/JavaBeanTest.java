@@ -5,9 +5,6 @@ import io.jutil.jdo.core.reflect.JavaBean;
 import io.jutil.jdo.core.reflect.MethodSignature;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import test.jutil.jdo.model.CoreTest;
-import test.jutil.jdo.model.TestModel;
-import test.jutil.jdo.model.TestModel2;
 
 import java.util.Map;
 

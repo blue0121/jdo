@@ -5,8 +5,6 @@ import io.jutil.jdo.core.reflect.BeanMethod;
 import io.jutil.jdo.core.reflect.JavaBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import test.jutil.jdo.model.Cat;
-import test.jutil.jdo.model.MoveAction;
 
 import java.util.List;
 

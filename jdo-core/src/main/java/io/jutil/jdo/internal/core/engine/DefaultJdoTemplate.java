@@ -149,9 +149,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		List<List<?>> batchList = new ArrayList<>();
 		for (var object : objectList) {
 			var param = ObjectUtil.toMap(object, config, false);
-			System.out.println(">>>>>>" + param);
 			IdUtil.generateId(param, config.getIdMap());
-			System.out.println(">>>>>>" + param);
 			var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
 			batchList.add(paramList);
 		}

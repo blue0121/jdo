@@ -1,4 +1,4 @@
-package test.jutil.jdo.model;
+package test.jutil.jdo.reflect;
 
 import lombok.Getter;
 import lombok.Setter;
