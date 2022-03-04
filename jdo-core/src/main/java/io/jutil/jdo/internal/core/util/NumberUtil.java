@@ -48,7 +48,10 @@ public class NumberUtil {
 	 * @return 十六进制字符串，范围是0000~ffff
 	 */
 	public static String toHexString(short val) {
-		return Integer.toHexString(val & 0xffff | 0x10000).substring(1);
+		String tmp = Integer.toHexString(val);
+		StringBuilder sb = new StringBuilder("0000");
+		sb.replace(4 - tmp.length(), 4, tmp);
+		return sb.toString();
 	}
 
 	/**

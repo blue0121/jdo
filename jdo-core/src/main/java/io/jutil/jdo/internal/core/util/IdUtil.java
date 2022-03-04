@@ -50,6 +50,15 @@ public class IdUtil {
 		}
 	}
 
+	public static void filterId(Map<String, ?> map, Map<String, IdConfig> idMap) {
+		for (var entry : idMap.entrySet()) {
+			var id = entry.getValue();
+			if (id.isDbGenerated()) {
+				map.remove(id.getFieldName());
+			}
+		}
+	}
+
 	public static void setId(KeyHolder holder, Object target, EntityConfig config) {
 		if (holder == null || target == null || config == null) {
 			return;
