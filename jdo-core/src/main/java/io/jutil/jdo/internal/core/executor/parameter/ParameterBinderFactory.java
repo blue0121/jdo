@@ -70,6 +70,9 @@ public class ParameterBinderFactory {
 
 	@SuppressWarnings("unchecked")
 	public void bind(PreparedStatement pstmt, Collection<?> paramList) throws SQLException {
+		if (paramList == null || paramList.isEmpty()) {
+			return;
+		}
 		int i = 1;
 		for (var param : paramList) {
 			if (ObjectUtil.isEmpty(param)) {
@@ -77,13 +80,15 @@ public class ParameterBinderFactory {
 			} else {
 				var binder = this.getBinder(param.getClass());
 				if (logger.isDebugEnabled()) {
-					logger.debug("找到 [{}] 参数绑定: {}", param.getClass().getName(), binder.getClass().getSimpleName());
+					logger.debug("找到 [{}] ParameterBinder: {}", param.getClass().getSimpleName(),
+							binder.getClass().getSimpleName());
 				}
 				binder.bind(pstmt, i, param);
 			}
 			i++;
 		}
 	}
+
 
 	@SuppressWarnings("rawtypes")
 	private ParameterBinder getBinder(Class<?> clazz) {

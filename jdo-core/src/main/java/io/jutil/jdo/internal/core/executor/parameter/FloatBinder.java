@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -19,5 +20,11 @@ public class FloatBinder implements ParameterBinder<Float> {
 	@Override
 	public void bind(PreparedStatement pstmt, int i, Float val) throws SQLException {
 		pstmt.setFloat(i, val);
+	}
+
+	@Override
+	public Float fetch(ResultSet rs, int i) throws SQLException {
+		var n = rs.getFloat(i);
+		return rs.wasNull() ? null : n;
 	}
 }

@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -19,5 +20,10 @@ public class ByteArrayBinder implements ParameterBinder<byte[]> {
 	@Override
 	public void bind(PreparedStatement pstmt, int i, byte[] val) throws SQLException {
 		pstmt.setBytes(i, val);
+	}
+
+	@Override
+	public byte[] fetch(ResultSet rs, int i) throws SQLException {
+		return rs.getBytes(i);
 	}
 }

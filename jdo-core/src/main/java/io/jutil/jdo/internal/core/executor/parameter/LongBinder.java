@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -20,4 +21,10 @@ public class LongBinder implements ParameterBinder<Long> {
     public void bind(PreparedStatement pstmt, int i, Long val) throws SQLException {
         pstmt.setLong(i, val);
     }
+
+	@Override
+	public Long fetch(ResultSet rs, int i) throws SQLException {
+		var n = rs.getLong(i);
+		return rs.wasNull() ? null : n;
+	}
 }

@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
@@ -21,5 +22,11 @@ public class LocalDateBinder implements ParameterBinder<LocalDate> {
 	@Override
 	public void bind(PreparedStatement pstmt, int i, LocalDate val) throws SQLException {
 		pstmt.setDate(i, Date.valueOf(val));
+	}
+
+	@Override
+	public LocalDate fetch(ResultSet rs, int i) throws SQLException {
+		var d = rs.getDate(i);
+		return rs.wasNull() ? null : d.toLocalDate();
 	}
 }

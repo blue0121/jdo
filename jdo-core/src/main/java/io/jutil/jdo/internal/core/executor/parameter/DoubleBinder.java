@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -19,5 +20,11 @@ public class DoubleBinder implements ParameterBinder<Double> {
 	@Override
 	public void bind(PreparedStatement pstmt, int i, Double val) throws SQLException {
 		pstmt.setDouble(i, val);
+	}
+
+	@Override
+	public Double fetch(ResultSet rs, int i) throws SQLException {
+		var n = rs.getDouble(i);
+		return rs.wasNull() ? null : n;
 	}
 }

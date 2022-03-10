@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
@@ -20,5 +21,10 @@ public class SqlTimestampBinder implements ParameterBinder<Timestamp> {
 	@Override
 	public void bind(PreparedStatement pstmt, int i, Timestamp val) throws SQLException {
 		pstmt.setTimestamp(i, val);
+	}
+
+	@Override
+	public Timestamp fetch(ResultSet rs, int i) throws SQLException {
+		return rs.getTimestamp(i);
 	}
 }

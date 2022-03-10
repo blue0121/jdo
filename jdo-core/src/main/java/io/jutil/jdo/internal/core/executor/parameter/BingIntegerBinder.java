@@ -3,6 +3,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -22,4 +23,14 @@ public class BingIntegerBinder implements ParameterBinder<BigInteger> {
     public void bind(PreparedStatement pstmt, int i, BigInteger val) throws SQLException {
 		pstmt.setBigDecimal(i, new BigDecimal(val));
     }
+
+	@Override
+	public BigInteger fetch(ResultSet rs, int i) throws SQLException {
+		var bd = rs.getBigDecimal(i);
+		if (bd == null) {
+			return null;
+		}
+		return bd.toBigInteger();
+	}
+
 }

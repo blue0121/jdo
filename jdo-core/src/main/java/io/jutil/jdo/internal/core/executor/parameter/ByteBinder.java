@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -20,4 +21,10 @@ public class ByteBinder implements ParameterBinder<Byte> {
     public void bind(PreparedStatement pstmt, int i, Byte val) throws SQLException {
 		pstmt.setByte(i, val);
     }
+
+	@Override
+	public Byte fetch(ResultSet rs, int i) throws SQLException {
+		var n = rs.getByte(i);
+		return rs.wasNull() ? null : n;
+	}
 }

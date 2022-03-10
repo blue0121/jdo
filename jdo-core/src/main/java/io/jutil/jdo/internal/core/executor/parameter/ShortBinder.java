@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -19,5 +20,11 @@ public class ShortBinder implements ParameterBinder<Short> {
 	@Override
 	public void bind(PreparedStatement pstmt, int i, Short val) throws SQLException {
 		pstmt.setShort(i, val);
+	}
+
+	@Override
+	public Short fetch(ResultSet rs, int i) throws SQLException {
+		var n = rs.getShort(i);
+		return rs.wasNull() ? null : n;
 	}
 }

@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -20,5 +21,10 @@ public class SqlDateBinder implements ParameterBinder<Date> {
 	@Override
 	public void bind(PreparedStatement pstmt, int i, Date val) throws SQLException {
 		pstmt.setDate(i, val);
+	}
+
+	@Override
+	public Date fetch(ResultSet rs, int i) throws SQLException {
+		return rs.getDate(i);
 	}
 }

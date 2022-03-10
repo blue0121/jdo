@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -24,5 +25,14 @@ public interface ParameterBinder<T> {
 	 * @throws SQLException
 	 */
 	void bind(PreparedStatement pstmt, int i, T val) throws SQLException;
+
+	/**
+	 * 从 ResultSet 获取值
+	 * @param rs
+	 * @param i
+	 * @return
+	 * @throws SQLException
+	 */
+	T fetch(ResultSet rs, int i) throws SQLException;
 
 }
