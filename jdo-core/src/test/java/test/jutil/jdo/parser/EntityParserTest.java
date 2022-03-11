@@ -25,8 +25,8 @@ public class EntityParserTest {
 	public void testParse() {
 		ParserFactory factory = new ParserFactory(new MySQLDialect(), true);
 		factory.parse(UserEntity.class);
-		var cache = factory.getEntityConfigCache();
-		var config = cache.get(UserEntity.class);
+		var cache = factory.getConfigCache();
+		var config = cache.loadEntityConfig(UserEntity.class);
 
 		Assertions.assertEquals(UserEntity.class, config.getClazz());
 		Assertions.assertEquals("usr_user", config.getTableName());
@@ -66,8 +66,8 @@ public class EntityParserTest {
 	public void testParse2() {
 		ParserFactory factory = new ParserFactory(new MySQLDialect(), false);
 		factory.parse(UserEntity.class);
-		var cache = factory.getEntityConfigCache();
-		var config = cache.get(UserEntity.class);
+		var cache = factory.getConfigCache();
+		var config = cache.loadEntityConfig(UserEntity.class);
 
 		Assertions.assertEquals(UserEntity.class, config.getClazz());
 		Assertions.assertEquals("usr_user", config.getTableName());

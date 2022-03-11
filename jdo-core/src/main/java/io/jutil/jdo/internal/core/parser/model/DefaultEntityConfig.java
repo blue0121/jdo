@@ -1,6 +1,8 @@
 package io.jutil.jdo.internal.core.parser.model;
 
+import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.core.parser.ColumnConfig;
+import io.jutil.jdo.core.parser.ConfigType;
 import io.jutil.jdo.core.parser.EntityConfig;
 import io.jutil.jdo.core.parser.IdConfig;
 import io.jutil.jdo.core.parser.SqlConfig;
@@ -24,6 +26,7 @@ public class DefaultEntityConfig extends DefaultMapperConfig implements EntityCo
 	private SqlConfig sqlConfig;
 
 	public DefaultEntityConfig() {
+		this.configType = ConfigType.ENTITY;
 	}
 
 	@Override
@@ -96,6 +99,9 @@ public class DefaultEntityConfig extends DefaultMapperConfig implements EntityCo
 	}
 
 	public void setVersionConfig(VersionConfig versionConfig) {
+		if (this.versionConfig != null) {
+			throw new JdbcException("只能有1个 @Version: " + javaBean.getTargetClass().getName());
+		}
 		this.versionConfig = versionConfig;
 	}
 

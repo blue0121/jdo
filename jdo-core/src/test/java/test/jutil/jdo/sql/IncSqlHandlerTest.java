@@ -25,7 +25,7 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
     public void testSql1() {
 	    Map<String, Object> map = new HashMap<>();
 		map.put("count", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.INC, config, map);
 	    System.out.println(sqlItem.getSql());
 	    Assertions.assertEquals("update `group` set `count`=`count`+? where `id`=?", sqlItem.getSql());
@@ -36,7 +36,7 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
 	public void testSql2() {
 		Map<String, Object> map = new LinkedHashMap<>();
 		map.put("groupId", 1);
-		var config = entityConfigCache.get(UserEntity.class);
+		var config = configCache.loadEntityConfig(UserEntity.class);
 		var sqlItem = factory.handle(SqlType.INC, config, map);
 		System.out.println(sqlItem.getSql());
 		Assertions.assertEquals("update `usr_user` set `group_id`=`group_id`+? where `id`=?", sqlItem.getSql());
@@ -46,7 +46,7 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure1() {
 		Map<String, Object> map = new HashMap<>();
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.INC, config, map);
 			Assertions.fail();
@@ -59,7 +59,7 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure2() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("aaa", "aaa");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.INC, config, map);
 			Assertions.fail();
@@ -72,7 +72,7 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure3() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("count", "aaa");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.INC, config, map);
 			Assertions.fail();
@@ -85,7 +85,7 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure4() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("name", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.INC, config, map);
 			Assertions.fail();

@@ -44,7 +44,7 @@ public class DefaultJdoBuilder implements JdoBuilder {
 		this.jdoTemplate = new DefaultJdoTemplate(parserFactory, connectionFactory);
 
 		this.parseClazz();
-		var tableChecker = new TableChecker(dataSourceFactory.getDateSource(), parserFactory.getEntityConfigCache());
+		var tableChecker = new TableChecker(dataSourceFactory.getDateSource(), parserFactory.getConfigCache());
 		tableChecker.check();
 
 		DefaultJdo jdo = new DefaultJdo(this);

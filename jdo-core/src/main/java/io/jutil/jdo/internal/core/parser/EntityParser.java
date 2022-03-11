@@ -34,11 +34,8 @@ public class EntityParser extends AbstractParser {
 	private static Logger logger = LoggerFactory.getLogger(EntityParser.class);
 	private static final Set<Class<?>> INT_TYPE_SET = Set.of(int.class, long.class, Integer.class, Long.class);
 
-	private final EntityConfigCache cache;
-
-	public EntityParser(Dialect dialect, boolean escape, EntityConfigCache cache) {
-		super(dialect, escape);
-		this.cache = cache;
+	public EntityParser(Dialect dialect, boolean escape, ConfigCache cache) {
+		super(dialect, escape, cache);
 	}
 
 	@Override
@@ -71,9 +68,6 @@ public class EntityParser extends AbstractParser {
 			}
 			Version annotationVersion = field.getDeclaredAnnotation(Version.class);
 			if (annotationVersion != null) {
-				if (config.getVersionConfig() != null) {
-					throw new JdbcException("只能有1个 @Version: " + bean.getTargetClass().getName());
-				}
 				VersionConfig version = this.parseFieldVersion(field, annotationVersion);
 				config.setVersionConfig(version);
 				logger.debug("版本字段: {} <==> {}", version.getFieldName(), version.getColumnName());
@@ -98,7 +92,7 @@ public class EntityParser extends AbstractParser {
 		generator.generate();
 
 		config.check();
-		cache.put(config);
+		configCache.put(config);
 	}
 
 	private IdConfig parseFieldId(BeanField field, Id annotation) {

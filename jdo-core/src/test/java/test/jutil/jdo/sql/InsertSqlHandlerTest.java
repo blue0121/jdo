@@ -24,7 +24,7 @@ public class InsertSqlHandlerTest extends SqlHandlerTest {
     public void testSql1() {
 	    Map<String, Object> map = new HashMap<>();
 		map.put("name", "blue");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.INSERT, config, map);
 	    System.out.println(sqlItem.getSql());
 	    Assertions.assertEquals("insert into `group` (`name`) values (?)", sqlItem.getSql());
@@ -36,7 +36,7 @@ public class InsertSqlHandlerTest extends SqlHandlerTest {
 		Map<String, Object> map = new LinkedHashMap<>();
 		map.put("name", "blue");
 		map.put("count", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.INSERT, config, map);
 		System.out.println(sqlItem.getSql());
 		Assertions.assertEquals("insert into `group` (`name`,`count`) values (?,?)", sqlItem.getSql());
@@ -46,7 +46,7 @@ public class InsertSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure1() {
 		Map<String, Object> map = new HashMap<>();
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.INSERT, config, map);
 			Assertions.fail();
@@ -59,7 +59,7 @@ public class InsertSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure2() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("aaa", "aaa");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.INSERT, config, map);
 			Assertions.fail();

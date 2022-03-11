@@ -23,21 +23,21 @@ public class ParserFactory {
 
 	private final Dialect dialect;
 	private final Map<Class<? extends Annotation>, Parser> parserMap = new HashMap<>();
-	private final EntityConfigCache entityConfigCache = new EntityConfigCache();
-	private final MapperConfigCache mapperConfigCache = new MapperConfigCache();
+	private final ConfigCache configCache = new ConfigCache();
 
 	public ParserFactory(Dialect dialect, boolean escape) {
 		this.dialect = dialect;
-		parserMap.put(Entity.class, new EntityParser(dialect, escape, entityConfigCache));
-		parserMap.put(Mapper.class, new MapperParser(dialect, escape, mapperConfigCache));
+		parserMap.put(Entity.class, new EntityParser(dialect, escape, configCache));
+		parserMap.put(Mapper.class, new MapperParser(dialect, escape, configCache));
 	}
 
 	public void parse(Class<?> clazz) {
 		JavaBean javaBean = JavaBean.create(clazz);
 		var annotationList = javaBean.getAnnotations();
 		for (var annotation : annotationList) {
-			if (!annotationSet.contains(annotation.annotationType()))
+			if (!annotationSet.contains(annotation.annotationType())) {
 				continue;
+			}
 
 			Parser parser = parserMap.get(annotation.annotationType());
 			if (parser != null) {
@@ -52,12 +52,7 @@ public class ParserFactory {
 		return dialect;
 	}
 
-	public EntityConfigCache getEntityConfigCache() {
-		return entityConfigCache;
+	public ConfigCache getConfigCache() {
+		return configCache;
 	}
-
-	public MapperConfigCache getMapperConfigCache() {
-		return mapperConfigCache;
-	}
-
 }

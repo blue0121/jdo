@@ -2,8 +2,7 @@ package io.jutil.jdo.internal.core.executor.mapper;
 
 import io.jutil.jdo.core.parser.EntityConfig;
 import io.jutil.jdo.core.parser.MapperConfig;
-import io.jutil.jdo.internal.core.parser.EntityConfigCache;
-import io.jutil.jdo.internal.core.parser.MapperConfigCache;
+import io.jutil.jdo.internal.core.parser.ConfigCache;
 import io.jutil.jdo.internal.core.parser.ParserFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +30,11 @@ import java.util.concurrent.ConcurrentMap;
 public class RowMapperFactory {
 	private static Logger logger = LoggerFactory.getLogger(RowMapperFactory.class);
 
-	private final EntityConfigCache entityConfigCache;
-	private final MapperConfigCache mapperConfigCache;
+	private final ConfigCache configCache;
 	private final ConcurrentMap<Class<?>, RowMapper<?>> rowMapper = new ConcurrentHashMap<>();
 
 	public RowMapperFactory(ParserFactory parserFactory) {
-		this.entityConfigCache = parserFactory.getEntityConfigCache();
-		this.mapperConfigCache = parserFactory.getMapperConfigCache();
+		this.configCache = parserFactory.getConfigCache();
 		this.init();
 	}
 
@@ -77,11 +74,8 @@ public class RowMapperFactory {
 	@SuppressWarnings("unchecked")
 	private <T> List<T> getObjectList(Class<T> clazz, ResultSet rs) throws SQLException {
 		RowMapper mapper = rowMapper.computeIfAbsent(clazz, k -> {
-			if (entityConfigCache.exist(k)) {
-				return new ObjectRowMapper<T>(entityConfigCache.get(k));
-			}
-			if (mapperConfigCache.exist(k)) {
-				return new ObjectRowMapper<T>(mapperConfigCache.get(k));
+			if (configCache.exist(k)) {
+				return new ObjectRowMapper<T>(configCache.get(k));
 			}
 			return null;
 		});

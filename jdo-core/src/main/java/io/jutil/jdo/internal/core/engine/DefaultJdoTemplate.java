@@ -4,14 +4,14 @@ import io.jutil.jdo.core.annotation.LockModeType;
 import io.jutil.jdo.core.engine.JdoTemplate;
 import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.core.exception.VersionException;
+import io.jutil.jdo.core.parser.ConfigType;
 import io.jutil.jdo.core.parser.EntityConfig;
 import io.jutil.jdo.core.parser.SqlItem;
 import io.jutil.jdo.internal.core.dialect.Dialect;
 import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.GenerateKeyHolder;
 import io.jutil.jdo.internal.core.executor.KeyHolder;
-import io.jutil.jdo.internal.core.parser.EntityConfigCache;
-import io.jutil.jdo.internal.core.parser.MapperConfigCache;
+import io.jutil.jdo.internal.core.parser.ConfigCache;
 import io.jutil.jdo.internal.core.parser.ParserFactory;
 import io.jutil.jdo.internal.core.sql.SqlHandlerFactory;
 import io.jutil.jdo.internal.core.sql.SqlType;
@@ -38,15 +38,13 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	private static Logger logger = LoggerFactory.getLogger(DefaultJdoTemplate.class);
 
 	private final Dialect dialect;
-	private final EntityConfigCache entityConfigCache;
-	private final MapperConfigCache mapperConfigCache;
+	private final ConfigCache configCache;
 	private final ConnectionFactory connectionFactory;
 	private final SqlHandlerFactory sqlHandlerFactory;
 
 	public DefaultJdoTemplate(ParserFactory parserFactory, ConnectionFactory connectionFactory) {
 		this.dialect = parserFactory.getDialect();
-		this.entityConfigCache = parserFactory.getEntityConfigCache();
-		this.mapperConfigCache = parserFactory.getMapperConfigCache();
+		this.configCache = parserFactory.getConfigCache();
 		this.connectionFactory = connectionFactory;
 		this.sqlHandlerFactory = new SqlHandlerFactory();
 	}
@@ -54,7 +52,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int save(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "Object");
-		var config = entityConfigCache.get(object.getClass());
+		var config = configCache.loadEntityConfig(object.getClass());
 		var param = ObjectUtil.toMap(object, config, dynamic);
 		IdUtil.generateId(param, config.getIdMap());
 		var sqlItem = dynamic ? sqlHandlerFactory.handle(SqlType.INSERT, config, param) :
@@ -69,7 +67,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int saveObject(Class<?> clazz, Map<String, ?> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var map = ObjectUtil.generateMap(param, config);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.INSERT, config, map);
 		var sql = sqlItem.getSql();
@@ -80,7 +78,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int[] saveList(List<?> objectList) {
 		AssertUtil.notEmpty(objectList, "ObjectList");
-		var config = entityConfigCache.get(objectList.get(0).getClass());
+		var config = configCache.loadEntityConfig(objectList.get(0).getClass());
 		var sqlItem = config.getSqlConfig().getInsert();
 		var sql = sqlItem.getSql();
 		List<List<?>> batchList = new ArrayList<>();
@@ -99,7 +97,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int update(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "Object");
-		var config = entityConfigCache.get(object.getClass());
+		var config = configCache.loadEntityConfig(object.getClass());
 		var param = ObjectUtil.toMap(object, config, dynamic);
 		var sqlConfig = config.getSqlConfig();
 		var isForceVer = VersionUtil.isForce(config);
@@ -122,7 +120,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int updateObject(Class<?> clazz, Object id, Map<String, ?> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var idConfig = IdUtil.checkSingleId(config);
 		Map<String, Object> map = new HashMap<>(param);
 		map.put(idConfig.getFieldName(), id);
@@ -141,7 +139,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int[] updateList(List<?> objectList) {
 		AssertUtil.notEmpty(objectList, "ObjectList");
 		var clazz = objectList.get(0).getClass();
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var sqlConfig = config.getSqlConfig();
 		var isForceVer = VersionUtil.isForce(config);
 		var sqlItem = isForceVer ? sqlConfig.getUpdateByIdAndVersion() : sqlConfig.getUpdateById();
@@ -166,7 +164,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int inc(Class<?> clazz, Object id, Map<String, ? extends Number> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var idConfig = IdUtil.checkSingleId(config);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.INC, config, param);
 		var sql = sqlItem.getSql();
@@ -178,7 +176,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int deleteId(Class<?> clazz, Object id) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		IdUtil.checkSingleId(config);
 		var sqlItem = config.getSqlConfig().getDeleteById();
 		var sql = sqlItem.getSql();
@@ -187,7 +185,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <K, T> int deleteIdList(Class<T> clazz, List<K> idList) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var id = IdUtil.checkSingleId(config);
 		var sqlItem = config.getSqlConfig().getDeleteByIdList();
 		var sql = String.format(sqlItem.getSql(), StringUtil.repeat("?", idList.size(), ","));
@@ -196,7 +194,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> int deleteBy(Class<T> clazz, Map<String, ?> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.DELETE, config, param);
 		var sql = sqlItem.getSql();
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
@@ -205,7 +203,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> T get(Class<T> clazz, Object id, LockModeType type) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		IdUtil.checkSingleId(config);
 		var sqlItem = config.getSqlConfig().getSelectById();
 		var sql = dialect.lock(dialect.page(sqlItem.getSql(), 0, 1), type);
@@ -219,7 +217,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <K, T> Map<K, T> getList(Class<T> clazz, List<K> idList) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var id = IdUtil.checkSingleId(config);
 		var sqlItem = config.getSqlConfig().getSelectByIdList();
 		var sql = String.format(sqlItem.getSql(), StringUtil.repeat("?", idList.size(), ","));
@@ -238,7 +236,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> T getField(Class<?> clazz, Class<T> target, String field, Map<String, ?> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.GET_FIELD, config, field, param);
 		var sql = dialect.getOne(sqlItem.getSql());
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
@@ -251,7 +249,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> T getObject(Class<T> clazz, Map<String, ?> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.GET, config, param);
 		var sql = dialect.getOne(sqlItem.getSql());
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
@@ -266,7 +264,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public boolean exist(Object object, String... names) {
 		AssertUtil.notNull(object, "Object");
 		var nameList = Arrays.asList(names);
-		var config = entityConfigCache.get(object.getClass());
+		var config = configCache.loadEntityConfig(object.getClass());
 		var param = ObjectUtil.toMap(object, config, false);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.EXIST, config, param, nameList);
 		var sql = sqlItem.getSql();
@@ -281,7 +279,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int count(Class<?> clazz, Map<String, ?> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.COUNT, config, param);
 		var sql = sqlItem.getSql();
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
@@ -321,7 +319,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> List<T> listField(Class<?> clazz, Class<T> target, String field, Map<String, ?> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.GET_FIELD, config, field, param);
 		var sql = dialect.getOne(sqlItem.getSql());
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
@@ -330,7 +328,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> List<T> listObject(Class<T> clazz, Map<String, ?> param) {
-		var config = entityConfigCache.get(clazz);
+		var config = configCache.loadEntityConfig(clazz);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.GET, config, param);
 		var sql = dialect.getOne(sqlItem.getSql());
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
@@ -344,8 +342,8 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public EntityConfig checkEntityConfig(Class<?> clazz) {
-		boolean existEntity = entityConfigCache.exist(clazz);
-		boolean existMapper = mapperConfigCache.exist(clazz);
+		boolean existEntity = configCache.exist(clazz, ConfigType.ENTITY);
+		boolean existMapper = configCache.exist(clazz, ConfigType.MAPPER);
 		if (!existEntity) {
 			if (existMapper) {
 				throw new JdbcException(clazz.getName() + " 需要覆写 select(), selectCount() 和 orderBy() 方法");
@@ -354,7 +352,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 				throw new JdbcException(clazz.getName() + " 缺少 @Entity 或 @Mapper 注解");
 			}
 		}
-		return entityConfigCache.get(clazz);
+		return configCache.loadEntityConfig(clazz);
 	}
 
 }

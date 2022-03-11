@@ -1,7 +1,7 @@
 package io.jutil.jdo.internal.core.executor.metadata;
 
 import io.jutil.jdo.core.parser.EntityConfig;
-import io.jutil.jdo.internal.core.parser.EntityConfigCache;
+import io.jutil.jdo.internal.core.parser.ConfigCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,19 +16,19 @@ import java.util.List;
 public class TableChecker {
 	private static Logger logger = LoggerFactory.getLogger(TableChecker.class);
 
-	private final EntityConfigCache entityConfigCache;
+	private final ConfigCache configCache;
 	private final MetadataCache metadataCache;
 	private final MetadataParser metadataParser;
 
-	public TableChecker(DataSource ds, EntityConfigCache cache) {
-		this.entityConfigCache = cache;
+	public TableChecker(DataSource ds, ConfigCache cache) {
+		this.configCache = cache;
 		this.metadataCache = new MetadataCache();
 		this.metadataParser = new MetadataParser(ds, metadataCache);
 	}
 
 	public void check() {
 		List<String> lackList = new ArrayList<>();
-		for (var entry : entityConfigCache.all().entrySet()) {
+		for (var entry : configCache.allEntityConfig().entrySet()) {
 			var config = entry.getValue();
 			var table = metadataCache.getTable(config.getTableName());
 			if (table == null) {

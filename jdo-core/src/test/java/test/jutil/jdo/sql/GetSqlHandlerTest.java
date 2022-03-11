@@ -24,7 +24,7 @@ public class GetSqlHandlerTest extends SqlHandlerTest {
     public void testSql1() {
 	    Map<String, Object> map = new HashMap<>();
 		map.put("id", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.getEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.GET, config, map);
 	    System.out.println(sqlItem.getSql());
 	    Assertions.assertEquals("select * from `group` where `id`=?",
@@ -37,7 +37,7 @@ public class GetSqlHandlerTest extends SqlHandlerTest {
 		Map<String, Object> map = new LinkedHashMap<>();
 		map.put("id", 1);
 		map.put("count", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.getEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.GET, config, map);
 		System.out.println(sqlItem.getSql());
 		Assertions.assertEquals("select * from `group` where `id`=? and `count`=?",
@@ -48,7 +48,7 @@ public class GetSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure1() {
 		Map<String, Object> map = new HashMap<>();
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.getEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.GET, config, map);
 			Assertions.fail();
@@ -61,7 +61,7 @@ public class GetSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure2() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("aaa", "aaa");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.getEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.GET, config, map);
 			Assertions.fail();

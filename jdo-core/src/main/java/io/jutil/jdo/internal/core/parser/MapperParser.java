@@ -18,16 +18,13 @@ import java.util.Map;
 public class MapperParser extends AbstractParser {
 	private static Logger logger = LoggerFactory.getLogger(MapperParser.class);
 
-	private final MapperConfigCache cache;
-
-	public MapperParser(Dialect dialect, boolean escape, MapperConfigCache cache) {
-		super(dialect, escape);
-		this.cache = cache;
+	public MapperParser(Dialect dialect, boolean escape, ConfigCache cache) {
+		super(dialect, escape, cache);
 	}
 
 	@Override
 	protected void parseInternal(JavaBean bean) {
-		logger.info("Mapped class: {}", bean.getTargetClass().getName());
+		logger.info("类映射: {}", bean.getTargetClass().getName());
 		DefaultMapperConfig config = new DefaultMapperConfig();
 		config.setJavaBean(bean);
 		Map<String, ColumnConfig> columnMap = new LinkedHashMap<>();
@@ -37,12 +34,12 @@ public class MapperParser extends AbstractParser {
 			DefaultColumnConfig column = new DefaultColumnConfig();
 			this.setFieldConfig(entry.getValue(), column);
 			columnMap.put(column.getFieldName(), column);
-			logger.debug("Column: {} <==> {}", column.getFieldName(), column.getColumnName());
+			logger.debug("普通字段: {} <==> {}", column.getFieldName(), column.getColumnName());
 		}
 
 		config.setColumnMap(columnMap);
 		config.check();
-		cache.put(config);
+		configCache.put(config);
 	}
 
 }

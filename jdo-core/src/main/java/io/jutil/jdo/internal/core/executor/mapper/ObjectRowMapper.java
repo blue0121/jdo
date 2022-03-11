@@ -45,6 +45,11 @@ public class ObjectRowMapper<T> implements RowMapper<T> {
 	public ObjectRowMapper(MapperConfig config) {
 		this.javaBean = config.getJavaBean();
 		config.getColumnMap().forEach((k, v) -> this.setFieldMap(v));
+		if (config instanceof EntityConfig c) {
+			c.getIdMap().forEach((k, v) -> this.setFieldMap(v));
+			this.setFieldMap(c.getVersionConfig());
+			c.getExtraMap().forEach((k, v) -> this.setFieldMap(v));
+		}
 	}
 
 	private void setFieldMap(FieldConfig field) {

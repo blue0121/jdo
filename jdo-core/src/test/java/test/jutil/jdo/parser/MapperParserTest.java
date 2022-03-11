@@ -19,8 +19,8 @@ public class MapperParserTest {
 	public void testParse() {
 		ParserFactory factory = new ParserFactory(new MySQLDialect(), true);
 		factory.parse(ResultMapper.class);
-		var cache = factory.getMapperConfigCache();
-		var config = cache.get(ResultMapper.class);
+		var cache = factory.getConfigCache();
+		var config = cache.load(ResultMapper.class);
 
 		Assertions.assertEquals(ResultMapper.class, config.getClazz());
 		var map = config.getColumnMap();
@@ -49,8 +49,8 @@ public class MapperParserTest {
 	public void testParse2() {
 		ParserFactory factory = new ParserFactory(new MySQLDialect(), false);
 		factory.parse(ResultMapper.class);
-		var cache = factory.getMapperConfigCache();
-		var config = cache.get(ResultMapper.class);
+		var cache = factory.getConfigCache();
+		var config = cache.load(ResultMapper.class);
 
 		Assertions.assertEquals(ResultMapper.class, config.getClazz());
 		var map = config.getColumnMap();

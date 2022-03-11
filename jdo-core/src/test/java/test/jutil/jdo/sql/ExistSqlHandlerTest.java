@@ -23,7 +23,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 		Map<String, Object> map = new HashMap<>();
 		map.put("name", "blue");
 		map.put("id", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.EXIST, config, map, List.of("name"));
 		System.out.println(sqlItem.getSql());
 		Assertions.assertEquals("select count(*) from `group` where `name`=? and `id`!=?", sqlItem.getSql());
@@ -35,7 +35,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 		Map<String, Object> map = new HashMap<>();
 		map.put("name", "blue");
 		map.put("id", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.EXIST, config, map);
 		System.out.println(sqlItem.getSql());
 		Assertions.assertEquals("select count(*) from `group` where `id`=?", sqlItem.getSql());
@@ -46,7 +46,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 	public void testSql3() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("name", "blue");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.EXIST, config, map, List.of("name"));
 		System.out.println(sqlItem.getSql());
 		Assertions.assertEquals("select count(*) from `group` where `name`=?", sqlItem.getSql());
@@ -56,7 +56,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure1() {
 		Map<String, Object> map = new HashMap<>();
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.EXIST, config, map);
 			Assertions.fail();
@@ -69,7 +69,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure2() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("aaa", "aaa");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.EXIST, config, map, List.of("aaa"));
 			Assertions.fail();

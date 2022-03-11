@@ -26,7 +26,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 	    Map<String, Object> map = new HashMap<>();
 		map.put("name", "blue");
 		map.put("id", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.UPDATE, config, map);
 	    System.out.println(sqlItem.getSql());
 	    Assertions.assertEquals("update `group` set `name`=? where `id`=?", sqlItem.getSql());
@@ -39,7 +39,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 		map.put("name", "blue");
 		map.put("count", 1);
 		map.put("id", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		var sqlItem = factory.handle(SqlType.UPDATE, config, map);
 		System.out.println(sqlItem.getSql());
 		Assertions.assertEquals("update `group` set `name`=?,`count`=? where `id`=?", sqlItem.getSql());
@@ -52,7 +52,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 		map.put("name", "blue");
 		map.put("id", 1);
 		map.put("version", 1);
-		var config = entityConfigCache.get(UserEntity.class);
+		var config = configCache.loadEntityConfig(UserEntity.class);
 		var sqlItem = factory.handle(SqlType.UPDATE, config, map);
 		System.out.println(sqlItem.getSql());
 		Assertions.assertEquals("update `usr_user` set `name`=?,`version`=`version`+1 where `id`=? and `version`=?",
@@ -63,7 +63,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure1() {
 		Map<String, Object> map = new HashMap<>();
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.UPDATE, config, map);
 			Assertions.fail();
@@ -76,7 +76,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure2() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("aaa", "aaa");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.UPDATE, config, map);
 			Assertions.fail();
@@ -89,7 +89,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure3() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("name", "blue");
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.UPDATE, config, map);
 			Assertions.fail();
@@ -102,7 +102,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 	public void testSqlFailure4() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", 1);
-		var config = entityConfigCache.get(GroupEntity.class);
+		var config = configCache.loadEntityConfig(GroupEntity.class);
 		try {
 			factory.handle(SqlType.UPDATE, config, map);
 			Assertions.fail();

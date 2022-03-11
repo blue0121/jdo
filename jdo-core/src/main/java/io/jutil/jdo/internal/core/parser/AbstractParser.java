@@ -22,10 +22,12 @@ public abstract class AbstractParser implements Parser {
     protected final Dialect dialect;
     protected final boolean escape;
     protected final Set<Class<?>> parserClassSet = new HashSet<>();
+    protected final ConfigCache configCache;
 
-    public AbstractParser(Dialect dialect, boolean escape) {
+    public AbstractParser(Dialect dialect, boolean escape, ConfigCache cache) {
         this.dialect = dialect;
         this.escape = escape;
+        this.configCache = cache;
     }
 
     @Override
