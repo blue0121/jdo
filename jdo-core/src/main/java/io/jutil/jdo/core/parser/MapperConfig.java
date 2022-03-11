@@ -12,6 +12,11 @@ import java.util.Map;
  */
 public interface MapperConfig {
 	/**
+	 * 配置类型
+	 */
+	ConfigType getConfigType();
+
+	/**
 	 * 检查验证配置
 	 */
 	void check();

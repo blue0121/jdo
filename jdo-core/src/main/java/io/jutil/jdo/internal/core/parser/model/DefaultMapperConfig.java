@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.parser.model;
 
 import io.jutil.jdo.core.parser.ColumnConfig;
+import io.jutil.jdo.core.parser.ConfigType;
 import io.jutil.jdo.core.parser.MapperConfig;
 import io.jutil.jdo.core.reflect.JavaBean;
 import io.jutil.jdo.internal.core.util.AssertUtil;
@@ -13,11 +14,18 @@ import java.util.Map;
  * @since 2022-02-18
  */
 public class DefaultMapperConfig implements MapperConfig {
-	private Class<?> clazz;
-	private JavaBean javaBean;
-	private Map<String, ColumnConfig> columnMap;
+	protected ConfigType configType;
+	protected Class<?> clazz;
+	protected JavaBean javaBean;
+	protected Map<String, ColumnConfig> columnMap;
 
 	public DefaultMapperConfig() {
+		this.configType = ConfigType.MAPPER;
+	}
+
+	@Override
+	public ConfigType getConfigType() {
+		return configType;
 	}
 
 	@Override

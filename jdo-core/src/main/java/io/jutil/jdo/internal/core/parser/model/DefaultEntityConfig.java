@@ -5,7 +5,6 @@ import io.jutil.jdo.core.parser.EntityConfig;
 import io.jutil.jdo.core.parser.IdConfig;
 import io.jutil.jdo.core.parser.SqlConfig;
 import io.jutil.jdo.core.parser.VersionConfig;
-import io.jutil.jdo.core.reflect.JavaBean;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 
 import java.util.Collections;
@@ -15,15 +14,12 @@ import java.util.Map;
  * @author Jin Zheng
  * @since 2022-02-18
  */
-public class DefaultEntityConfig implements EntityConfig {
-	private Class<?> clazz;
-	private JavaBean javaBean;
+public class DefaultEntityConfig extends DefaultMapperConfig implements EntityConfig {
 	private String tableName;
 	private String escapeTableName;
 	private IdConfig idConfig;
 	private Map<String, IdConfig> idMap;
 	private VersionConfig versionConfig;
-	private Map<String, ColumnConfig> columnMap;
 	private Map<String, ColumnConfig> extraMap;
 	private SqlConfig sqlConfig;
 
@@ -32,28 +28,16 @@ public class DefaultEntityConfig implements EntityConfig {
 
 	@Override
 	public void check() {
-		AssertUtil.notNull(clazz, "类");
+		super.check();
 		AssertUtil.notEmpty(tableName, "表名");
 		AssertUtil.notEmpty(escapeTableName, "转义表名");
-		AssertUtil.notNull(idMap, "主键配置");
-		AssertUtil.notNull(columnMap, "普通字段配置");
+		AssertUtil.notEmpty(idMap, "@Id 主键配置");
 		AssertUtil.notNull(extraMap, "额外字段配置");
 		AssertUtil.notNull(sqlConfig, "SQL配置");
 
 		idMap.forEach((k, v) -> v.check());
-		columnMap.forEach((k, v) -> v.check());
 		extraMap.forEach((k, v) -> v.check());
 		sqlConfig.check();
-	}
-
-	@Override
-	public Class<?> getClazz() {
-		return clazz;
-	}
-
-	@Override
-	public JavaBean getJavaBean() {
-		return javaBean;
 	}
 
 	@Override
@@ -82,11 +66,6 @@ public class DefaultEntityConfig implements EntityConfig {
 	}
 
 	@Override
-	public Map<String, ColumnConfig> getColumnMap() {
-		return columnMap;
-	}
-
-	@Override
 	public Map<String, ColumnConfig> getExtraMap() {
 		return extraMap;
 	}
@@ -94,12 +73,6 @@ public class DefaultEntityConfig implements EntityConfig {
 	@Override
 	public SqlConfig getSqlConfig() {
 		return sqlConfig;
-	}
-
-	public void setJavaBean(JavaBean javaBean) {
-		AssertUtil.notNull(javaBean, "JavaBean");
-		this.clazz = javaBean.getTargetClass();
-		this.javaBean = javaBean;
 	}
 
 	public void setTableName(String tableName) {
@@ -124,14 +97,6 @@ public class DefaultEntityConfig implements EntityConfig {
 
 	public void setVersionConfig(VersionConfig versionConfig) {
 		this.versionConfig = versionConfig;
-	}
-
-	public void setColumnMap(Map<String, ColumnConfig> columnMap) {
-		if (columnMap == null || columnMap.isEmpty()) {
-			this.columnMap = Map.of();
-		} else {
-			this.columnMap = Collections.unmodifiableMap(columnMap);
-		}
 	}
 
 	public void setExtraMap(Map<String, ColumnConfig> extraMap) {

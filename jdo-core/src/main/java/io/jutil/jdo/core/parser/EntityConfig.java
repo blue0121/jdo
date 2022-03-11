@@ -1,7 +1,5 @@
 package io.jutil.jdo.core.parser;
 
-import io.jutil.jdo.core.reflect.JavaBean;
-
 import java.util.Map;
 
 /**
@@ -10,22 +8,7 @@ import java.util.Map;
  * @author Jin Zheng
  * @since 2022-02-16
  */
-public interface EntityConfig {
-
-	/**
-	 * 检查验证配置
-	 */
-	void check();
-
-	/**
-	 * 对象类型
-	 */
-	Class<?> getClazz();
-
-	/**
-	 * JavaBean
-	 */
-	JavaBean getJavaBean();
+public interface EntityConfig extends MapperConfig {
 
 	/**
 	 * 表名
@@ -53,13 +36,6 @@ public interface EntityConfig {
 	 * 版本配置
 	 */
 	VersionConfig getVersionConfig();
-
-	/**
-	 * 所有普通字段配置
-	 *
-	 * @return Map<字段名, 普通字段配置>
-	 */
-	Map<String, ColumnConfig> getColumnMap();
 
 	/**
 	 * 额外字段配置
