@@ -2,6 +2,7 @@ package test.jutil.jdo.executor.parameter;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import test.jutil.jdo.model.State;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,14 +21,21 @@ public class ObjectBinderTest extends BaseBinderTest {
 	@Test
 	public void testString() throws SQLException {
 		var str = "123";
-		factory.bind(pstmt, List.of(str));
+		facade.bind(pstmt, List.of(str));
 		Mockito.verify(pstmt).setString(Mockito.eq(1), Mockito.eq(str));
+	}
+
+	@Test
+	public void testEnum() throws SQLException {
+		var state = State.ACTIVE;
+		facade.bind(pstmt, List.of(state));
+		Mockito.verify(pstmt).setString(Mockito.eq(1), Mockito.eq(state.name()));
 	}
 
 	@Test
 	public void testObject() throws SQLException {
 		var obj = new Object();
-		factory.bind(pstmt, List.of(obj));
+		facade.bind(pstmt, List.of(obj));
 		Mockito.verify(pstmt).setObject(Mockito.eq(1), Mockito.eq(obj));
 	}
 
@@ -35,7 +43,7 @@ public class ObjectBinderTest extends BaseBinderTest {
 	public void testNull() throws SQLException {
 		List<Object> list = new ArrayList<>();
 		list.add(null);
-		factory.bind(pstmt, list);
+		facade.bind(pstmt, list);
 		Mockito.verify(pstmt).setObject(Mockito.eq(1), Mockito.eq(null));
 	}
 
@@ -49,7 +57,7 @@ public class ObjectBinderTest extends BaseBinderTest {
 		list.add(123);
 		list.add(123.0d);
 		list.add(now);
-		factory.bind(pstmt, list);
+		facade.bind(pstmt, list);
 		Mockito.verify(pstmt).setObject(Mockito.eq(1), Mockito.eq(null));
 		Mockito.verify(pstmt).setObject(Mockito.eq(2), Mockito.eq(obj));
 		Mockito.verify(pstmt).setInt(Mockito.eq(3), Mockito.eq(123));

@@ -1,6 +1,6 @@
 package test.jutil.jdo.executor.parameter;
 
-import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFactory;
+import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFacade;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,7 +16,7 @@ public class BaseBinderTest {
 	@Mock
     protected PreparedStatement pstmt;
 
-	protected ParameterBinderFactory factory = new ParameterBinderFactory();
+	protected ParameterBinderFacade facade = new ParameterBinderFacade();
 
 	public BaseBinderTest() {
 	}

@@ -17,18 +17,22 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Jin Zheng
  * @since 2022-03-09
  */
-public class ParameterBinderFactory {
-	private static Logger logger = LoggerFactory.getLogger(ParameterBinderFactory.class);
+public class ParameterBinderFacade {
+	private static Logger logger = LoggerFactory.getLogger(ParameterBinderFacade.class);
 
-	private final Map<Class<?>, ParameterBinder<?>> binderMap = new HashMap<>();
+	private final ConcurrentMap<Class<?>, ParameterBinder<?>> binderMap = new ConcurrentHashMap<>();
+	private final Map<Class<?>, ParameterBindFactory<?>> factoryMap = new HashMap<>();
+
 	private final ParameterBinder<?> defaultBinder = new ObjectBinder();
 
-	public ParameterBinderFactory() {
+	public ParameterBinderFacade() {
 		this.init();
 		this.log();
 	}
@@ -51,6 +55,8 @@ public class ParameterBinderFactory {
 		binderMap.put(Time.class, new SqlTimeBinder());
 		binderMap.put(Timestamp.class, new SqlTimestampBinder());
 		binderMap.put(String.class, new StringBinder());
+
+		factoryMap.put(Enum.class, new EnumBindFactory());
 	}
 
 	private void log() {
@@ -62,6 +68,12 @@ public class ParameterBinderFactory {
 					.append(entry.getValue().getClass().getSimpleName())
 					.append(",");
 
+		}
+		for (var entry : factoryMap.entrySet()) {
+			sb.append(entry.getKey().getName())
+					.append("=")
+					.append(entry.getValue().getClass().getSimpleName())
+					.append(",");
 		}
 		sb.delete(sb.length() - 1, sb.length());
 		sb.append("}");
@@ -92,11 +104,29 @@ public class ParameterBinderFactory {
 
 	@SuppressWarnings("rawtypes")
 	private ParameterBinder getBinder(Class<?> clazz) {
-		var binder = binderMap.get(clazz);
+		var binder = this.getBinderFromFactory(clazz);
 		if (binder == null) {
 			return defaultBinder;
 		}
 		return binder;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private ParameterBinder getBinderFromFactory(Class<?> clazz) {
+		var binder = binderMap.get(clazz);
+		if (binder !=  null) {
+			return binder;
+		}
+		while (clazz != Object.class) {
+			var factory = factoryMap.get(clazz);
+			if (factory == null) {
+				clazz = clazz.getSuperclass();
+				continue;
+			}
+			Class key = clazz;
+			return binderMap.computeIfAbsent(key, k -> factory.getBinder(key));
+		}
+		return null;
 	}
 
 }

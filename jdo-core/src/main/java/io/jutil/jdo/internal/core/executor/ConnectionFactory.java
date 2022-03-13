@@ -2,7 +2,7 @@ package io.jutil.jdo.internal.core.executor;
 
 import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.internal.core.executor.mapper.RowMapperFactory;
-import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFactory;
+import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFacade;
 import io.jutil.jdo.internal.core.util.JdbcUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +24,14 @@ public class ConnectionFactory {
 
 	private final DataSource dataSource;
 	private final RowMapperFactory rowMapperFactory;
-	private final ParameterBinderFactory binderFactory;
+	private final ParameterBinderFacade binderFacade;
 	private final ThreadLocal<Boolean> tlAutoCommit;
 	private final ThreadLocal<Connection> tlConnection;
 
 	public ConnectionFactory(DataSource dataSource, RowMapperFactory rowMapperFactory) {
 		this.dataSource = dataSource;
 		this.rowMapperFactory = rowMapperFactory;
-		this.binderFactory = new ParameterBinderFactory();
+		this.binderFacade = new ParameterBinderFacade();
 		this.tlAutoCommit = ThreadLocal.withInitial(() -> true);
 		this.tlConnection = ThreadLocal.withInitial(() -> {
 			try {
@@ -87,7 +87,7 @@ public class ConnectionFactory {
 		try {
 			conn = this.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			binderFactory.bind(pstmt, paramList);
+			binderFacade.bind(pstmt, paramList);
 			rs = pstmt.executeQuery();
 			return rowMapperFactory.getObjectList(config, rs);
 		} catch (Exception e) {
@@ -108,7 +108,7 @@ public class ConnectionFactory {
 		try {
 			conn = this.getConnection();
 			pstmt = this.createPreparedStatement(conn, sql, holder);
-			binderFactory.bind(pstmt, paramList);
+			binderFacade.bind(pstmt, paramList);
 			int count = pstmt.executeUpdate();
 			this.handleKeyHolder(pstmt, holder);
 			return count;
@@ -132,7 +132,7 @@ public class ConnectionFactory {
 			pstmt = this.createPreparedStatement(conn, sql, holder);
 			for (var paramList : batchList) {
 				this.logParam(null, paramList);
-				binderFactory.bind(pstmt, paramList);
+				binderFacade.bind(pstmt, paramList);
 				pstmt.addBatch();
 			}
 			int[] count = pstmt.executeBatch();
