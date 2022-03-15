@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
@@ -24,7 +25,7 @@ public class SqlTimestampBinder implements ParameterBinder<Timestamp> {
 	}
 
 	@Override
-	public Timestamp fetch(ResultSet rs, int i) throws SQLException {
+	public Timestamp fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
 		return rs.getTimestamp(i);
 	}
 }

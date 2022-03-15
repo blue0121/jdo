@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -25,7 +26,7 @@ public class BingIntegerBinder implements ParameterBinder<BigInteger> {
     }
 
 	@Override
-	public BigInteger fetch(ResultSet rs, int i) throws SQLException {
+	public BigInteger fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
 		var bd = rs.getBigDecimal(i);
 		if (bd == null) {
 			return null;

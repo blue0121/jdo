@@ -3,6 +3,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -24,7 +25,7 @@ public class BigDecimalBinder implements ParameterBinder<BigDecimal> {
 	}
 
 	@Override
-	public BigDecimal fetch(ResultSet rs, int i) throws SQLException {
+	public BigDecimal fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
 		return rs.getBigDecimal(i);
 	}
 }

@@ -207,7 +207,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		IdUtil.checkSingleId(config);
 		var sqlItem = config.getSqlConfig().getSelectById();
 		var sql = dialect.lock(dialect.page(sqlItem.getSql(), 0, 1), type);
-		List<T> list = connectionFactory.query(config, sql, List.of(id));
+		List<T> list = connectionFactory.query(clazz, sql, List.of(id));
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -221,7 +221,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var id = IdUtil.checkSingleId(config);
 		var sqlItem = config.getSqlConfig().getSelectByIdList();
 		var sql = String.format(sqlItem.getSql(), StringUtil.repeat("?", idList.size(), ","));
-		List<T> list = connectionFactory.query(config, sql, idList);
+		List<T> list = connectionFactory.query(clazz, sql, idList);
 		if (list.isEmpty()) {
 			return Map.of();
 		}
@@ -253,7 +253,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var sqlItem = sqlHandlerFactory.handle(SqlType.GET, config, param);
 		var sql = dialect.getOne(sqlItem.getSql());
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
-		List<T> list = connectionFactory.query(config, sql, paramList);
+		List<T> list = connectionFactory.query(clazz, sql, paramList);
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -332,7 +332,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var sqlItem = sqlHandlerFactory.handle(SqlType.GET, config, param);
 		var sql = dialect.getOne(sqlItem.getSql());
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
-		return connectionFactory.query(config, sql, paramList);
+		return connectionFactory.query(clazz, sql, paramList);
 	}
 
     @Override

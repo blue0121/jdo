@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
+import io.jutil.jdo.internal.core.parser.ParserFactory;
 import io.jutil.jdo.internal.core.util.ObjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,15 +8,18 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -27,12 +31,12 @@ import java.util.concurrent.ConcurrentMap;
 public class ParameterBinderFacade {
 	private static Logger logger = LoggerFactory.getLogger(ParameterBinderFacade.class);
 
+	private final ParserFactory parserFactory;
 	private final ConcurrentMap<Class<?>, ParameterBinder<?>> binderMap = new ConcurrentHashMap<>();
 	private final Map<Class<?>, ParameterBindFactory<?>> factoryMap = new HashMap<>();
 
-	private final ParameterBinder<?> defaultBinder = new ObjectBinder();
-
-	public ParameterBinderFacade() {
+	public ParameterBinderFacade(ParserFactory parserFactory) {
+		this.parserFactory = parserFactory;
 		this.init();
 		this.log();
 	}
@@ -57,6 +61,7 @@ public class ParameterBinderFacade {
 		binderMap.put(String.class, new StringBinder());
 
 		factoryMap.put(Enum.class, new EnumBindFactory());
+		factoryMap.put(Object.class, new ObjectBindFactory(this));
 	}
 
 	private void log() {
@@ -101,32 +106,42 @@ public class ParameterBinderFacade {
 		}
 	}
 
-
-	@SuppressWarnings("rawtypes")
-	private ParameterBinder getBinder(Class<?> clazz) {
-		var binder = this.getBinderFromFactory(clazz);
-		if (binder == null) {
-			return defaultBinder;
+	@SuppressWarnings("unchecked")
+	public <T> List<T> fetch(ResultSet rs, Class<T> clazz) throws SQLException {
+		var binder = this.getBinder(clazz);
+		if (logger.isDebugEnabled()) {
+			logger.debug("找到 [{}] ParameterBinder: {}", clazz.getSimpleName(), binder.getClass().getSimpleName());
 		}
-		return binder;
+		List<T> objectList = new ArrayList<>();
+		var rsmd = rs.getMetaData();
+		while (rs.next()) {
+			T object = (T) binder.fetch(rsmd, rs, 1);
+			if (object != null) {
+				objectList.add(object);
+			}
+		}
+		return objectList;
 	}
 
 	@SuppressWarnings("rawtypes")
-	private ParameterBinder getBinderFromFactory(Class<?> clazz) {
+	protected ParameterBinder getBinder(Class<?> clazz) {
 		var binder = binderMap.get(clazz);
-		if (binder !=  null) {
+		if (binder != null) {
 			return binder;
 		}
-		while (clazz != Object.class) {
+		Class key = clazz;
+		do {
 			var factory = factoryMap.get(clazz);
 			if (factory == null) {
 				clazz = clazz.getSuperclass();
 				continue;
 			}
-			Class key = clazz;
 			return binderMap.computeIfAbsent(key, k -> factory.getBinder(key));
-		}
-		return null;
+		} while (clazz != null);
+		throw new UnsupportedOperationException("不支持类型: " + clazz.getName());
 	}
 
+	protected ParserFactory getParserFactory() {
+		return parserFactory;
+	}
 }

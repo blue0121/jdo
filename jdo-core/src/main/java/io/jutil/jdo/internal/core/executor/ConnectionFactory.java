@@ -1,8 +1,8 @@
 package io.jutil.jdo.internal.core.executor;
 
 import io.jutil.jdo.core.exception.JdbcException;
-import io.jutil.jdo.internal.core.executor.mapper.RowMapperFactory;
 import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFacade;
+import io.jutil.jdo.internal.core.parser.ParserFactory;
 import io.jutil.jdo.internal.core.util.JdbcUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +23,13 @@ public class ConnectionFactory {
 	private static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
 	private final DataSource dataSource;
-	private final RowMapperFactory rowMapperFactory;
 	private final ParameterBinderFacade binderFacade;
 	private final ThreadLocal<Boolean> tlAutoCommit;
 	private final ThreadLocal<Connection> tlConnection;
 
-	public ConnectionFactory(DataSource dataSource, RowMapperFactory rowMapperFactory) {
+	public ConnectionFactory(DataSource dataSource, ParserFactory parserFactory) {
 		this.dataSource = dataSource;
-		this.rowMapperFactory = rowMapperFactory;
-		this.binderFacade = new ParameterBinderFacade();
+		this.binderFacade = new ParameterBinderFacade(parserFactory);
 		this.tlAutoCommit = ThreadLocal.withInitial(() -> true);
 		this.tlConnection = ThreadLocal.withInitial(() -> {
 			try {
@@ -52,11 +50,11 @@ public class ConnectionFactory {
 		this.tlAutoCommit.set(autoCommit);
 	}
 
-    public Connection getConnection() throws SQLException {
-        var conn = tlConnection.get();
-	    //System.out.println("get>>" + conn);
+	public Connection getConnection() throws SQLException {
+		var conn = tlConnection.get();
+		//System.out.println("get>>" + conn);
 		return conn;
-    }
+	}
 
 	public void close(ResultSet rs, Statement stmt, Connection conn) {
 		var autoCommit = this.tlAutoCommit.get().booleanValue();
@@ -68,7 +66,7 @@ public class ConnectionFactory {
 		}
 	}
 
-    public void destroy() {
+	public void destroy() {
 		try {
 			var conn = this.getConnection();
 			JdbcUtil.close(conn);
@@ -77,9 +75,9 @@ public class ConnectionFactory {
 			logger.warn("销毁数据库连接错误, ", e);
 		}
 		tlAutoCommit.remove();
-    }
+	}
 
-	public <T> List<T> query(Object config, String sql, List<?> paramList) {
+	public <T> List<T> query(Class<T> clazz, String sql, List<?> paramList) {
 		this.logParam(sql, paramList);
 		Connection conn = null;
 		ResultSet rs = null;
@@ -89,7 +87,7 @@ public class ConnectionFactory {
 			pstmt = conn.prepareStatement(sql);
 			binderFacade.bind(pstmt, paramList);
 			rs = pstmt.executeQuery();
-			return rowMapperFactory.getObjectList(config, rs);
+			return binderFacade.fetch(rs, clazz);
 		} catch (Exception e) {
 			throw new JdbcException(e);
 		} finally {

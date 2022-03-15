@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -23,7 +24,7 @@ public class ShortBinder implements ParameterBinder<Short> {
 	}
 
 	@Override
-	public Short fetch(ResultSet rs, int i) throws SQLException {
+	public Short fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
 		var n = rs.getShort(i);
 		return rs.wasNull() ? null : n;
 	}

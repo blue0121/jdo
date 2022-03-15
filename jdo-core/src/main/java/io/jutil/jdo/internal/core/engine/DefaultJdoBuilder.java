@@ -7,7 +7,6 @@ import io.jutil.jdo.core.engine.JdoTemplate;
 import io.jutil.jdo.internal.core.dialect.DetectDialect;
 import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.DataSourceFactory;
-import io.jutil.jdo.internal.core.executor.mapper.RowMapperFactory;
 import io.jutil.jdo.internal.core.executor.metadata.TableChecker;
 import io.jutil.jdo.internal.core.parser.ParserFactory;
 import io.jutil.jdo.internal.core.path.ClassScanner;
@@ -39,8 +38,7 @@ public class DefaultJdoBuilder implements JdoBuilder {
 		this.dataSourceFactory = new DataSourceFactory(dataSourceOptions);
 		var dialect = DetectDialect.dialect(dataSourceFactory.getDateSource());
 		this.parserFactory = new ParserFactory(dialect, true);
-		var rowMapperFactory = new RowMapperFactory(parserFactory);
-		var connectionFactory = new ConnectionFactory(dataSourceFactory.getDateSource(), rowMapperFactory);
+		var connectionFactory = new ConnectionFactory(dataSourceFactory.getDateSource(), parserFactory);
 		this.jdoTemplate = new DefaultJdoTemplate(parserFactory, connectionFactory);
 
 		this.parseClazz();

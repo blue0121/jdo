@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -23,7 +24,7 @@ public class ByteArrayBinder implements ParameterBinder<byte[]> {
 	}
 
 	@Override
-	public byte[] fetch(ResultSet rs, int i) throws SQLException {
+	public byte[] fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
 		return rs.getBytes(i);
 	}
 }

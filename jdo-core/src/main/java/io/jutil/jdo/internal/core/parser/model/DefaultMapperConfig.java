@@ -32,7 +32,7 @@ public class DefaultMapperConfig implements MapperConfig {
 	public void check() {
 		AssertUtil.notNull(clazz, "Class");
 		AssertUtil.notNull(javaBean, "JavaBean");
-		AssertUtil.notNull(columnMap, "ColumnConfigMap");
+		AssertUtil.notNull(columnMap, "普通字段配置");
 		for (var entry : columnMap.entrySet()) {
 			entry.getValue().check();
 		}

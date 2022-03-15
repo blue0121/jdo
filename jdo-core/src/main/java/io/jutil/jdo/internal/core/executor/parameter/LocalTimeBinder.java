@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalTime;
@@ -25,7 +26,7 @@ public class LocalTimeBinder implements ParameterBinder<LocalTime> {
     }
 
 	@Override
-	public LocalTime fetch(ResultSet rs, int i) throws SQLException {
+	public LocalTime fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
 		var d = rs.getTime(i);
 		return rs.wasNull() ? null : d.toLocalTime();
 	}

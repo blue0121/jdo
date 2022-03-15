@@ -4,6 +4,7 @@ import io.jutil.jdo.internal.core.util.EnumUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -38,7 +39,7 @@ public class EnumBindFactory implements ParameterBindFactory<Enum<?>> {
 		}
 
 		@Override
-		public Enum<?> fetch(ResultSet rs, int i) throws SQLException {
+		public Enum<?> fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
 			var str = rs.getString(i);
 			return EnumUtil.fromString(clazz, str);
 		}

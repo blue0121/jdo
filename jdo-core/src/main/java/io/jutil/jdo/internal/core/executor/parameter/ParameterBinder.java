@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -28,11 +29,12 @@ public interface ParameterBinder<T> {
 
 	/**
 	 * 从 ResultSet 获取值
+	 * @param rsmd
 	 * @param rs
 	 * @param i
 	 * @return
 	 * @throws SQLException
 	 */
-	T fetch(ResultSet rs, int i) throws SQLException;
+	T fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException;
 
 }
