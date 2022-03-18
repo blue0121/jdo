@@ -11,6 +11,7 @@ import io.jutil.jdo.internal.core.dialect.Dialect;
 import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.GenerateKeyHolder;
 import io.jutil.jdo.internal.core.executor.KeyHolder;
+import io.jutil.jdo.internal.core.executor.mapper.MapHandlerFacade;
 import io.jutil.jdo.internal.core.parser.ConfigCache;
 import io.jutil.jdo.internal.core.parser.ParserFactory;
 import io.jutil.jdo.internal.core.sql.SqlHandlerFactory;
@@ -41,20 +42,21 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	private final ConfigCache configCache;
 	private final ConnectionFactory connectionFactory;
 	private final SqlHandlerFactory sqlHandlerFactory;
+	private final MapHandlerFacade mapHandlerFacade;
 
 	public DefaultJdoTemplate(ParserFactory parserFactory, ConnectionFactory connectionFactory) {
 		this.dialect = parserFactory.getDialect();
 		this.configCache = parserFactory.getConfigCache();
 		this.connectionFactory = connectionFactory;
 		this.sqlHandlerFactory = new SqlHandlerFactory();
+		this.mapHandlerFacade = new MapHandlerFacade();
 	}
 
 	@Override
 	public int save(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "Object");
 		var config = configCache.loadEntityConfig(object.getClass());
-		var param = ObjectUtil.toMap(object, config, dynamic);
-		IdUtil.generateId(param, config.getIdMap());
+		var param = mapHandlerFacade.handleInsert(object, config, dynamic);
 		var sqlItem = dynamic ? sqlHandlerFactory.handle(SqlType.INSERT, config, param) :
 				config.getSqlConfig().getInsert();
 		var sql = sqlItem.getSql();
@@ -83,8 +85,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var sql = sqlItem.getSql();
 		List<List<?>> batchList = new ArrayList<>();
 		for (var object : objectList) {
-			var param = ObjectUtil.toMap(object, config, false);
-			IdUtil.generateId(param, config.getIdMap());
+			var param = mapHandlerFacade.handleInsert(object, config, false);
 			var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
 			batchList.add(paramList);
 		}
@@ -98,7 +99,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int update(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "Object");
 		var config = configCache.loadEntityConfig(object.getClass());
-		var param = ObjectUtil.toMap(object, config, dynamic);
+		var param = mapHandlerFacade.handleUpdate(object, config, dynamic);
 		var sqlConfig = config.getSqlConfig();
 		var isForceVer = VersionUtil.isForce(config);
 		SqlItem sqlItem = null;
@@ -146,8 +147,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var sql = sqlItem.getSql();
 		List<List<?>> batchList = new ArrayList<>();
 		for (var object : objectList) {
-			var param = ObjectUtil.toMap(object, config, false);
-			IdUtil.generateId(param, config.getIdMap());
+			var param = mapHandlerFacade.handleUpdate(object, config, false);
 			var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
 			batchList.add(paramList);
 		}

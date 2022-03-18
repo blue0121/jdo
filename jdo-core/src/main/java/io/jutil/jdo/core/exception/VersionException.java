@@ -7,10 +7,14 @@ package io.jutil.jdo.core.exception;
 public class VersionException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	private Class<?> clazz;
+	private final Class<?> clazz;
 
 	public VersionException(Class<?> clazz) {
-		super(clazz.getName() + " 版本冲突");
+		this(clazz, "版本冲突");
+	}
+
+	public VersionException(Class<?> clazz, String message) {
+		super(clazz.getName() + " " + message);
 		this.clazz = clazz;
 	}
 
