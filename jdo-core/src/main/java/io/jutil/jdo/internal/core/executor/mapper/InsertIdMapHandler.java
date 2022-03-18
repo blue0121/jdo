@@ -1,6 +1,5 @@
 package io.jutil.jdo.internal.core.executor.mapper;
 
-import io.jutil.jdo.core.parser.IdConfig;
 import io.jutil.jdo.core.parser.IdType;
 import io.jutil.jdo.internal.core.id.IdGenerator;
 import io.jutil.jdo.internal.core.id.SnowflakeId;
@@ -9,7 +8,7 @@ import io.jutil.jdo.internal.core.id.SnowflakeId;
  * @author Jin Zheng
  * @since 2022-03-17
  */
-public class InsertIdMapHandler implements MapHandler {
+public class InsertIdMapHandler extends AbstractMapHandler {
 	private final SnowflakeId snowflakeId;
 
 	public InsertIdMapHandler(SnowflakeId snowflakeId) {
@@ -26,7 +25,7 @@ public class InsertIdMapHandler implements MapHandler {
 				case AUTO -> this.handleAuto(response, field, id.getIdType());
 				case UUID -> this.handleUuid(response, field, id.getIdType());
 				case INCREMENT -> this.handleIncrement(response, field, id.getIdType());
-				case ASSIGNED -> this.handleAssigned(request, response, id);
+				case ASSIGNED -> this.putObject(request, response, id);
 				default -> throw new UnsupportedOperationException("不支持主键产生类型: " + id.getGeneratorType());
 			}
 		}
@@ -52,12 +51,6 @@ public class InsertIdMapHandler implements MapHandler {
 			case INT, LONG -> response.removeField(field);
 			default -> throw new UnsupportedOperationException("不支持主键类型: " + idType);
 		}
-	}
-
-	private void handleAssigned(MapRequest request, MapResponse response, IdConfig id) {
-		var beanField = id.getBeanField();
-		var value = beanField.getFieldValue(request.getTarget());
-		response.putField(id.getFieldName(), value);
 	}
 
 }

@@ -16,11 +16,22 @@ public class UpdateVersionMapHandler implements MapHandler {
 		if (version == null) {
 			return;
 		}
-		var beanField = version.getBeanField();
-		var value = beanField.getFieldValue(request.getTarget());
-		if (value != null) {
-			response.putField(version.getFieldName(), value);
-			return;
+
+		var map = request.getMap();
+		if (map == null) {
+			var beanField = version.getBeanField();
+			var value = beanField.getFieldValue(request.getTarget());
+			if (value != null) {
+				response.putField(version.getFieldName(), value);
+				return;
+			}
+		} else {
+			var field = version.getFieldName();
+			var value = map.get(field);
+			if (value != null) {
+				response.putField(field, value);
+				return;
+			}
 		}
 		if (version.isForce()) {
 			throw new VersionException(request.getClazz(), "缺少版本号");

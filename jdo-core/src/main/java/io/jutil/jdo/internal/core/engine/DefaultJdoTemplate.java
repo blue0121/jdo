@@ -18,7 +18,6 @@ import io.jutil.jdo.internal.core.sql.SqlHandlerFactory;
 import io.jutil.jdo.internal.core.sql.SqlType;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.IdUtil;
-import io.jutil.jdo.internal.core.util.ObjectUtil;
 import io.jutil.jdo.internal.core.util.ParamUtil;
 import io.jutil.jdo.internal.core.util.StringUtil;
 import io.jutil.jdo.internal.core.util.VersionUtil;
@@ -70,7 +69,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int saveObject(Class<?> clazz, Map<String, ?> param) {
 		var config = configCache.loadEntityConfig(clazz);
-		var map = ObjectUtil.generateMap(param, config);
+		var map = mapHandlerFacade.handleInsert(param, config, false);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.INSERT, config, map);
 		var sql = sqlItem.getSql();
 		var paramList = ParamUtil.toParamList(map, sqlItem.getParamNameList(), false);
@@ -123,7 +122,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int updateObject(Class<?> clazz, Object id, Map<String, ?> param) {
 		var config = configCache.loadEntityConfig(clazz);
 		var idConfig = IdUtil.checkSingleId(config);
-		Map<String, Object> map = new HashMap<>(param);
+		var map = mapHandlerFacade.handleUpdate(param, config, true);
 		map.put(idConfig.getFieldName(), id);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.UPDATE, config, map);
 		var sql = sqlItem.getSql();
@@ -265,7 +264,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(object, "Object");
 		var nameList = Arrays.asList(names);
 		var config = configCache.loadEntityConfig(object.getClass());
-		var param = ObjectUtil.toMap(object, config, false);
+		var param = mapHandlerFacade.handleUpdate(object, config, true);
 		var sqlItem = sqlHandlerFactory.handle(SqlType.EXIST, config, param, nameList);
 		var sql = sqlItem.getSql();
 		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
@@ -273,7 +272,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		if (list.isEmpty()) {
 			return false;
 		}
-		int count = (Integer) list.get(0);
+		int count = list.get(0);
 		return count > 0;
 	}
 
@@ -288,7 +287,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 			logger.warn("No result");
 			return -1;
 		}
-		return (Integer) list.get(0);
+		return list.get(0);
 	}
 
 	@Override

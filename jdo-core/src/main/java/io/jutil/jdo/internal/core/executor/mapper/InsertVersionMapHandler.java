@@ -14,11 +14,22 @@ public class InsertVersionMapHandler implements MapHandler {
 		if (version == null) {
 			return;
 		}
-		var beanField = version.getBeanField();
-		var value = beanField.getFieldValue(request.getTarget());
-		if (value == null) {
-			value = version.getDefaultValue();
-			beanField.setFieldValue(request.getTarget(), value);
+
+		var map = request.getMap();
+		Object value = null;
+		if (map == null) {
+			var beanField = version.getBeanField();
+			value = beanField.getFieldValue(request.getTarget());
+			if (value == null) {
+				value = version.getDefaultValue();
+				beanField.setFieldValue(request.getTarget(), value);
+			}
+		} else {
+			var field = version.getFieldName();
+			value = map.get(field);
+			if (value == null) {
+				value = version.getDefaultValue();
+			}
 		}
 		response.putField(version.getFieldName(), value);
 	}
