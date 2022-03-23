@@ -6,7 +6,6 @@ import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.core.exception.VersionException;
 import io.jutil.jdo.core.parser.ConfigType;
 import io.jutil.jdo.core.parser.EntityConfig;
-import io.jutil.jdo.core.parser.SqlItem;
 import io.jutil.jdo.internal.core.dialect.Dialect;
 import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.GenerateKeyHolder;
@@ -14,6 +13,7 @@ import io.jutil.jdo.internal.core.executor.KeyHolder;
 import io.jutil.jdo.internal.core.executor.mapper.MapHandlerFacade;
 import io.jutil.jdo.internal.core.parser.ConfigCache;
 import io.jutil.jdo.internal.core.parser.ParserFactory;
+import io.jutil.jdo.internal.core.sql.SqlHandlerFacade;
 import io.jutil.jdo.internal.core.sql.SqlHandlerFactory;
 import io.jutil.jdo.internal.core.sql.SqlType;
 import io.jutil.jdo.internal.core.util.AssertUtil;
@@ -39,6 +39,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	private final Dialect dialect;
 	private final ConfigCache configCache;
+	private final SqlHandlerFacade sqlHandlerFacade;
 	private final ConnectionFactory connectionFactory;
 	private final SqlHandlerFactory sqlHandlerFactory;
 	private final MapHandlerFacade mapHandlerFacade;
@@ -46,6 +47,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public DefaultJdoTemplate(ParserFactory parserFactory, ConnectionFactory connectionFactory) {
 		this.dialect = parserFactory.getDialect();
 		this.configCache = parserFactory.getConfigCache();
+		this.sqlHandlerFacade = new SqlHandlerFacade(configCache);
 		this.connectionFactory = connectionFactory;
 		this.sqlHandlerFactory = new SqlHandlerFactory();
 		this.mapHandlerFacade = new MapHandlerFacade();
@@ -53,26 +55,23 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int save(Object object, boolean dynamic) {
-		AssertUtil.notNull(object, "Object");
-		var config = configCache.loadEntityConfig(object.getClass());
-		var param = mapHandlerFacade.handleInsert(object, config, dynamic);
-		var sqlItem = dynamic ? sqlHandlerFactory.handle(SqlType.INSERT, config, param) :
-				config.getSqlConfig().getInsert();
-		var sql = sqlItem.getSql();
-		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), dynamic);
+		AssertUtil.notNull(object, "对象");
+		var response = sqlHandlerFacade.handle(SqlType.INSERT, object, dynamic);
+		var sql = response.getSql();
+		var paramList = response.toParamList();
 		KeyHolder holder = new GenerateKeyHolder();
 		int count = connectionFactory.execute(sql, paramList, holder);
-		IdUtil.setId(holder, object, config);
+		IdUtil.setId(holder, object, response.getConfig());
 		return count;
 	}
 
 	@Override
 	public int saveObject(Class<?> clazz, Map<String, ?> param) {
-		var config = configCache.loadEntityConfig(clazz);
-		var map = mapHandlerFacade.handleInsert(param, config, false);
-		var sqlItem = sqlHandlerFactory.handle(SqlType.INSERT, config, map);
-		var sql = sqlItem.getSql();
-		var paramList = ParamUtil.toParamList(map, sqlItem.getParamNameList(), false);
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notEmpty(param, "Map");
+		var response = sqlHandlerFacade.handle(SqlType.INSERT, clazz, param);
+		var sql = response.getSql();
+		var paramList = response.toParamList();
 		return connectionFactory.execute(sql, paramList);
 	}
 
@@ -97,20 +96,11 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int update(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "Object");
-		var config = configCache.loadEntityConfig(object.getClass());
-		var param = mapHandlerFacade.handleUpdate(object, config, dynamic);
-		var sqlConfig = config.getSqlConfig();
-		var isForceVer = VersionUtil.isForce(config);
-		SqlItem sqlItem = null;
-		if (dynamic) {
-			sqlItem = sqlHandlerFactory.handle(SqlType.UPDATE, config, param);
-		} else if (isForceVer) {
-			sqlItem = sqlConfig.getUpdateByIdAndVersion();
-		} else {
-			sqlItem = sqlConfig.getUpdateById();
-		}
-		var sql = sqlItem.getSql();
-		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), dynamic);
+		var response = sqlHandlerFacade.handle(SqlType.UPDATE, object, dynamic);
+		var sql = response.getSql();
+		var paramList = response.toParamList();
+
+		var isForceVer = VersionUtil.isForce(response.getConfig());
 		int count = connectionFactory.execute(sql, paramList);
 		if (isForceVer && count <= 0) {
 			throw new VersionException(object.getClass());
@@ -120,14 +110,15 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int updateObject(Class<?> clazz, Object id, Map<String, ?> param) {
-		var config = configCache.loadEntityConfig(clazz);
-		var idConfig = IdUtil.checkSingleId(config);
-		var map = mapHandlerFacade.handleUpdate(param, config, true);
-		map.put(idConfig.getFieldName(), id);
-		var sqlItem = sqlHandlerFactory.handle(SqlType.UPDATE, config, map);
-		var sql = sqlItem.getSql();
-		var isForceVer = VersionUtil.isForce(config);
-		var paramList = ParamUtil.toParamList(map, sqlItem.getParamNameList(), false);
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notNull(id, "主键");
+		AssertUtil.notEmpty(param, "Map");
+
+		var response = sqlHandlerFacade.handle(SqlType.UPDATE, clazz, id, param);
+		var sql = response.getSql();
+		var paramList = response.toParamList();
+
+		var isForceVer = VersionUtil.isForce(response.getConfig());
 		int count = connectionFactory.execute(sql, paramList);
 		if (isForceVer && count <= 0) {
 			throw new VersionException(clazz);
@@ -163,13 +154,13 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int inc(Class<?> clazz, Object id, Map<String, ? extends Number> param) {
-		var config = configCache.loadEntityConfig(clazz);
-		var idConfig = IdUtil.checkSingleId(config);
-		var sqlItem = sqlHandlerFactory.handle(SqlType.INC, config, param);
-		var sql = sqlItem.getSql();
-		Map<String, Object> map = new HashMap<>(param);
-		map.put(idConfig.getFieldName(), id);
-		var paramList = ParamUtil.toParamList(map, sqlItem.getParamNameList(), false);
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notNull(id, "主键");
+		AssertUtil.notEmpty(param, "Map");
+
+		var response = sqlHandlerFacade.handle(SqlType.INC, clazz, id, param);
+		var sql = response.getSql();
+		var paramList = response.toParamList();
 		return connectionFactory.execute(sql, paramList);
 	}
 

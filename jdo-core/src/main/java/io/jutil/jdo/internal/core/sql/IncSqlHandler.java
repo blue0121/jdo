@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.sql;
 
+import io.jutil.jdo.core.exception.EntityFieldException;
 import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.core.parser.SqlItem;
 import io.jutil.jdo.internal.core.parser.model.DefaultSqlItem;
@@ -13,7 +14,7 @@ import java.util.List;
  * @author Jin Zheng
  * @since 2022-02-18
  */
-public class IncSqlHandler implements SqlHandler {
+public class IncSqlHandler extends AbstractSqlHandler implements SqlHandler {
 	public IncSqlHandler() {
 	}
 
@@ -46,5 +47,37 @@ public class IncSqlHandler implements SqlHandler {
 		var sql = String.format(UPDATE_TPL, config.getEscapeTableName(),
 				StringUtil.join(columnList, SEPARATOR), whereId);
 		return new DefaultSqlItem(sql, fieldList);
+	}
+
+	@Override
+	public void handle(SqlRequest request, SqlResponse response) {
+		var config = request.getConfig();
+		var map = response.toParamMap();
+
+		var columnMap = config.getColumnMap();
+		List<String> columnList = new ArrayList<>();
+
+		for (var entry : map.entrySet()) {
+			var column = columnMap.get(entry.getKey());
+			if (column == null) {
+				continue;
+			}
+			if (!NumberUtil.isNumber(column.getBeanField().getField().getType())) {
+				throw new EntityFieldException(entry.getKey(), "不是数字");
+			}
+			if (!NumberUtil.isNumber(entry.getValue().getClass())) {
+				throw new EntityFieldException(entry.getKey(), "不是数字");
+			}
+			columnList.add(column.getEscapeColumnName() + "=" + column.getEscapeColumnName() + "+?");
+			response.addName(entry.getKey());
+		}
+
+		var id = config.getIdConfig();
+		var whereId = id.getEscapeColumnName() + EQUAL_PLACEHOLDER;
+		response.addName(id.getFieldName());
+
+		var sql = String.format(UPDATE_TPL, config.getEscapeTableName(),
+				StringUtil.join(columnList, SEPARATOR), whereId);
+		response.setSql(sql);
 	}
 }

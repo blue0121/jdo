@@ -4,7 +4,7 @@ package io.jutil.jdo.core.exception;
  * @author Jin Zheng
  * @since 2022-02-16
  */
-public class VersionException extends RuntimeException {
+public class VersionException extends JdbcException {
 	private static final long serialVersionUID = 1L;
 
 	private final Class<?> clazz;
