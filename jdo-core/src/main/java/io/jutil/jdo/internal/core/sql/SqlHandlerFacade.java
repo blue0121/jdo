@@ -32,6 +32,7 @@ public class SqlHandlerFacade {
 	private void init() {
 		var insertId = new InsertIdSqlHandler(snowflakeId);
 		var updateId = new UpdateIdSqlHandler();
+		var id = new IdSqlHandler();
 		var column = new ColumnSqlHandler();
 		var insertVersion = new InsertVersionSqlHandler();
 		var updateVersion = new UpdateVersionSqlHandler();
@@ -41,6 +42,7 @@ public class SqlHandlerFacade {
 		this.addHandler(SqlType.INSERT, insertId, column, insertVersion, new InsertSqlHandler(), param);
 		this.addHandler(SqlType.UPDATE, updateId, column, updateVersion, new UpdateSqlHandler(), param);
 		this.addHandler(SqlType.INC, updateId, column, new IncSqlHandler(), param);
+		this.addHandler(SqlType.COUNT, id, column, new CountSqlHandler(), param);
 	}
 
 	private void addHandler(SqlType type, SqlHandle...handlers) {
