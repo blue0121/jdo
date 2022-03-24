@@ -36,13 +36,16 @@ public class SqlHandlerFacade {
 		var column = new ColumnSqlHandler();
 		var insertVersion = new InsertVersionSqlHandler();
 		var updateVersion = new UpdateVersionSqlHandler();
+		var version = new VersionSqlHandler();
 
 		var param = new ParamSqlHandler();
 
 		this.addHandler(SqlType.INSERT, insertId, column, insertVersion, new InsertSqlHandler(), param);
 		this.addHandler(SqlType.UPDATE, updateId, column, updateVersion, new UpdateSqlHandler(), param);
-		this.addHandler(SqlType.INC, updateId, column, new IncSqlHandler(), param);
-		this.addHandler(SqlType.COUNT, id, column, new CountSqlHandler(), param);
+		this.addHandler(SqlType.INC, updateId, column, version, new IncSqlHandler(), param);
+		this.addHandler(SqlType.COUNT, id, column, version, new CountSqlHandler(), param);
+		this.addHandler(SqlType.GET, id, column, version, new GetSqlHandler(), param);
+		this.addHandler(SqlType.GET_FIELD, id, column, version, new GetFieldSqlHandler(), param);
 	}
 
 	private void addHandler(SqlType type, SqlHandle...handlers) {
@@ -71,6 +74,12 @@ public class SqlHandlerFacade {
 	public SqlResponse handle(SqlType type, Class<?> clazz, Map<String, ?> map) {
 		var config = configCache.loadEntityConfig(clazz);
 		var request = SqlRequest.create(map, config);
+		return this.handle(type, request);
+	}
+
+	public SqlResponse handle(SqlType type, Class<?> clazz, String field, Map<String, ?> map) {
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(field, map, config);
 		return this.handle(type, request);
 	}
 

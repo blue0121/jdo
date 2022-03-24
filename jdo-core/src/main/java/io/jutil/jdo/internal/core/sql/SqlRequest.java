@@ -15,6 +15,7 @@ public class SqlRequest {
 	private Object target;
 	private Class<?> clazz;
 	private EntityConfig config;
+	private String field;
 	private Map<String, ?> map;
 	private boolean dynamic;
 
@@ -25,6 +26,18 @@ public class SqlRequest {
 		AssertUtil.notNull(map, "对象");
 		AssertUtil.notNull(config, "EntityConfig");
 		var request = new SqlRequest();
+		request.map = map;
+		request.clazz = Map.class;
+		request.config = config;
+		request.dynamic = true;
+		return request;
+	}
+
+	public static SqlRequest create(String field, Map<String, ?> map, EntityConfig config) {
+		AssertUtil.notNull(map, "对象");
+		AssertUtil.notNull(config, "EntityConfig");
+		var request = new SqlRequest();
+		request.field = field;
 		request.map = map;
 		request.clazz = Map.class;
 		request.config = config;
