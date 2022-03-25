@@ -1,9 +1,9 @@
 package io.jutil.jdo.internal.core.sql;
 
 import io.jutil.jdo.core.parser.EntityConfig;
-import io.jutil.jdo.internal.core.util.AssertUtil;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,14 +17,13 @@ public class SqlRequest {
 	private EntityConfig config;
 	private String field;
 	private Map<String, ?> map;
+	private List<String> args;
 	private boolean dynamic;
 
 	private SqlRequest() {
 	}
 
 	public static SqlRequest create(Map<String, ?> map, EntityConfig config) {
-		AssertUtil.notNull(map, "对象");
-		AssertUtil.notNull(config, "EntityConfig");
 		var request = new SqlRequest();
 		request.map = map;
 		request.clazz = Map.class;
@@ -34,8 +33,6 @@ public class SqlRequest {
 	}
 
 	public static SqlRequest create(String field, Map<String, ?> map, EntityConfig config) {
-		AssertUtil.notNull(map, "对象");
-		AssertUtil.notNull(config, "EntityConfig");
 		var request = new SqlRequest();
 		request.field = field;
 		request.map = map;
@@ -46,13 +43,21 @@ public class SqlRequest {
 	}
 
 	public static SqlRequest create(Object target, EntityConfig config, boolean dynamic) {
-		AssertUtil.notNull(target, "对象");
-		AssertUtil.notNull(config, "EntityConfig");
 		var request = new SqlRequest();
 		request.target = target;
 		request.clazz = target.getClass();
 		request.config = config;
 		request.dynamic = dynamic;
+		return request;
+	}
+
+	public static SqlRequest create(Object target, List<String> args, EntityConfig config) {
+		var request = new SqlRequest();
+		request.target = target;
+		request.args = args;
+		request.clazz = target.getClass();
+		request.config = config;
+		request.dynamic = true;
 		return request;
 	}
 

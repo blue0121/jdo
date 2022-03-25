@@ -71,6 +71,12 @@ public class SqlHandlerFacade {
 		return this.handle(type, request);
 	}
 
+	public SqlResponse handle(SqlType type, Object object, List<String> args) {
+		var config = configCache.loadEntityConfig(object.getClass());
+		var request = SqlRequest.create(object, args, config);
+		return this.handle(type, request);
+	}
+
 	public SqlResponse handle(SqlType type, Class<?> clazz, Map<String, ?> map) {
 		var config = configCache.loadEntityConfig(clazz);
 		var request = SqlRequest.create(map, config);
