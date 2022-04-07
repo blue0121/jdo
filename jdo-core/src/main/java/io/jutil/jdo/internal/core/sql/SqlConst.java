@@ -16,6 +16,7 @@ public class SqlConst {
 	public static final String INSERT_TPL = "insert into %s (%s) values (%s)";
 	public static final String UPDATE_TPL = "update %s set %s where %s";
 	public static final String DELETE_TPL = "delete from %s where %s";
+	public static final String DELETE_BY_TPL = "delete from %s where %s";
 	public static final String SELECT_TPL = "select * from %s where %s";
 	public static final String GET_TPL = "select %s from %s where %s";
 	public static final String COUNT_TPL = "select count(*) from %s where %s";

@@ -47,6 +47,7 @@ public class SqlHandlerFacade {
 		this.addHandler(SqlType.GET, id, column, version, new GetSqlHandler(), param);
 		this.addHandler(SqlType.GET_FIELD, id, column, version, new GetFieldSqlHandler(), param);
 		this.addHandler(SqlType.EXIST, id, column, version, new ExistSqlHandler(), param);
+		this.addHandler(SqlType.DELETE_BY, id, column, version, new DeleteBySqlHandler(), param);
 	}
 
 	private void addHandler(SqlType type, SqlHandle...handlers) {

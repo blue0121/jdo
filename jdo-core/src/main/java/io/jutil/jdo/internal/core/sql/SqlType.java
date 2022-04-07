@@ -22,6 +22,11 @@ public enum SqlType {
 	DELETE,
 
 	/**
+	 * 动态 delete by SQL 语句
+	 */
+	DELETE_BY,
+
+	/**
 	 * 动态增长SQL语句
 	 */
 	INC,

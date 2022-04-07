@@ -184,10 +184,13 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> int deleteBy(Class<T> clazz, Map<String, ?> param) {
-		var config = configCache.loadEntityConfig(clazz);
-		var sqlItem = sqlHandlerFactory.handle(SqlType.DELETE, config, param);
-		var sql = sqlItem.getSql();
-		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notEmpty(param, "Map");
+
+		var response = sqlHandlerFacade.handle(SqlType.DELETE_BY, clazz, param);
+		var sql = response.getSql();
+		var paramList = response.toParamList();
+
 		return connectionFactory.execute(sql, paramList);
 	}
 
