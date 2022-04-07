@@ -261,12 +261,12 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public boolean exist(Object object, String... names) {
 		AssertUtil.notNull(object, "Object");
+
 		var nameList = Arrays.asList(names);
-		var config = configCache.loadEntityConfig(object.getClass());
-		var param = mapHandlerFacade.handleUpdate(object, config, true);
-		var sqlItem = sqlHandlerFactory.handle(SqlType.EXIST, config, param, nameList);
-		var sql = sqlItem.getSql();
-		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
+		var response = sqlHandlerFacade.handle(SqlType.EXIST, object, nameList);
+		var sql = response.getSql();
+		var paramList = response.toParamList();
+
 		var list = connectionFactory.query(Integer.class, sql, paramList);
 		if (list.isEmpty()) {
 			return false;

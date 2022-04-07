@@ -17,7 +17,7 @@ public class SqlRequest {
 	private EntityConfig config;
 	private String field;
 	private Map<String, ?> map;
-	private List<String> args;
+	private List<?> args;
 	private boolean dynamic;
 
 	private SqlRequest() {
@@ -51,7 +51,7 @@ public class SqlRequest {
 		return request;
 	}
 
-	public static SqlRequest create(Object target, List<String> args, EntityConfig config) {
+	public static SqlRequest create(Object target, List<?> args, EntityConfig config) {
 		var request = new SqlRequest();
 		request.target = target;
 		request.args = args;
