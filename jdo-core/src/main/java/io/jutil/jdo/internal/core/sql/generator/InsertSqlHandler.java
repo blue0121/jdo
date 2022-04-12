@@ -1,7 +1,12 @@
-package io.jutil.jdo.internal.core.sql;
+package io.jutil.jdo.internal.core.sql.generator;
 
 import io.jutil.jdo.core.parser.SqlItem;
 import io.jutil.jdo.internal.core.parser.model.DefaultSqlItem;
+import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
+import io.jutil.jdo.internal.core.sql.SqlHandler;
+import io.jutil.jdo.internal.core.sql.SqlParam;
+import io.jutil.jdo.internal.core.sql.SqlRequest;
+import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.util.StringUtil;
 
 import java.util.ArrayList;

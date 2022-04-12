@@ -1,6 +1,8 @@
-package io.jutil.jdo.internal.core.sql;
+package io.jutil.jdo.internal.core.sql.map;
 
 import io.jutil.jdo.core.exception.EntityFieldException;
+import io.jutil.jdo.internal.core.sql.SqlRequest;
+import io.jutil.jdo.internal.core.sql.SqlResponse;
 
 /**
  * @author Jin Zheng

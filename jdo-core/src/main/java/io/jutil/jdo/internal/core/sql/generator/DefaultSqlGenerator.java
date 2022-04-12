@@ -1,8 +1,9 @@
-package io.jutil.jdo.internal.core.sql;
+package io.jutil.jdo.internal.core.sql.generator;
 
 import io.jutil.jdo.internal.core.parser.model.DefaultEntityConfig;
 import io.jutil.jdo.internal.core.parser.model.DefaultSqlConfig;
 import io.jutil.jdo.internal.core.parser.model.DefaultSqlItem;
+import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

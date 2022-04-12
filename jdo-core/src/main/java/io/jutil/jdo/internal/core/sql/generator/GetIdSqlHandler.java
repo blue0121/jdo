@@ -1,5 +1,9 @@
-package io.jutil.jdo.internal.core.sql;
+package io.jutil.jdo.internal.core.sql.generator;
 
+import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
+import io.jutil.jdo.internal.core.sql.SqlConst;
+import io.jutil.jdo.internal.core.sql.SqlRequest;
+import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.IdUtil;
 import io.jutil.jdo.internal.core.util.StringUtil;

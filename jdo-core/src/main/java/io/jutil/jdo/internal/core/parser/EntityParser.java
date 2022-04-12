@@ -18,7 +18,7 @@ import io.jutil.jdo.internal.core.parser.model.DefaultColumnConfig;
 import io.jutil.jdo.internal.core.parser.model.DefaultEntityConfig;
 import io.jutil.jdo.internal.core.parser.model.DefaultIdConfig;
 import io.jutil.jdo.internal.core.parser.model.DefaultVersionConfig;
-import io.jutil.jdo.internal.core.sql.DefaultSqlGenerator;
+import io.jutil.jdo.internal.core.sql.generator.DefaultSqlGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

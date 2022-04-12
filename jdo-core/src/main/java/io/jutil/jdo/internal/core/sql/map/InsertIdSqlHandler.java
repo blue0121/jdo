@@ -1,9 +1,12 @@
-package io.jutil.jdo.internal.core.sql;
+package io.jutil.jdo.internal.core.sql.map;
 
 import io.jutil.jdo.core.parser.IdConfig;
 import io.jutil.jdo.core.parser.IdType;
 import io.jutil.jdo.internal.core.id.IdGenerator;
 import io.jutil.jdo.internal.core.id.SnowflakeId;
+import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
+import io.jutil.jdo.internal.core.sql.SqlRequest;
+import io.jutil.jdo.internal.core.sql.SqlResponse;
 
 /**
  * @author Jin Zheng

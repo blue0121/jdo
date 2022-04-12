@@ -3,6 +3,24 @@ package io.jutil.jdo.internal.core.sql;
 import io.jutil.jdo.internal.core.id.SnowflakeId;
 import io.jutil.jdo.internal.core.id.SnowflakeIdFactory;
 import io.jutil.jdo.internal.core.parser.ConfigCache;
+import io.jutil.jdo.internal.core.sql.generator.CountSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.DeleteBySqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.DeleteSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.ExistSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.GetFieldSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.GetIdSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.GetSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.IncSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.InsertSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.UpdateSqlHandler;
+import io.jutil.jdo.internal.core.sql.map.ColumnSqlHandler;
+import io.jutil.jdo.internal.core.sql.map.IdSqlHandler;
+import io.jutil.jdo.internal.core.sql.map.InsertIdSqlHandler;
+import io.jutil.jdo.internal.core.sql.map.InsertVersionSqlHandler;
+import io.jutil.jdo.internal.core.sql.map.UpdateIdSqlHandler;
+import io.jutil.jdo.internal.core.sql.map.UpdateVersionSqlHandler;
+import io.jutil.jdo.internal.core.sql.map.VersionSqlHandler;
+import io.jutil.jdo.internal.core.sql.parameter.ParameterSqlHandler;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.IdUtil;
 import org.slf4j.Logger;
@@ -38,7 +56,7 @@ public class SqlHandlerFacade {
 		var updateVersion = new UpdateVersionSqlHandler();
 		var version = new VersionSqlHandler();
 
-		var param = new ParamSqlHandler();
+		var param = new ParameterSqlHandler();
 
 		this.addHandler(SqlType.INSERT, insertId, column, insertVersion, new InsertSqlHandler(), param);
 		this.addHandler(SqlType.UPDATE, updateId, column, updateVersion, new UpdateSqlHandler(), param);
