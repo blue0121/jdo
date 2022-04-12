@@ -184,7 +184,8 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(id, "Id");
 
 		var response = sqlHandlerFacade.handle(SqlType.GET_ID, clazz, List.of(id));
-		List<T> list = connectionFactory.query(clazz, response.getSql(), response.toParamList());
+		var sql = dialect.lock(dialect.page(response.getSql(), 0, 1), type);
+		List<T> list = connectionFactory.query(clazz, sql, response.toParamList());
 		if (list.isEmpty()) {
 			return null;
 		}
