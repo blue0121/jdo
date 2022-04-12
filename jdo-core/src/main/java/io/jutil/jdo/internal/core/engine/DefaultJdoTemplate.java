@@ -166,20 +166,26 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public int deleteId(Class<?> clazz, Object id) {
-		var config = configCache.loadEntityConfig(clazz);
-		IdUtil.checkSingleId(config);
-		var sqlItem = config.getSqlConfig().getDeleteById();
-		var sql = sqlItem.getSql();
-		return connectionFactory.execute(sql, List.of(id));
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notNull(id, "Id");
+
+		var response = sqlHandlerFacade.handle(SqlType.DELETE, clazz, List.of(id));
+		var sql = response.getSql();
+		var paramList = response.toParamList();
+
+		return connectionFactory.execute(sql, paramList);
 	}
 
 	@Override
 	public <K, T> int deleteIdList(Class<T> clazz, List<K> idList) {
-		var config = configCache.loadEntityConfig(clazz);
-		var id = IdUtil.checkSingleId(config);
-		var sqlItem = config.getSqlConfig().getDeleteByIdList();
-		var sql = String.format(sqlItem.getSql(), StringUtil.repeat("?", idList.size(), ","));
-		return connectionFactory.execute(sql, idList);
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notEmpty(idList, "Id列表");
+
+		var response = sqlHandlerFacade.handle(SqlType.DELETE, clazz, idList);
+		var sql = response.getSql();
+		var paramList = response.toParamList();
+
+		return connectionFactory.execute(sql, paramList);
 	}
 
 	@Override

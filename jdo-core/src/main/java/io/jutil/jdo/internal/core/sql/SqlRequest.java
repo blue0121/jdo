@@ -61,4 +61,13 @@ public class SqlRequest {
 		return request;
 	}
 
+	public static SqlRequest create(Class<?> clazz, List<?> args, EntityConfig config) {
+		var request = new SqlRequest();
+		request.args = args;
+		request.clazz = clazz;
+		request.config = config;
+		request.dynamic = true;
+		return request;
+	}
+
 }

@@ -48,6 +48,7 @@ public class SqlHandlerFacade {
 		this.addHandler(SqlType.GET_FIELD, id, column, version, new GetFieldSqlHandler(), param);
 		this.addHandler(SqlType.EXIST, id, column, version, new ExistSqlHandler(), param);
 		this.addHandler(SqlType.DELETE_BY, id, column, version, new DeleteBySqlHandler(), param);
+		this.addHandler(SqlType.DELETE, new DeleteSqlHandler());
 	}
 
 	private void addHandler(SqlType type, SqlHandle...handlers) {
@@ -76,6 +77,12 @@ public class SqlHandlerFacade {
 	public SqlResponse handle(SqlType type, Object object, List<?> args) {
 		var config = configCache.loadEntityConfig(object.getClass());
 		var request = SqlRequest.create(object, args, config);
+		return this.handle(type, request);
+	}
+
+	public SqlResponse handle(SqlType type, Class<?> clazz, List<?> args) {
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(clazz, args, config);
 		return this.handle(type, request);
 	}
 
