@@ -184,7 +184,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(id, "Id");
 
 		var response = sqlHandlerFacade.handle(SqlType.GET_ID, clazz, List.of(id));
-		var sql = dialect.lock(dialect.page(response.getSql(), 0, 1), type);
+		var sql = dialect.lock(dialect.getOne(response.getSql()), type);
 		List<T> list = connectionFactory.query(clazz, sql, response.toParamList());
 		if (list.isEmpty()) {
 			return null;
@@ -297,20 +297,22 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> List<T> listField(Class<?> clazz, Class<T> target, String field, Map<String, ?> param) {
-		var config = configCache.loadEntityConfig(clazz);
-		var sqlItem = sqlHandlerFactory.handle(SqlType.GET_FIELD, config, field, param);
-		var sql = dialect.getOne(sqlItem.getSql());
-		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
-		return connectionFactory.query(target, sql, paramList);
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notNull(target, "目标类型");
+		AssertUtil.notEmpty(field, "字段");
+		AssertUtil.notEmpty(param, "Map");
+
+		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, clazz, field, param);
+		return connectionFactory.query(target, response.getSql(), response.toParamList());
 	}
 
 	@Override
 	public <T> List<T> listObject(Class<T> clazz, Map<String, ?> param) {
-		var config = configCache.loadEntityConfig(clazz);
-		var sqlItem = sqlHandlerFactory.handle(SqlType.GET, config, param);
-		var sql = dialect.getOne(sqlItem.getSql());
-		var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
-		return connectionFactory.query(clazz, sql, paramList);
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notEmpty(param, "Map");
+
+		var response = sqlHandlerFacade.handle(SqlType.GET, clazz, param);
+		return connectionFactory.query(clazz, response.getSql(), response.toParamList());
 	}
 
     @Override
