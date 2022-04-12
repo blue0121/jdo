@@ -19,7 +19,6 @@ import io.jutil.jdo.internal.core.sql.SqlType;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.IdUtil;
 import io.jutil.jdo.internal.core.util.ParamUtil;
-import io.jutil.jdo.internal.core.util.StringUtil;
 import io.jutil.jdo.internal.core.util.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +56,8 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int save(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "对象");
 		var response = sqlHandlerFacade.handle(SqlType.INSERT, object, dynamic);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
 		KeyHolder holder = new GenerateKeyHolder();
-		int count = connectionFactory.execute(sql, paramList, holder);
+		int count = connectionFactory.execute(response.getSql(), response.toParamList(), holder);
 		IdUtil.setId(holder, object, response.getConfig());
 		return count;
 	}
@@ -70,9 +67,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 		var response = sqlHandlerFacade.handle(SqlType.INSERT, clazz, param);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-		return connectionFactory.execute(sql, paramList);
+		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -97,11 +92,8 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int update(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "Object");
 		var response = sqlHandlerFacade.handle(SqlType.UPDATE, object, dynamic);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
 		var isForceVer = VersionUtil.isForce(response.getConfig());
-		int count = connectionFactory.execute(sql, paramList);
+		int count = connectionFactory.execute(response.getSql(), response.toParamList());
 		if (isForceVer && count <= 0) {
 			throw new VersionException(object.getClass());
 		}
@@ -115,11 +107,8 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(param, "Map");
 
 		var response = sqlHandlerFacade.handle(SqlType.UPDATE, clazz, id, param);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
 		var isForceVer = VersionUtil.isForce(response.getConfig());
-		int count = connectionFactory.execute(sql, paramList);
+		int count = connectionFactory.execute(response.getSql(), response.toParamList());
 		if (isForceVer && count <= 0) {
 			throw new VersionException(clazz);
 		}
@@ -159,9 +148,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(param, "Map");
 
 		var response = sqlHandlerFacade.handle(SqlType.INC, clazz, id, param);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-		return connectionFactory.execute(sql, paramList);
+		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -170,10 +157,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(id, "Id");
 
 		var response = sqlHandlerFacade.handle(SqlType.DELETE, clazz, List.of(id));
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
-		return connectionFactory.execute(sql, paramList);
+		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -182,10 +166,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(idList, "Id列表");
 
 		var response = sqlHandlerFacade.handle(SqlType.DELETE, clazz, idList);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
-		return connectionFactory.execute(sql, paramList);
+		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -194,19 +175,16 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(param, "Map");
 
 		var response = sqlHandlerFacade.handle(SqlType.DELETE_BY, clazz, param);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
-		return connectionFactory.execute(sql, paramList);
+		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
 	public <T> T get(Class<T> clazz, Object id, LockModeType type) {
-		var config = configCache.loadEntityConfig(clazz);
-		IdUtil.checkSingleId(config);
-		var sqlItem = config.getSqlConfig().getSelectById();
-		var sql = dialect.lock(dialect.page(sqlItem.getSql(), 0, 1), type);
-		List<T> list = connectionFactory.query(clazz, sql, List.of(id));
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notNull(id, "Id");
+
+		var response = sqlHandlerFacade.handle(SqlType.GET_ID, clazz, List.of(id));
+		List<T> list = connectionFactory.query(clazz, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -216,15 +194,16 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <K, T> Map<K, T> getList(Class<T> clazz, List<K> idList) {
-		var config = configCache.loadEntityConfig(clazz);
-		var id = IdUtil.checkSingleId(config);
-		var sqlItem = config.getSqlConfig().getSelectByIdList();
-		var sql = String.format(sqlItem.getSql(), StringUtil.repeat("?", idList.size(), ","));
-		List<T> list = connectionFactory.query(clazz, sql, idList);
+		AssertUtil.notNull(clazz, "类型");
+		AssertUtil.notEmpty(idList, "Id列表");
+
+		var response = sqlHandlerFacade.handle(SqlType.GET_ID, clazz, idList);
+		List<T> list = connectionFactory.query(clazz, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return Map.of();
 		}
 
+		var id = response.getConfig().getIdConfig();
 		Map<K, T> map = new HashMap<>();
 		var idField = id.getBeanField();
 		for (var o : list) {
@@ -241,10 +220,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(param, "Map");
 
 		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, clazz, field, param);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
-		List<T> list = connectionFactory.query(target, sql, paramList);
+		List<T> list = connectionFactory.query(target, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -257,10 +233,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(param, "Map");
 
 		var response = sqlHandlerFacade.handle(SqlType.GET, clazz, param);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
-		List<T> list = connectionFactory.query(clazz, sql, paramList);
+		List<T> list = connectionFactory.query(clazz, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -273,10 +246,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 		var nameList = Arrays.asList(names);
 		var response = sqlHandlerFacade.handle(SqlType.EXIST, object, nameList);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
-		var list = connectionFactory.query(Integer.class, sql, paramList);
+		var list = connectionFactory.query(Integer.class, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return false;
 		}
@@ -290,10 +260,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(param, "Map");
 
 		var response = sqlHandlerFacade.handle(SqlType.COUNT, clazz, param);
-		var sql = response.getSql();
-		var paramList = response.toParamList();
-
-		var list = connectionFactory.query(Integer.class, sql, paramList);
+		var list = connectionFactory.query(Integer.class, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			logger.warn("No result");
 			return -1;

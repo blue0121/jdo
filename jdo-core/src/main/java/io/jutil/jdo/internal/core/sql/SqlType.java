@@ -47,6 +47,11 @@ public enum SqlType {
 	GET,
 
 	/**
+	 * 动态 select ... where id SQL语句
+	 */
+	GET_ID,
+
+	/**
 	 * 动态 select count(*) SQL 语句
 	 */
 	COUNT,
