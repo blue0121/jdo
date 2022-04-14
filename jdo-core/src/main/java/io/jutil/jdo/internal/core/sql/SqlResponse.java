@@ -15,8 +15,10 @@ public class SqlResponse {
 	private final EntityConfig config;
 	private final Map<String, Object> paramMap = new HashMap<>();
 	private String sql;
+	private boolean isForceVersion;
 	private final List<String> nameList = new ArrayList<>();
 	private final List<Object> paramList = new ArrayList<>();
+	private final List<List<?>> batchParamList = new ArrayList<>();
 
 	public SqlResponse(EntityConfig config) {
 		this.config = config;
@@ -46,6 +48,14 @@ public class SqlResponse {
 		this.sql = sql;
 	}
 
+	public boolean isForceVersion() {
+		return isForceVersion;
+	}
+
+	public void setForceVersion(boolean forceVersion) {
+		isForceVersion = forceVersion;
+	}
+
 	public void addName(String name) {
 		nameList.add(name);
 	}
@@ -60,6 +70,14 @@ public class SqlResponse {
 
 	public List<Object> toParamList() {
 		return paramList;
+	}
+
+	public void addBatchParam(List<?> paramList) {
+		batchParamList.add(paramList);
+	}
+
+	public List<List<?>> toBatchParamList() {
+		return batchParamList;
 	}
 
 }

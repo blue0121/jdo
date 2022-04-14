@@ -52,16 +52,14 @@ public class DeleteSqlHandler extends AbstractSqlHandler implements SqlHandler {
 
 		var id = IdUtil.checkSingleId(config);
 		if (args.size() == 1) {
-			var where = id.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER;
-			var sql = String.format(SqlConst.DELETE_TPL, config.getEscapeTableName(), where);
-			response.setSql(sql);
+			var sqlItem = config.getSqlConfig().getDeleteById();
+			response.setSql(sqlItem.getSql());
 			response.addParam(args.get(0));
 			return;
 		}
 
-		var placeholder = StringUtil.repeat(SqlConst.PLACEHOLDER, args.size(), SqlConst.SEPARATOR);
-		var where = id.getEscapeColumnName() + String.format(SqlConst.IN_PLACEHOLDER, placeholder);
-		var sql = String.format(SqlConst.DELETE_TPL, config.getEscapeTableName(), where);
+		var sqlItem = config.getSqlConfig().getDeleteByIdList();
+		var sql = String.format(sqlItem.getSql(), StringUtil.repeat(SqlConst.PLACEHOLDER, args.size(), SqlConst.SEPARATOR));
 		response.setSql(sql);
 		for (var arg : args) {
 			response.addParam(arg);

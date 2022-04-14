@@ -123,7 +123,7 @@ public class ParameterBinderFacade {
 		return objectList;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	protected ParameterBinder getBinder(Class<?> clazz) {
 		var binder = binderMap.get(clazz);
 		if (binder != null) {

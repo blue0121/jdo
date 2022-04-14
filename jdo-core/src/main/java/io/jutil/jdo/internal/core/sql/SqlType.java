@@ -12,9 +12,19 @@ public enum SqlType {
 	INSERT,
 
 	/**
+	 * 批量 insert SQL 语句
+	 */
+	BATCH_INSERT,
+
+	/**
 	 * 动态 update SQL语句
 	 */
 	UPDATE,
+
+	/**
+	 * 批量 update SQL 语句
+	 */
+	BATCH_UPDATE,
 
 	/**
 	 * 动态 delete SQL 语句

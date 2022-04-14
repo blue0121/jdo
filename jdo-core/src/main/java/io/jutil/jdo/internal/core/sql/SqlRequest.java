@@ -70,4 +70,13 @@ public class SqlRequest {
 		return request;
 	}
 
+	public static SqlRequest createForBatch(List<?> args, EntityConfig config) {
+		var request = new SqlRequest();
+		request.args = args;
+		request.clazz = config.getClazz();
+		request.config = config;
+		request.dynamic = false;
+		return request;
+	}
+
 }

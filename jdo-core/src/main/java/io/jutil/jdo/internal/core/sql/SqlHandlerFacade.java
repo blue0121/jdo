@@ -3,6 +3,8 @@ package io.jutil.jdo.internal.core.sql;
 import io.jutil.jdo.internal.core.id.SnowflakeId;
 import io.jutil.jdo.internal.core.id.SnowflakeIdFactory;
 import io.jutil.jdo.internal.core.parser.ConfigCache;
+import io.jutil.jdo.internal.core.sql.generator.BatchInsertSqlHandler;
+import io.jutil.jdo.internal.core.sql.generator.BatchUpdateSqlHandler;
 import io.jutil.jdo.internal.core.sql.generator.CountSqlHandler;
 import io.jutil.jdo.internal.core.sql.generator.DeleteBySqlHandler;
 import io.jutil.jdo.internal.core.sql.generator.DeleteSqlHandler;
@@ -68,6 +70,8 @@ public class SqlHandlerFacade {
 		this.addHandler(SqlType.DELETE_BY, id, column, version, new DeleteBySqlHandler(), param);
 		this.addHandler(SqlType.DELETE, new DeleteSqlHandler());
 		this.addHandler(SqlType.GET_ID, new GetIdSqlHandler());
+		this.addHandler(SqlType.BATCH_INSERT, new BatchInsertSqlHandler(param, insertId, column, insertVersion));
+		this.addHandler(SqlType.BATCH_UPDATE, new BatchUpdateSqlHandler(param, updateId, column, updateVersion));
 	}
 
 	private void addHandler(SqlType type, SqlHandle...handlers) {
@@ -129,7 +133,7 @@ public class SqlHandlerFacade {
 		return this.handle(type, request);
 	}
 
-	private SqlResponse handle(SqlType type, SqlRequest request) {
+	public SqlResponse handle(SqlType type, SqlRequest request) {
 		var response = new SqlResponse(request.getConfig());
 		var handlers = this.getHandlers(type);
 		for (var handler : handlers) {

@@ -10,20 +10,17 @@ import io.jutil.jdo.internal.core.dialect.Dialect;
 import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.GenerateKeyHolder;
 import io.jutil.jdo.internal.core.executor.KeyHolder;
-import io.jutil.jdo.internal.core.executor.mapper.MapHandlerFacade;
 import io.jutil.jdo.internal.core.parser.ConfigCache;
 import io.jutil.jdo.internal.core.parser.ParserFactory;
 import io.jutil.jdo.internal.core.sql.SqlHandlerFacade;
-import io.jutil.jdo.internal.core.sql.SqlHandlerFactory;
+import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlType;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.IdUtil;
-import io.jutil.jdo.internal.core.util.ParamUtil;
 import io.jutil.jdo.internal.core.util.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -40,16 +37,12 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	private final ConfigCache configCache;
 	private final SqlHandlerFacade sqlHandlerFacade;
 	private final ConnectionFactory connectionFactory;
-	private final SqlHandlerFactory sqlHandlerFactory;
-	private final MapHandlerFacade mapHandlerFacade;
 
 	public DefaultJdoTemplate(ParserFactory parserFactory, ConnectionFactory connectionFactory) {
 		this.dialect = parserFactory.getDialect();
 		this.configCache = parserFactory.getConfigCache();
 		this.sqlHandlerFacade = new SqlHandlerFacade(configCache);
 		this.connectionFactory = connectionFactory;
-		this.sqlHandlerFactory = new SqlHandlerFactory();
-		this.mapHandlerFacade = new MapHandlerFacade();
 	}
 
 	@Override
@@ -73,17 +66,13 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int[] saveList(List<?> objectList) {
 		AssertUtil.notEmpty(objectList, "ObjectList");
+
 		var config = configCache.loadEntityConfig(objectList.get(0).getClass());
-		var sqlItem = config.getSqlConfig().getInsert();
-		var sql = sqlItem.getSql();
-		List<List<?>> batchList = new ArrayList<>();
-		for (var object : objectList) {
-			var param = mapHandlerFacade.handleInsert(object, config, false);
-			var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
-			batchList.add(paramList);
-		}
+		var request = SqlRequest.createForBatch(objectList, config);
+		var response = sqlHandlerFacade.handle(SqlType.BATCH_INSERT, request);
+
 		KeyHolder holder = new GenerateKeyHolder();
-		int[] count = connectionFactory.executeBatch(sql, batchList, holder);
+		int[] count = connectionFactory.executeBatch(response.getSql(), response.toBatchParamList(), holder);
 		IdUtil.setId(holder, objectList, config);
 		return count;
 	}
@@ -118,20 +107,14 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int[] updateList(List<?> objectList) {
 		AssertUtil.notEmpty(objectList, "ObjectList");
+
 		var clazz = objectList.get(0).getClass();
 		var config = configCache.loadEntityConfig(clazz);
-		var sqlConfig = config.getSqlConfig();
-		var isForceVer = VersionUtil.isForce(config);
-		var sqlItem = isForceVer ? sqlConfig.getUpdateByIdAndVersion() : sqlConfig.getUpdateById();
-		var sql = sqlItem.getSql();
-		List<List<?>> batchList = new ArrayList<>();
-		for (var object : objectList) {
-			var param = mapHandlerFacade.handleUpdate(object, config, false);
-			var paramList = ParamUtil.toParamList(param, sqlItem.getParamNameList(), false);
-			batchList.add(paramList);
-		}
-		int[] count = connectionFactory.executeBatch(sql, batchList);
-		if (isForceVer) {
+		var request = SqlRequest.createForBatch(objectList, config);
+		var response = sqlHandlerFacade.handle(SqlType.BATCH_UPDATE, request);
+
+		int[] count = connectionFactory.executeBatch(response.getSql(), response.toBatchParamList());
+		if (response.isForceVersion()) {
 			for (int c : count) {
 				if (c <= 0) {
 					throw new VersionException(clazz);
