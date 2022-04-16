@@ -94,9 +94,11 @@
 				<configuration>
 					<argLine>
 						--add-opens jdo.core/test.jutil.jdo.executor.parameter=ALL-UNNAMED
+						${argLine}
 					</argLine>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 
