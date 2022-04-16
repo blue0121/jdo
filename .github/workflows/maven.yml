@@ -29,5 +29,4 @@ jobs:
         -Dsonar.projectKey=blue0121_jdo
         -Dsonar.organization=blue0121
         -Dsonar.host.url=https://sonarcloud.io
-        -Dsonar.coverage.jacoco.xmlReportPaths=${project.build.directory}/site/jacoco/jacoco.xml
         -Dsonar.login=$SONAR_TOKEN
