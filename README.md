@@ -1,2 +1,2 @@
-# jdo [![Java CI with Maven](https://github.com/blue0121/jdo/actions/workflows/maven.yml/badge.svg)](https://github.com/blue0121/jdo/actions/workflows/maven.yml)
+# jdo [![Java CI with Maven](https://github.com/blue0121/jdo/actions/workflows/maven.yml/badge.svg)](https://github.com/blue0121/jdo/actions/workflows/maven.yml) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=blue0121_jdo&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=blue0121_jdo) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=blue0121_jdo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=blue0121_jdo)
 全称Java Database Object，简化Java访问数据库方式
