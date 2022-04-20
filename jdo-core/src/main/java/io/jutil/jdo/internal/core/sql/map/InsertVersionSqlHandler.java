@@ -19,6 +19,7 @@ public class InsertVersionSqlHandler extends AbstractSqlHandler {
 			return;
 		}
 
+		response.setForceVersion(version.isForce());
 		var map = request.getMap();
 		Object value = null;
 		if (map == null) {

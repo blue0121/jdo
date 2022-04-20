@@ -24,14 +24,11 @@ import io.jutil.jdo.internal.core.sql.map.UpdateVersionSqlHandler;
 import io.jutil.jdo.internal.core.sql.map.VersionSqlHandler;
 import io.jutil.jdo.internal.core.sql.parameter.ParameterSqlHandler;
 import io.jutil.jdo.internal.core.util.AssertUtil;
-import io.jutil.jdo.internal.core.util.IdUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Jin Zheng
@@ -89,48 +86,6 @@ public class SqlHandlerFacade {
 			logger.debug("找到 [{}] 处理器: {}", type.name(), handlers.getClass().getSimpleName());
 		}
 		return handlers;
-	}
-
-	public SqlResponse handle(SqlType type, Object object, boolean dynamic) {
-		var config = configCache.loadEntityConfig(object.getClass());
-		var request = SqlRequest.create(object, config, dynamic);
-		return this.handle(type, request);
-	}
-
-	public SqlResponse handle(SqlType type, Object object, List<?> args) {
-		var config = configCache.loadEntityConfig(object.getClass());
-		var request = SqlRequest.create(object, args, config);
-		return this.handle(type, request);
-	}
-
-	public SqlResponse handle(SqlType type, Class<?> clazz, List<?> args) {
-		var config = configCache.loadEntityConfig(clazz);
-		var request = SqlRequest.create(clazz, args, config);
-		return this.handle(type, request);
-	}
-
-	public SqlResponse handle(SqlType type, Class<?> clazz, Map<String, ?> map) {
-		var config = configCache.loadEntityConfig(clazz);
-		var request = SqlRequest.create(map, config);
-		return this.handle(type, request);
-	}
-
-	public SqlResponse handle(SqlType type, Class<?> clazz, String field, Map<String, ?> map) {
-		var config = configCache.loadEntityConfig(clazz);
-		var request = SqlRequest.create(field, map, config);
-		return this.handle(type, request);
-	}
-
-	public SqlResponse handle(SqlType type, Class<?> clazz, Object id, Map<String, ?> map) {
-		var config = configCache.loadEntityConfig(clazz);
-		var idConfig = IdUtil.checkSingleId(config);
-		Map<String, Object> param = new HashMap<>();
-		for (var entry : map.entrySet()) {
-			param.put(entry.getKey(), entry.getValue());
-		}
-		param.put(idConfig.getFieldName(), id);
-		var request = SqlRequest.create(param, config);
-		return this.handle(type, request);
 	}
 
 	public SqlResponse handle(SqlType type, SqlRequest request) {

@@ -17,7 +17,7 @@ import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlType;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.IdUtil;
-import io.jutil.jdo.internal.core.util.VersionUtil;
+import io.jutil.jdo.internal.core.util.MapUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,11 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int save(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "对象");
-		var response = sqlHandlerFacade.handle(SqlType.INSERT, object, dynamic);
+
+		var config = configCache.loadEntityConfig(object.getClass());
+		var request = SqlRequest.create(object, config, dynamic);
+		var response = sqlHandlerFacade.handle(SqlType.INSERT, request);
+
 		KeyHolder holder = new GenerateKeyHolder();
 		int count = connectionFactory.execute(response.getSql(), response.toParamList(), holder);
 		IdUtil.setId(holder, object, response.getConfig());
@@ -59,7 +63,11 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int saveObject(Class<?> clazz, Map<String, ?> param) {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
-		var response = sqlHandlerFacade.handle(SqlType.INSERT, clazz, param);
+
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(param, config);
+		var response = sqlHandlerFacade.handle(SqlType.INSERT, request);
+
 		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
@@ -80,10 +88,13 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	@Override
 	public int update(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "Object");
-		var response = sqlHandlerFacade.handle(SqlType.UPDATE, object, dynamic);
-		var isForceVer = VersionUtil.isForce(response.getConfig());
+
+		var config = configCache.loadEntityConfig(object.getClass());
+		var request = SqlRequest.create(object, config, dynamic);
+		var response = sqlHandlerFacade.handle(SqlType.UPDATE, request);
+
 		int count = connectionFactory.execute(response.getSql(), response.toParamList());
-		if (isForceVer && count <= 0) {
+		if (response.isForceVersion() && count <= 0) {
 			throw new VersionException(object.getClass());
 		}
 		return count;
@@ -95,10 +106,14 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(id, "主键");
 		AssertUtil.notEmpty(param, "Map");
 
-		var response = sqlHandlerFacade.handle(SqlType.UPDATE, clazz, id, param);
-		var isForceVer = VersionUtil.isForce(response.getConfig());
+		var config = configCache.loadEntityConfig(clazz);
+		var idConfig = IdUtil.checkSingleId(config);
+		var map = MapUtil.merge(param, idConfig.getFieldName(), id);
+		var request = SqlRequest.create(map, config);
+		var response = sqlHandlerFacade.handle(SqlType.UPDATE, request);
+
 		int count = connectionFactory.execute(response.getSql(), response.toParamList());
-		if (isForceVer && count <= 0) {
+		if (response.isForceVersion() && count <= 0) {
 			throw new VersionException(clazz);
 		}
 		return count;
@@ -130,7 +145,12 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(id, "主键");
 		AssertUtil.notEmpty(param, "Map");
 
-		var response = sqlHandlerFacade.handle(SqlType.INC, clazz, id, param);
+		var config = configCache.loadEntityConfig(clazz);
+		var idConfig = IdUtil.checkSingleId(config);
+		var map = MapUtil.merge(param, idConfig.getFieldName(), id);
+		var request = SqlRequest.create(map, config);
+		var response = sqlHandlerFacade.handle(SqlType.INC, request);
+
 		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
@@ -139,7 +159,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notNull(id, "Id");
 
-		var response = sqlHandlerFacade.handle(SqlType.DELETE, clazz, List.of(id));
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(clazz, List.of(id), config);
+		var response = sqlHandlerFacade.handle(SqlType.DELETE, request);
+
 		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
@@ -148,7 +171,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(idList, "Id列表");
 
-		var response = sqlHandlerFacade.handle(SqlType.DELETE, clazz, idList);
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(clazz, idList, config);
+		var response = sqlHandlerFacade.handle(SqlType.DELETE, request);
+
 		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
@@ -157,7 +183,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var response = sqlHandlerFacade.handle(SqlType.DELETE_BY, clazz, param);
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(param, config);
+		var response = sqlHandlerFacade.handle(SqlType.DELETE_BY, request);
+
 		return connectionFactory.execute(response.getSql(), response.toParamList());
 	}
 
@@ -166,7 +195,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notNull(id, "Id");
 
-		var response = sqlHandlerFacade.handle(SqlType.GET_ID, clazz, List.of(id));
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(clazz, List.of(id), config);
+		var response = sqlHandlerFacade.handle(SqlType.GET_ID, request);
+
 		var sql = dialect.lock(dialect.getOne(response.getSql()), type);
 		List<T> list = connectionFactory.query(clazz, sql, response.toParamList());
 		if (list.isEmpty()) {
@@ -181,7 +213,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(idList, "Id列表");
 
-		var response = sqlHandlerFacade.handle(SqlType.GET_ID, clazz, idList);
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(clazz, idList, config);
+		var response = sqlHandlerFacade.handle(SqlType.GET_ID, request);
+
 		List<T> list = connectionFactory.query(clazz, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return Map.of();
@@ -203,7 +238,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(field, "字段");
 		AssertUtil.notEmpty(param, "Map");
 
-		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, clazz, field, param);
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(field, param, config);
+		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, request);
+
 		List<T> list = connectionFactory.query(target, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return null;
@@ -216,7 +254,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var response = sqlHandlerFacade.handle(SqlType.GET, clazz, param);
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(param, config);
+		var response = sqlHandlerFacade.handle(SqlType.GET, request);
+
 		List<T> list = connectionFactory.query(clazz, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return null;
@@ -228,8 +269,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public boolean exist(Object object, String... names) {
 		AssertUtil.notNull(object, "Object");
 
-		var nameList = Arrays.asList(names);
-		var response = sqlHandlerFacade.handle(SqlType.EXIST, object, nameList);
+		var config = configCache.loadEntityConfig(object.getClass());
+		var request = SqlRequest.create(object, Arrays.asList(names), config);
+		var response = sqlHandlerFacade.handle(SqlType.EXIST, request);
+
 		var list = connectionFactory.query(Integer.class, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return false;
@@ -243,7 +286,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var response = sqlHandlerFacade.handle(SqlType.COUNT, clazz, param);
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(param, config);
+		var response = sqlHandlerFacade.handle(SqlType.COUNT, request);
+
 		var list = connectionFactory.query(Integer.class, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			logger.warn("No result");
@@ -285,7 +331,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(field, "字段");
 		AssertUtil.notEmpty(param, "Map");
 
-		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, clazz, field, param);
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(field, param, config);
+		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, request);
+
 		return connectionFactory.query(target, response.getSql(), response.toParamList());
 	}
 
@@ -294,7 +343,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var response = sqlHandlerFacade.handle(SqlType.GET, clazz, param);
+		var config = configCache.loadEntityConfig(clazz);
+		var request = SqlRequest.create(param, config);
+		var response = sqlHandlerFacade.handle(SqlType.GET, request);
+
 		return connectionFactory.query(clazz, response.getSql(), response.toParamList());
 	}
 

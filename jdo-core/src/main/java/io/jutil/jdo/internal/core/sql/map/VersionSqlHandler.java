@@ -19,6 +19,7 @@ public class VersionSqlHandler extends AbstractSqlHandler {
 			return;
 		}
 
+		response.setForceVersion(version.isForce());
 		var map = request.getMap();
 		if (map == null) {
 			var beanField = version.getBeanField();
