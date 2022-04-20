@@ -14,7 +14,8 @@ public class ColumnSqlHandler extends AbstractSqlHandler {
 
     @Override
     public void handle(SqlRequest request, SqlResponse response) {
-        var columnMap = request.getConfig().getColumnMap();
+        var config = request.getConfig();
+        var columnMap = config.getColumnMap();
         var map = request.getMap();
         if (map == null) {
             for (var entry : columnMap.entrySet()) {
@@ -22,7 +23,9 @@ public class ColumnSqlHandler extends AbstractSqlHandler {
             }
         } else {
             for (var entry : map.entrySet()) {
-                response.putParam(entry.getKey(), entry.getValue());
+                if (columnMap.containsKey(entry.getKey())) {
+                    response.putParam(entry.getKey(), entry.getValue());
+                }
             }
         }
     }

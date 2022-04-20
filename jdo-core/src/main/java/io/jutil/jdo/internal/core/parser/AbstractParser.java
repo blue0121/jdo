@@ -9,6 +9,7 @@ import io.jutil.jdo.internal.core.parser.model.DefaultFieldConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,11 +44,13 @@ public abstract class AbstractParser implements Parser {
 
 
     protected String getColumnName(BeanField field) {
-        if (field.getGetterMethod() == null) {
-            throw new JdbcException("找不到Getter方法: " + field.getField().getName());
-        }
-        if (field.getSetterMethod() == null) {
-            throw new JdbcException("找不到Setter方法: " + field.getField().getName());
+        if (!Modifier.isPublic(field.getField().getModifiers())) {
+            if (field.getGetterMethod() == null) {
+                throw new JdbcException("找不到Getter方法: " + field.getField().getName());
+            }
+            if (field.getSetterMethod() == null) {
+                throw new JdbcException("找不到Setter方法: " + field.getField().getName());
+            }
         }
 
         Column annotation = field.getDeclaredAnnotation(Column.class);

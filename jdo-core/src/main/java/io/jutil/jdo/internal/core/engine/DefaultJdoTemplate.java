@@ -41,7 +41,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public DefaultJdoTemplate(ParserFactory parserFactory, ConnectionFactory connectionFactory) {
 		this.dialect = parserFactory.getDialect();
 		this.configCache = parserFactory.getConfigCache();
-		this.sqlHandlerFacade = new SqlHandlerFacade(configCache);
+		this.sqlHandlerFacade = new SqlHandlerFacade();
 		this.connectionFactory = connectionFactory;
 	}
 

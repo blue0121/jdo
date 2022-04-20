@@ -27,7 +27,7 @@ public abstract class SqlHandlerTest {
 		this.parseFactory = new ParserFactory(dialect, true);
 		this.configCache = parseFactory.getConfigCache();
 		this.factory = new SqlHandlerFactory();
-		this.facade = new SqlHandlerFacade(configCache);
+		this.facade = new SqlHandlerFacade();
 
 		parseFactory.parse(GroupEntity.class);
 		parseFactory.parse(GroupMapper.class);

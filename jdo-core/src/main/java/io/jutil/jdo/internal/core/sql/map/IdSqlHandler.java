@@ -23,7 +23,9 @@ public class IdSqlHandler extends AbstractSqlHandler {
 			}
 		} else {
 			for (var entry : map.entrySet()) {
-				response.putParam(entry.getKey(), entry.getValue());
+				if (idMap.containsKey(entry.getKey())) {
+					response.putParam(entry.getKey(), entry.getValue());
+				}
 			}
 		}
 	}

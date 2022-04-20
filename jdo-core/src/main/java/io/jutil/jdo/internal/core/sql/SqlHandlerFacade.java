@@ -2,7 +2,6 @@ package io.jutil.jdo.internal.core.sql;
 
 import io.jutil.jdo.internal.core.id.SnowflakeId;
 import io.jutil.jdo.internal.core.id.SnowflakeIdFactory;
-import io.jutil.jdo.internal.core.parser.ConfigCache;
 import io.jutil.jdo.internal.core.sql.generator.BatchInsertSqlHandler;
 import io.jutil.jdo.internal.core.sql.generator.BatchUpdateSqlHandler;
 import io.jutil.jdo.internal.core.sql.generator.CountSqlHandler;
@@ -37,12 +36,10 @@ import java.util.List;
 public class SqlHandlerFacade {
     private static Logger logger = LoggerFactory.getLogger(SqlHandlerFacade.class);
 
-	private final ConfigCache configCache;
 	private final SnowflakeId snowflakeId = SnowflakeIdFactory.getSingleSnowflakeId();
 	private final EnumMap<SqlType, List<SqlHandle>> handlerMap = new EnumMap<>(SqlType.class);
 
-	public SqlHandlerFacade(ConfigCache configCache) {
-		this.configCache = configCache;
+	public SqlHandlerFacade() {
 		this.init();
 	}
 

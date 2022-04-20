@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.sql.map;
 
+import io.jutil.jdo.core.exception.EntityFieldException;
 import io.jutil.jdo.core.parser.IdConfig;
 import io.jutil.jdo.core.parser.IdType;
 import io.jutil.jdo.internal.core.id.IdGenerator;
@@ -7,6 +8,7 @@ import io.jutil.jdo.internal.core.id.SnowflakeId;
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
+import io.jutil.jdo.internal.core.util.AssertUtil;
 
 /**
  * @author Jin Zheng
@@ -16,6 +18,7 @@ public class InsertIdSqlHandler extends AbstractSqlHandler {
     private final SnowflakeId snowflakeId;
 
 	public InsertIdSqlHandler(SnowflakeId snowflakeId) {
+        AssertUtil.notNull(snowflakeId, "SnowflakeId");
         this.snowflakeId = snowflakeId;
 	}
 
@@ -59,11 +62,17 @@ public class InsertIdSqlHandler extends AbstractSqlHandler {
 
     private void handleAssigned(SqlRequest request, SqlResponse response, IdConfig id) {
         var map = request.getMap();
+        Object value = null;
         if (map == null) {
-            this.putParam(request, response, id);
+            var beanField = id.getBeanField();
+            value = beanField.getFieldValue(request.getTarget());
         } else {
-            var value = map.get(id.getFieldName());
-            response.putParam(id.getFieldName(), value);
+            value = map.get(id.getFieldName());
         }
+        if (this.isEmpty(value)) {
+            throw new EntityFieldException(id.getFieldName(), "不能为空");
+        }
+
+        response.putParam(id.getFieldName(), value);
     }
 }
