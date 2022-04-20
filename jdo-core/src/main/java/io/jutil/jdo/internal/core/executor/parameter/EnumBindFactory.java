@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import io.jutil.jdo.internal.core.util.EnumUtil;
+import lombok.NoArgsConstructor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,10 +12,9 @@ import java.sql.SQLException;
  * @author Jin Zheng
  * @since 2022-03-13
  */
+@NoArgsConstructor
 public class EnumBindFactory implements ParameterBindFactory<Enum<?>> {
 
-	public EnumBindFactory() {
-	}
 
 	@Override
 	public ParameterBinder<Enum<?>> getBinder(Class<Enum<?>> clazz) {

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
  * @author Jin Zheng
  * @since 2022-03-02
  */
-public class BaseTest {
+public abstract class BaseTest {
 	protected static Jdo jdo;
     protected static JdoTemplate jdoTemplate;
 

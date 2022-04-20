@@ -5,6 +5,7 @@ import io.jutil.jdo.internal.core.sql.SqlConst;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.util.StringUtil;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +14,9 @@ import java.util.List;
  * @author Jin Zheng
  * @since 2022-02-18
  */
+@NoArgsConstructor
 public class DeleteBySqlHandler extends AbstractSqlHandler {
-	public DeleteBySqlHandler() {
-	}
+
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {

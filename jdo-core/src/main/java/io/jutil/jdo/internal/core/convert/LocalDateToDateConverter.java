@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.convert;
 
 import io.jutil.jdo.internal.core.util.DateUtil;
+import lombok.NoArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.LocalDate;
@@ -13,9 +14,8 @@ import java.util.Date;
  * @author Jin Zheng
  * @since 2022-02-17
  */
+@NoArgsConstructor
 public class LocalDateToDateConverter implements Converter<TemporalAccessor, Date> {
-	public LocalDateToDateConverter() {
-	}
 
 	@Override
 	public Date convert(TemporalAccessor source) {

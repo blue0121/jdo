@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.convert;
 
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
@@ -14,11 +15,10 @@ import java.util.Date;
  * @author zhengj
  * @since 2022-02-17
  */
+@NoArgsConstructor
 public class StringToDateConverter implements Converter<String, Date>, DateTimeConverter {
 	private static Logger logger = LoggerFactory.getLogger(StringToDateConverter.class);
 
-	public StringToDateConverter() {
-	}
 
 	@Override
 	public Date convert(String text) {

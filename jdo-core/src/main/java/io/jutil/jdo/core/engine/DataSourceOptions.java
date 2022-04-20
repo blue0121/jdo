@@ -2,12 +2,14 @@ package io.jutil.jdo.core.engine;
 
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Jin Zheng
  * @since 2022-02-16
  */
 @Getter
+@NoArgsConstructor
 public class DataSourceOptions {
 	private String url;
 	private String username;
@@ -31,9 +33,6 @@ public class DataSourceOptions {
 	private boolean asyncInit = true;
 
 	private String filters = "stat";
-
-	public DataSourceOptions() {
-	}
 
 	/**
 	 * 检查验证配置

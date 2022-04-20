@@ -29,7 +29,7 @@ public class ScanFileUtil {
 	 * com.blue.jdbc => com/blue/jdbc
 	 */
 	public static String dotToSplash(String name) {
-		return name.replaceAll("\\.", "/");
+		return name.replace(".", "/");
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class ScanFileUtil {
 	 * javax/servlet/http/Cookie.class => javax.servlet.http.Cookie
 	 */
 	public static String fileToClass(String name) {
-		name = name.replaceAll("/", ".");
+		name = name.replace("/", ".");
 		int pos = name.lastIndexOf('.');
 		if (pos == -1) {
 			return name;

@@ -3,14 +3,15 @@ package io.jutil.jdo.internal.core.sql.map;
 import io.jutil.jdo.core.exception.EntityFieldException;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Jin Zheng
  * @since 2022-03-23
  */
+@NoArgsConstructor
 public class UpdateIdSqlHandler extends IdSqlHandler {
-	public UpdateIdSqlHandler() {
-	}
+
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {

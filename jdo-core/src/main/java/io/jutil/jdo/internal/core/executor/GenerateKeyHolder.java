@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.executor;
 
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,13 +13,12 @@ import java.util.List;
  * @author Jin Zheng
  * @since 2022-02-21
  */
+@NoArgsConstructor
 public class GenerateKeyHolder implements KeyHolder {
 	private static Logger logger = LoggerFactory.getLogger(GenerateKeyHolder.class);
 
 	private List<Number> keyList;
 
-	public GenerateKeyHolder() {
-	}
 
 	@Override
 	public Number getKey() {

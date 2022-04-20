@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.convert;
 
+import lombok.NoArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 
 import java.sql.Timestamp;
@@ -10,9 +11,9 @@ import java.sql.Timestamp;
  * @author zhengj
  * @since 2022-02-17
  */
+@NoArgsConstructor
 public class StringToSqlTimestampConverter implements Converter<String, Timestamp>, DateTimeConverter {
-	public StringToSqlTimestampConverter() {
-	}
+
 
 	@Override
 	public Timestamp convert(String text) {

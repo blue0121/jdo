@@ -8,6 +8,8 @@ import java.util.Map;
  * @since 2022-02-16
  */
 public class AssertUtil {
+	private static final String STR_IS_REQUIRED = " 不能为空";
+
 	private AssertUtil() {
 	}
 
@@ -17,7 +19,7 @@ public class AssertUtil {
 		}
 
 		if (object == null) {
-			throw new NullPointerException(name + " 不能为空");
+			throw new NullPointerException(name + STR_IS_REQUIRED);
 		}
 	}
 
@@ -47,7 +49,7 @@ public class AssertUtil {
 		}
 
 		if (str == null || str.isEmpty()) {
-			throw new NullPointerException(name + " 不能为空");
+			throw new NullPointerException(name + STR_IS_REQUIRED);
 		}
 	}
 
@@ -57,7 +59,7 @@ public class AssertUtil {
 		}
 
 		if (list == null || list.isEmpty()) {
-			throw new NullPointerException(name + " 不能为空");
+			throw new NullPointerException(name + STR_IS_REQUIRED);
 		}
 	}
 
@@ -67,7 +69,7 @@ public class AssertUtil {
 		}
 
 		if (map == null || map.isEmpty()) {
-			throw new NullPointerException(name + " 不能为空");
+			throw new NullPointerException(name + STR_IS_REQUIRED);
 		}
 	}
 
@@ -77,7 +79,7 @@ public class AssertUtil {
 		}
 
 		if (array == null || array.length == 0) {
-			throw new NullPointerException(name + " 不能为空");
+			throw new NullPointerException(name + STR_IS_REQUIRED);
 		}
 	}
 
@@ -87,7 +89,7 @@ public class AssertUtil {
 		}
 
 		if (array == null || array.length == 0) {
-			throw new NullPointerException(name + " 不能为空");
+			throw new NullPointerException(name + STR_IS_REQUIRED);
 		}
 	}
 

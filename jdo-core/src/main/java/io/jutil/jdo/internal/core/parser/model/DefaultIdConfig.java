@@ -4,6 +4,7 @@ import io.jutil.jdo.core.annotation.GeneratorType;
 import io.jutil.jdo.core.parser.IdConfig;
 import io.jutil.jdo.core.parser.IdType;
 import io.jutil.jdo.internal.core.util.AssertUtil;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -11,12 +12,11 @@ import lombok.Setter;
  * @since 2022-02-18
  */
 @Setter
+@NoArgsConstructor
 public class DefaultIdConfig extends DefaultFieldConfig implements IdConfig {
 	private IdType idType;
 	private GeneratorType generatorType;
 
-	public DefaultIdConfig() {
-	}
 
 	@Override
 	public void check() {

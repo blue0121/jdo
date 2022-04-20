@@ -12,9 +12,9 @@ import java.net.UnknownHostException;
  * @since 2022-02-18
  */
 public final class UUID {
-	private static final String ip;
+	private static final String IP;
 	private static short counter = (short) 0;
-	private static final int jvm = (int) (System.currentTimeMillis() >>> 8);
+	private static final int JVM = (int) (System.currentTimeMillis() >>> 8);
 
 	static {
 		String ipadd = "00000000";
@@ -23,7 +23,7 @@ public final class UUID {
 		}
 		catch (UnknownHostException e) {
 		}
-		ip = ipadd;
+		IP = ipadd;
 	}
 
 	private UUID() {
@@ -36,8 +36,8 @@ public final class UUID {
 	 */
 	public static String generator() {
 		StringBuilder sb = new StringBuilder(32);
-		sb.append(ip);
-		sb.append(NumberUtil.toHexString(jvm));
+		sb.append(IP);
+		sb.append(NumberUtil.toHexString(JVM));
 		sb.append(NumberUtil.toHexString((short) (System.currentTimeMillis() >>> 32)));
 		sb.append(NumberUtil.toHexString((int) (System.currentTimeMillis())));
 		sb.append(NumberUtil.toHexString(getCounter()));

@@ -4,6 +4,7 @@ package io.jutil.jdo.internal.core.parser.model;
 import io.jutil.jdo.core.parser.SqlConfig;
 import io.jutil.jdo.core.parser.SqlItem;
 import io.jutil.jdo.internal.core.util.AssertUtil;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -11,6 +12,7 @@ import lombok.Setter;
  * @since 2022-02-18
  */
 @Setter
+@NoArgsConstructor
 public class DefaultSqlConfig implements SqlConfig {
 	private SqlItem selectById;
 	private SqlItem selectByIdList;
@@ -20,8 +22,6 @@ public class DefaultSqlConfig implements SqlConfig {
 	private SqlItem deleteById;
 	private SqlItem deleteByIdList;
 
-	public DefaultSqlConfig() {
-	}
 
 	@Override
 	public void check() {

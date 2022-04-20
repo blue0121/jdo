@@ -7,7 +7,7 @@ package io.jutil.jdo.internal.core.id;
  * @since 2022-02-18
  */
 public class SnowflakeIdFactory {
-	private static SnowflakeId singleSnowflakeId;
+	private volatile static SnowflakeId singleSnowflakeId;
 
 	private SnowflakeIdFactory() {
 	}

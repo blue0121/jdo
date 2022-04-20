@@ -8,6 +8,7 @@ import io.jutil.jdo.internal.core.sql.SqlParam;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.util.StringUtil;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,9 @@ import java.util.List;
  * @author Jin Zheng
  * @since 2022-02-18
  */
+@NoArgsConstructor
 public class InsertSqlHandler extends AbstractSqlHandler implements SqlHandler {
-	public InsertSqlHandler() {
-	}
+
 
 	@Override
 	public SqlItem sql(SqlParam param) {

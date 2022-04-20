@@ -4,6 +4,7 @@ import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.core.parser.ConfigType;
 import io.jutil.jdo.core.parser.EntityConfig;
 import io.jutil.jdo.core.parser.MapperConfig;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +13,10 @@ import java.util.Map;
  * @author Jin Zheng
  * @since 2022-03-11
  */
+@NoArgsConstructor
 public class ConfigCache {
 	private final Map<Class<?>, MapperConfig> configMap = new HashMap<>();
 
-	public ConfigCache() {
-	}
 
 	public void put(MapperConfig config) {
 		configMap.put(config.getClazz(), config);

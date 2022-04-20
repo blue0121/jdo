@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.convert;
 
 
+import lombok.NoArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 
 import java.sql.Time;
@@ -11,9 +12,9 @@ import java.sql.Time;
  * @author zhengj
  * @since 2022-02-17
  */
+@NoArgsConstructor
 public class StringToSqlTimeConverter implements Converter<String, Time>, DateTimeConverter {
-	public StringToSqlTimeConverter() {
-	}
+
 
 	@Override
 	public Time convert(String text) {

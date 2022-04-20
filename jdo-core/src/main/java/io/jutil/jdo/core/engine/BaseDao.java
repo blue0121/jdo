@@ -2,6 +2,7 @@ package io.jutil.jdo.core.engine;
 
 import io.jutil.jdo.core.annotation.LockModeType;
 import io.jutil.jdo.internal.core.util.IdUtil;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +12,8 @@ import java.util.Map;
  * @author Jin Zheng
  * @since 2022-02-28
  */
+@NoArgsConstructor
 public class BaseDao<T> extends QueryDao<T, T> {
-	public BaseDao() {
-	}
 
 	/**
 	 * 保存对象，动态生成SQL

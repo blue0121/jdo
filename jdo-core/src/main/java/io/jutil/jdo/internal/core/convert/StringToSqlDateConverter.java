@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.convert;
 
+import lombok.NoArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 
 import java.sql.Date;
@@ -10,9 +11,9 @@ import java.sql.Date;
  * @author zhengj
  * @since 2022-02-17
  */
+@NoArgsConstructor
 public class StringToSqlDateConverter implements Converter<String, Date>, DateTimeConverter {
-	public StringToSqlDateConverter() {
-	}
+
 
 	@Override
 	public Date convert(String text) {

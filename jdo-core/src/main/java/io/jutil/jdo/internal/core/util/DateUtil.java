@@ -24,7 +24,7 @@ public class DateUtil {
 	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE);
 	public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern(TIME);
 
-	public DateUtil() {
+	private DateUtil() {
 	}
 
 	/**

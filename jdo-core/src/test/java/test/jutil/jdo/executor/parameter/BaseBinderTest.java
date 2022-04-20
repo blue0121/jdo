@@ -18,7 +18,7 @@ import java.sql.SQLException;
  * @since 2022-03-09
  */
 @ExtendWith(MockitoExtension.class)
-public class BaseBinderTest {
+public abstract class BaseBinderTest {
 	protected static final int ONE = 1;
 	protected static final int ZERO = 0;
 

@@ -1,5 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
+import lombok.NoArgsConstructor;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +13,9 @@ import java.time.LocalDate;
  * @author Jin Zheng
  * @since 2022-03-09
  */
+@NoArgsConstructor
 public class LocalDateBinder implements ParameterBinder<LocalDate> {
-	public LocalDateBinder() {
-	}
+
 
 	@Override
 	public Class<LocalDate> getType() {

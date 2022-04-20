@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.dialect;
 
 import io.jutil.jdo.core.annotation.LockModeType;
+import lombok.NoArgsConstructor;
 
 /**
  * MySQL 数据库方言
@@ -8,12 +9,11 @@ import io.jutil.jdo.core.annotation.LockModeType;
  * @author Jin Zheng
  * @since 2022-02-18
  */
+@NoArgsConstructor
 public class MySQLDialect implements Dialect {
 	public static final String PROTOCOL = "mysql";
 	private static final String QUOT = "`";
 
-	public MySQLDialect() {
-	}
 
 	@Override
 	public String escape() {

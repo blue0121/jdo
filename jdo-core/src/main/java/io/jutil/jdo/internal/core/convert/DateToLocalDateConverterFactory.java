@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.convert;
 
+import lombok.NoArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 
@@ -14,9 +15,8 @@ import java.util.Date;
  * @author Jin Zheng
  * @since 2022-02-17
  */
+@NoArgsConstructor
 public class DateToLocalDateConverterFactory implements ConverterFactory<Date, TemporalAccessor> {
-	public DateToLocalDateConverterFactory() {
-	}
 
 	@Override
 	public <T extends TemporalAccessor> Converter<Date, T> getConverter(Class<T> targetType) {

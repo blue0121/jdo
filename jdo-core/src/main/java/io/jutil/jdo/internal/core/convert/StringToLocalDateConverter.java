@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.convert;
 
+import lombok.NoArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.LocalDate;
@@ -10,9 +11,8 @@ import java.time.LocalDate;
  * @author zhengj
  * @since 2022-02-17
  */
+@NoArgsConstructor
 public class StringToLocalDateConverter implements Converter<String, LocalDate>, DateTimeConverter {
-	public StringToLocalDateConverter() {
-	}
 
 	@Override
 	public LocalDate convert(String text) {

@@ -10,6 +10,7 @@ import io.jutil.jdo.internal.core.executor.DataSourceFactory;
 import io.jutil.jdo.internal.core.executor.metadata.TableChecker;
 import io.jutil.jdo.internal.core.parser.ParserFactory;
 import io.jutil.jdo.internal.core.path.ClassScanner;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @author Jin Zheng
  * @since 2022-02-28
  */
+@NoArgsConstructor
 public class DefaultJdoBuilder implements JdoBuilder {
 	private static Logger logger = LoggerFactory.getLogger(DefaultJdoBuilder.class);
 
@@ -30,8 +32,6 @@ public class DefaultJdoBuilder implements JdoBuilder {
 	private final List<Class<?>> clazzList = new ArrayList<>();
 	private final List<String> pkgList = new ArrayList<>();
 
-	public DefaultJdoBuilder() {
-	}
 
 	@Override
 	public Jdo build() {

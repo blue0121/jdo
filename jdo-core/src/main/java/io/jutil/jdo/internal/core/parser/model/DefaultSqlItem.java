@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.parser.model;
 
 import io.jutil.jdo.core.parser.SqlItem;
 import io.jutil.jdo.internal.core.util.AssertUtil;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -9,12 +10,11 @@ import java.util.List;
  * @author Jin Zheng
  * @since 2022-02-18
  */
+@NoArgsConstructor
 public class DefaultSqlItem implements SqlItem {
 	private String sql;
 	private List<String> paramNameList;
 
-	public DefaultSqlItem() {
-	}
 
 	public DefaultSqlItem(String sql) {
 		this(sql, null);

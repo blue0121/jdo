@@ -1,5 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
+import lombok.NoArgsConstructor;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -10,9 +12,9 @@ import java.sql.Time;
  * @author Jin Zheng
  * @since 2022-03-09
  */
+@NoArgsConstructor
 public class SqlTimeBinder implements ParameterBinder<Time> {
-	public SqlTimeBinder() {
-	}
+
 
 	@Override
 	public Class<Time> getType() {

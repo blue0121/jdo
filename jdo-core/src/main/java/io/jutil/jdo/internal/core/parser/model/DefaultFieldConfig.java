@@ -3,19 +3,19 @@ package io.jutil.jdo.internal.core.parser.model;
 import io.jutil.jdo.core.parser.FieldConfig;
 import io.jutil.jdo.core.reflect.BeanField;
 import io.jutil.jdo.internal.core.util.AssertUtil;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Jin Zheng
  * @since 2022-02-18
  */
+@NoArgsConstructor
 public class DefaultFieldConfig implements FieldConfig {
 	protected String fieldName;
 	protected String columnName;
 	protected String escapeColumnName;
 	protected BeanField beanField;
 
-	public DefaultFieldConfig() {
-	}
 
 	@Override
 	public void check() {

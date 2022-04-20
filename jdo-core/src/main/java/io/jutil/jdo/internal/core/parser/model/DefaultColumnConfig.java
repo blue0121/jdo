@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.parser.model;
 
 import io.jutil.jdo.core.parser.ColumnConfig;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -8,12 +9,11 @@ import lombok.Setter;
  * @since 2022-02-18
  */
 @Setter
+@NoArgsConstructor
 public class DefaultColumnConfig extends DefaultFieldConfig implements ColumnConfig {
 	private boolean mustInsert;
 	private boolean mustUpdate;
 
-	public DefaultColumnConfig() {
-	}
 
 	@Override
 	public boolean isMustInsert() {

@@ -7,14 +7,15 @@ import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.IdUtil;
 import io.jutil.jdo.internal.core.util.StringUtil;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Jin Zheng
  * @since 2022-04-12
  */
+@NoArgsConstructor
 public class GetIdSqlHandler extends AbstractSqlHandler {
-	public GetIdSqlHandler() {
-	}
+
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {

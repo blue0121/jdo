@@ -5,6 +5,7 @@ import io.jutil.jdo.core.parser.ColumnConfig;
 import io.jutil.jdo.core.parser.FieldConfig;
 import io.jutil.jdo.core.parser.IdConfig;
 import io.jutil.jdo.core.parser.VersionConfig;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
@@ -12,9 +13,9 @@ import java.util.Map;
  * @author Jin Zheng
  * @since 2022-03-21
  */
+@NoArgsConstructor
 public abstract class AbstractSqlHandler implements SqlHandle {
-	public AbstractSqlHandler() {
-	}
+
 
 	public ColumnConfig getColumn(String name, Map<String, ColumnConfig> columnMap) {
 		var column = columnMap.get(name);

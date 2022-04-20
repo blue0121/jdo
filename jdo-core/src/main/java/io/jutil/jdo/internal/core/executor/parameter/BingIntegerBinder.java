@@ -1,5 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
@@ -11,9 +13,9 @@ import java.sql.SQLException;
  * @author Jin Zheng
  * @since 2022-03-09
  */
+@NoArgsConstructor
 public class BingIntegerBinder implements ParameterBinder<BigInteger> {
-	public BingIntegerBinder() {
-	}
+
 
     @Override
     public Class<BigInteger> getType() {
