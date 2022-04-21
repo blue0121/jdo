@@ -4,6 +4,7 @@ import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlConst;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
+import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.StringUtil;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,7 @@ public class DeleteBySqlHandler extends AbstractSqlHandler {
 	public void handle(SqlRequest request, SqlResponse response) {
 		var config = request.getConfig();
 		var map = response.toParamMap();
+		AssertUtil.notEmpty(map, "参数");
 
 		var idMap = config.getIdMap();
 		var columnMap = config.getColumnMap();

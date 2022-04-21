@@ -37,7 +37,7 @@ public class SqlHandlerFacade {
     private static Logger logger = LoggerFactory.getLogger(SqlHandlerFacade.class);
 
 	private final SnowflakeId snowflakeId = SnowflakeIdFactory.getSingleSnowflakeId();
-	private final EnumMap<SqlType, List<SqlHandle>> handlerMap = new EnumMap<>(SqlType.class);
+	private final EnumMap<SqlType, List<SqlHandler>> handlerMap = new EnumMap<>(SqlType.class);
 
 	public SqlHandlerFacade() {
 		this.init();
@@ -68,12 +68,12 @@ public class SqlHandlerFacade {
 		this.addHandler(SqlType.BATCH_UPDATE, new BatchUpdateSqlHandler(param, updateId, column, updateVersion));
 	}
 
-	private void addHandler(SqlType type, SqlHandle...handlers) {
+	private void addHandler(SqlType type, SqlHandler...handlers) {
 		var list = List.of(handlers);
 		handlerMap.put(type, list);
 	}
 
-	private List<SqlHandle> getHandlers(SqlType type) {
+	private List<SqlHandler> getHandlers(SqlType type) {
 		AssertUtil.notNull(type, "SqlType");
 		var handlers = handlerMap.get(type);
 		if (handlers == null || handlers.isEmpty()) {

@@ -21,7 +21,7 @@ public class GetIdSqlHandler extends AbstractSqlHandler {
 	public void handle(SqlRequest request, SqlResponse response) {
 		var config = request.getConfig();
 		var args = request.getArgs();
-		AssertUtil.notEmpty(args, "Args");
+		AssertUtil.notEmpty(args, "参数");
 
 		var id = IdUtil.checkSingleId(config);
 		if (args.size() == 1) {

@@ -2,7 +2,7 @@ package io.jutil.jdo.internal.core.sql.generator;
 
 import io.jutil.jdo.core.parser.EntityConfig;
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
-import io.jutil.jdo.internal.core.sql.SqlHandle;
+import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 
@@ -11,10 +11,10 @@ import io.jutil.jdo.internal.core.sql.SqlResponse;
  * @since 2022-04-13
  */
 public class BatchInsertSqlHandler extends AbstractSqlHandler {
-	private final SqlHandle parameterSqlHandler;
-    private final SqlHandle[] mapHandlers;
+	private final SqlHandler parameterSqlHandler;
+    private final SqlHandler[] mapHandlers;
 
-	public BatchInsertSqlHandler(SqlHandle parameterSqlHandler, SqlHandle... mapHandlers) {
+	public BatchInsertSqlHandler(SqlHandler parameterSqlHandler, SqlHandler... mapHandlers) {
 		this.parameterSqlHandler = parameterSqlHandler;
 		this.mapHandlers = mapHandlers;
 	}

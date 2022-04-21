@@ -14,7 +14,7 @@ import java.util.Map;
  * @since 2022-03-21
  */
 @NoArgsConstructor
-public abstract class AbstractSqlHandler implements SqlHandle {
+public abstract class AbstractSqlHandler implements SqlHandler {
 
 
 	public ColumnConfig getColumn(String name, Map<String, ColumnConfig> columnMap) {

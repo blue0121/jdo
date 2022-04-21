@@ -5,7 +5,6 @@ import io.jutil.jdo.internal.core.dialect.MySQLDialect;
 import io.jutil.jdo.internal.core.parser.ConfigCache;
 import io.jutil.jdo.internal.core.parser.ParserFactory;
 import io.jutil.jdo.internal.core.sql.SqlHandlerFacade;
-import io.jutil.jdo.internal.core.sql.SqlHandlerFactory;
 import test.jutil.jdo.model.GroupEntity;
 import test.jutil.jdo.model.GroupMapper;
 import test.jutil.jdo.model.ResultMapper;
@@ -19,14 +18,12 @@ public abstract class SqlHandlerTest {
 	protected final Dialect dialect;
 	protected final ParserFactory parseFactory;
 	protected final ConfigCache configCache;
-	protected final SqlHandlerFactory factory;
 	protected final SqlHandlerFacade facade;
 
 	public SqlHandlerTest() {
 		this.dialect = new MySQLDialect();
 		this.parseFactory = new ParserFactory(dialect, true);
 		this.configCache = parseFactory.getConfigCache();
-		this.factory = new SqlHandlerFactory();
 		this.facade = new SqlHandlerFacade();
 
 		parseFactory.parse(GroupEntity.class);

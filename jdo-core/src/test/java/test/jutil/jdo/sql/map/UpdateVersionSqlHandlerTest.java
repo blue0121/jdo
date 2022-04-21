@@ -4,7 +4,7 @@ import io.jutil.jdo.core.annotation.Entity;
 import io.jutil.jdo.core.annotation.Id;
 import io.jutil.jdo.core.annotation.Version;
 import io.jutil.jdo.core.exception.VersionException;
-import io.jutil.jdo.internal.core.sql.SqlHandle;
+import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.sql.map.UpdateVersionSqlHandler;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	private SqlResponse response = new SqlResponse(null);
-	private SqlHandle handler = new UpdateVersionSqlHandler();
+	private SqlHandler handler = new UpdateVersionSqlHandler();
 
 	public UpdateVersionSqlHandlerTest() {
 		parseFactory.parse(ForceVersionEntity.class);

@@ -2,7 +2,7 @@ package test.jutil.jdo.sql.map;
 
 import io.jutil.jdo.core.annotation.Entity;
 import io.jutil.jdo.core.annotation.Id;
-import io.jutil.jdo.internal.core.sql.SqlHandle;
+import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.sql.map.IdSqlHandler;
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class IdSqlHandlerTest extends SqlHandlerTest {
 	private SqlResponse response = new SqlResponse(null);
-	private SqlHandle handler = new IdSqlHandler();
+	private SqlHandler handler = new IdSqlHandler();
 
 	public IdSqlHandlerTest() {
 		parseFactory.parse(IdEntity.class);

@@ -5,7 +5,7 @@ import io.jutil.jdo.core.annotation.GeneratorType;
 import io.jutil.jdo.core.annotation.Id;
 import io.jutil.jdo.core.exception.EntityFieldException;
 import io.jutil.jdo.internal.core.id.SnowflakeIdFactory;
-import io.jutil.jdo.internal.core.sql.SqlHandle;
+import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.sql.map.InsertIdSqlHandler;
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class InsertAssignedIdSqlHandlerTest extends SqlHandlerTest {
 	private SqlResponse response = new SqlResponse(null);
-	private SqlHandle handler = new InsertIdSqlHandler(SnowflakeIdFactory.getSingleSnowflakeId());
+	private SqlHandler handler = new InsertIdSqlHandler(SnowflakeIdFactory.getSingleSnowflakeId());
 
 	public InsertAssignedIdSqlHandlerTest() {
 		parseFactory.parse(AssignedIntIdEntity.class);

@@ -1,6 +1,6 @@
 package test.jutil.jdo.sql.parameter;
 
-import io.jutil.jdo.internal.core.sql.SqlHandle;
+import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.sql.parameter.ParameterSqlHandler;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ParameterSqlHandlerTest {
 
 	private SqlResponse response = new SqlResponse(null);
-	private SqlHandle handler = new ParameterSqlHandler();
+	private SqlHandler handler = new ParameterSqlHandler();
 
 	public ParameterSqlHandlerTest() {
 	}

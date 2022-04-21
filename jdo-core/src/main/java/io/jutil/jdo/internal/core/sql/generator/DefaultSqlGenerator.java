@@ -3,7 +3,7 @@ package io.jutil.jdo.internal.core.sql.generator;
 import io.jutil.jdo.internal.core.parser.model.DefaultEntityConfig;
 import io.jutil.jdo.internal.core.parser.model.DefaultSqlConfig;
 import io.jutil.jdo.internal.core.parser.model.DefaultSqlItem;
-import io.jutil.jdo.internal.core.sql.SqlHandler;
+import io.jutil.jdo.internal.core.sql.SqlConst;
 import io.jutil.jdo.internal.core.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +53,8 @@ public class DefaultSqlGenerator {
 	}
 
 	private void generateSelectById() {
-		String sql = String.format(SqlHandler.SELECT_TPL, table,
-				StringUtil.join(whereIdColumnList, SqlHandler.AND));
+		String sql = String.format(SqlConst.SELECT_TPL, table,
+				StringUtil.join(whereIdColumnList, SqlConst.AND));
 		var item = new DefaultSqlItem(sql, whereIdFieldList);
 		sqlConfig.setSelectById(item);
 		if (logger.isDebugEnabled()) {
@@ -67,7 +67,7 @@ public class DefaultSqlGenerator {
 			return;
 		}
 
-		String sql = String.format(SqlHandler.SELECT_TPL, table, idColumn + SqlHandler.IN_PLACEHOLDER);
+		String sql = String.format(SqlConst.SELECT_TPL, table, idColumn + SqlConst.IN_PLACEHOLDER);
 		var item = new DefaultSqlItem(sql, List.of(idField));
 		sqlConfig.setSelectByIdList(item);
 		if (logger.isDebugEnabled()) {
@@ -76,9 +76,9 @@ public class DefaultSqlGenerator {
 	}
 
 	private void generateInsert() {
-		String sql = String.format(SqlHandler.INSERT_TPL, table,
-				StringUtil.join(insertColumnList, SqlHandler.SEPARATOR),
-				StringUtil.repeat(SqlHandler.PLACEHOLDER, insertFieldList.size(), SqlHandler.SEPARATOR));
+		String sql = String.format(SqlConst.INSERT_TPL, table,
+				StringUtil.join(insertColumnList, SqlConst.SEPARATOR),
+				StringUtil.repeat(SqlConst.PLACEHOLDER, insertFieldList.size(), SqlConst.SEPARATOR));
 		var item = new DefaultSqlItem(sql, insertFieldList);
 		sqlConfig.setInsert(item);
 		if (logger.isDebugEnabled()) {
@@ -93,9 +93,9 @@ public class DefaultSqlGenerator {
 
 		List<String> fieldList = new ArrayList<>(updateFieldList);
 		fieldList.addAll(whereIdFieldList);
-		String sql = String.format(SqlHandler.UPDATE_TPL, table,
-				StringUtil.join(updateColumnList, SqlHandler.SEPARATOR),
-				StringUtil.join(whereIdColumnList, SqlHandler.AND));
+		String sql = String.format(SqlConst.UPDATE_TPL, table,
+				StringUtil.join(updateColumnList, SqlConst.SEPARATOR),
+				StringUtil.join(whereIdColumnList, SqlConst.AND));
 		var item = new DefaultSqlItem(sql, fieldList);
 		sqlConfig.setUpdateById(item);
 		if (logger.isDebugEnabled()) {
@@ -116,11 +116,11 @@ public class DefaultSqlGenerator {
 		List<String> columnList = new ArrayList<>(updateColumnList);
 		columnList.add(version.getEscapeColumnName() + "=" + version.getEscapeColumnName() + "+1");
 		List<String> whereList = new ArrayList<>(whereIdColumnList);
-		whereList.add(version.getEscapeColumnName() + SqlHandler.EQUAL_PLACEHOLDER);
+		whereList.add(version.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER);
 
-		String sql = String.format(SqlHandler.UPDATE_TPL, table,
-				StringUtil.join(columnList, SqlHandler.SEPARATOR),
-				StringUtil.join(whereList, SqlHandler.AND));
+		String sql = String.format(SqlConst.UPDATE_TPL, table,
+				StringUtil.join(columnList, SqlConst.SEPARATOR),
+				StringUtil.join(whereList, SqlConst.AND));
 		var item = new DefaultSqlItem(sql, fieldList);
 		sqlConfig.setUpdateByIdAndVersion(item);
 		if (logger.isDebugEnabled()) {
@@ -129,8 +129,8 @@ public class DefaultSqlGenerator {
 	}
 
 	private void generateDeleteById() {
-		String sql = String.format(SqlHandler.DELETE_TPL, table,
-				StringUtil.join(whereIdColumnList, SqlHandler.AND));
+		String sql = String.format(SqlConst.DELETE_TPL, table,
+				StringUtil.join(whereIdColumnList, SqlConst.AND));
 		var item = new DefaultSqlItem(sql, whereIdFieldList);
 		sqlConfig.setDeleteById(item);
 		if (logger.isDebugEnabled()) {
@@ -143,7 +143,7 @@ public class DefaultSqlGenerator {
 			return;
 		}
 
-		String sql = String.format(SqlHandler.DELETE_TPL, table, idColumn + SqlHandler.IN_PLACEHOLDER);
+		String sql = String.format(SqlConst.DELETE_TPL, table, idColumn + SqlConst.IN_PLACEHOLDER);
 		var item = new DefaultSqlItem(sql, List.of(idField));
 		sqlConfig.setDeleteByIdList(item);
 		if (logger.isDebugEnabled()) {
@@ -178,7 +178,7 @@ public class DefaultSqlGenerator {
 			}
 
 			whereIdFieldList.add(entry.getKey());
-			whereIdColumnList.add(config.getEscapeColumnName() + SqlHandler.EQUAL_PLACEHOLDER);
+			whereIdColumnList.add(config.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER);
 		}
 
 		if (entityConfig.getVersionConfig() != null) {
@@ -194,7 +194,7 @@ public class DefaultSqlGenerator {
 			insertColumnList.add(config.getEscapeColumnName());
 
 			updateFieldList.add(entry.getKey());
-			updateColumnList.add(config.getEscapeColumnName() + SqlHandler.EQUAL_PLACEHOLDER);
+			updateColumnList.add(config.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER);
 		}
 
 	}
