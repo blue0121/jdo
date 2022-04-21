@@ -6,8 +6,6 @@ import io.jutil.jdo.core.reflect.BeanField;
 import io.jutil.jdo.core.reflect.JavaBean;
 import io.jutil.jdo.internal.core.dialect.Dialect;
 import io.jutil.jdo.internal.core.parser.model.DefaultFieldConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
@@ -18,14 +16,13 @@ import java.util.Set;
  * @since 2022-02-18
  */
 public abstract class AbstractParser implements Parser {
-    private static Logger logger = LoggerFactory.getLogger(AbstractParser.class);
 
     protected final Dialect dialect;
     protected final boolean escape;
     protected final Set<Class<?>> parserClassSet = new HashSet<>();
     protected final ConfigCache configCache;
 
-    public AbstractParser(Dialect dialect, boolean escape, ConfigCache cache) {
+    protected AbstractParser(Dialect dialect, boolean escape, ConfigCache cache) {
         this.dialect = dialect;
         this.escape = escape;
         this.configCache = cache;

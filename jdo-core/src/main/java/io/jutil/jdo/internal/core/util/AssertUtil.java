@@ -83,7 +83,7 @@ public class AssertUtil {
 		}
 	}
 
-	public static <T> void notEmpty(byte[] array, String name) {
+	public static void notEmpty(byte[] array, String name) {
 		if (name == null) {
 			name = "";
 		}

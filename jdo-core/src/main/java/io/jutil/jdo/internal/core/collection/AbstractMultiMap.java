@@ -12,7 +12,7 @@ import java.util.Set;
 public abstract class AbstractMultiMap<K, V> implements MultiMap<K, V> {
 	protected Map<K, Set<V>> map;
 
-	public AbstractMultiMap() {
+	protected AbstractMultiMap() {
 	}
 
 	@Override

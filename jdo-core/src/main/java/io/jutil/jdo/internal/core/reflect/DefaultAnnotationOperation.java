@@ -17,7 +17,7 @@ public abstract class DefaultAnnotationOperation implements AnnotationOperation 
 	private Map<Class<?>, Annotation> annotationMap;
 	private List<Annotation> annotationList;
 
-	public DefaultAnnotationOperation(AnnotatedElement annotatedElement) {
+	protected DefaultAnnotationOperation(AnnotatedElement annotatedElement) {
 		this.annotatedElement = annotatedElement;
 	}
 

@@ -33,9 +33,9 @@ public class DefaultBeanConstructor extends DefaultExecutableOperation implement
 			return null;
 		}
 
-		for (var constructor : clazz.getConstructors()) {
-			if (Arrays.equals(src.getParameterTypes(), constructor.getParameterTypes())) {
-				return constructor;
+		for (var cst : clazz.getConstructors()) {
+			if (Arrays.equals(src.getParameterTypes(), cst.getParameterTypes())) {
+				return cst;
 			}
 		}
 		return null;

@@ -1,6 +1,8 @@
 package io.jutil.jdo.internal.core.id;
 
 import io.jutil.jdo.internal.core.util.NumberUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,6 +14,8 @@ import java.net.UnknownHostException;
  * @since 2022-02-18
  */
 public final class UUID {
+	private static Logger logger = LoggerFactory.getLogger(UUID.class);
+
 	private static final String IP;
 	private static short counter = (short) 0;
 	private static final int JVM = (int) (System.currentTimeMillis() >>> 8);
@@ -22,6 +26,7 @@ public final class UUID {
 			ipadd = NumberUtil.toHexString(InetAddress.getLocalHost().getAddress());
 		}
 		catch (UnknownHostException e) {
+			logger.warn("未知主机, ", e);
 		}
 		IP = ipadd;
 	}

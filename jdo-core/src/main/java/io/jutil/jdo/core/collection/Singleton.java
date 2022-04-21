@@ -17,12 +17,12 @@ public class Singleton {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T get(Class<T> clazz, Object... args) {
+	public static <T> T get(Class<T> clazz) {
 		AssertUtil.notNull(clazz, "类型");
-		return (T) POOL.computeIfAbsent(clazz, k -> newInstance(k, args));
+		return (T) POOL.computeIfAbsent(clazz, k -> newInstance(k));
 	}
 
-	private static <T> T newInstance(Class<T> clazz, Object... args) {
+	private static <T> T newInstance(Class<T> clazz) {
 		try {
 			return clazz.getConstructor().newInstance();
 		}

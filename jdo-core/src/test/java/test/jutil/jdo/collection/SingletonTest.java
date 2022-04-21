@@ -25,7 +25,7 @@ public class SingletonTest {
 		Assertions.assertEquals(1, Singleton.size());
 		Group group2 = Singleton.get(Group.class);
 		Assertions.assertEquals(1, Singleton.size());
-		Assertions.assertTrue(group1 == group2);
+		Assertions.assertSame(group1, group2);
 	}
 
 	@Test

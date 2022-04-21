@@ -24,7 +24,7 @@ public abstract class DefaultExecutableOperation extends DefaultAnnotationOperat
 	protected List<Executable> superExecutableList;
 	protected List<MethodParameter> methodParamList;
 
-	public DefaultExecutableOperation(Executable executable, List<Class<?>> superClassList, List<Class<?>> interfaceList) {
+	protected DefaultExecutableOperation(Executable executable, List<Class<?>> superClassList, List<Class<?>> interfaceList) {
 		super(executable);
 		this.executable = executable;
 		this.superClassList = superClassList;

@@ -18,12 +18,10 @@ public class TableChecker {
 
 	private final ConfigCache configCache;
 	private final MetadataCache metadataCache;
-	private final MetadataParser metadataParser;
 
 	public TableChecker(DataSource ds, ConfigCache cache) {
 		this.configCache = cache;
 		this.metadataCache = new MetadataCache();
-		this.metadataParser = new MetadataParser(ds, metadataCache);
 	}
 
 	public void check() {

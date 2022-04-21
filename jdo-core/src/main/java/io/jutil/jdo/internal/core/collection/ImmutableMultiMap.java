@@ -2,8 +2,6 @@ package io.jutil.jdo.internal.core.collection;
 
 import io.jutil.jdo.core.collection.MultiMap;
 import io.jutil.jdo.internal.core.util.AssertUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,7 +11,6 @@ import java.util.LinkedHashMap;
  * @since 1.0 2021-02-08
  */
 public class ImmutableMultiMap<K, V> extends AbstractMultiMap<K, V> {
-	private static Logger logger = LoggerFactory.getLogger(ImmutableMultiMap.class);
 
 	public ImmutableMultiMap(MultiMap<K, V> map) {
 		AssertUtil.notNull(map, "MultiMap");

@@ -170,12 +170,11 @@ public class JdoDynamicTest extends BaseTest {
 		UserEntity.verify(user, 2, 1, "blueblue", "blue", State.ACTIVE);
 
 		map = Map.of("name", "blueblue", "version", 1);
-		try {
-			jdoTemplate.updateObject(UserEntity.class, user.getId(), map);
-			Assertions.fail();
-		} catch (VersionException e) {
-			Assertions.assertEquals("test.jutil.jdo.model.UserEntity 版本冲突", e.getMessage());
-		}
+		var updateUser = user;
+		var updateMap = map;
+		Assertions.assertThrows(VersionException.class,
+				() -> jdoTemplate.updateObject(UserEntity.class, updateUser.getId(), updateMap),
+				"test.jutil.jdo.model.UserEntity 版本冲突");
 	}
 
 	@Test
@@ -197,12 +196,9 @@ public class JdoDynamicTest extends BaseTest {
 		UserEntity.verify(user, 2, 1, "blueblue", "blue", State.ACTIVE);
 
 		user.setVersion(1);
-		try {
-			jdoTemplate.update(user);
-			Assertions.fail();
-		} catch (VersionException e) {
-			Assertions.assertEquals("test.jutil.jdo.model.UserEntity 版本冲突", e.getMessage());
-		}
+		var updateUser = user;
+		Assertions.assertThrows(VersionException.class, () -> jdoTemplate.update(updateUser),
+				"test.jutil.jdo.model.UserEntity 版本冲突");
 	}
 
 }

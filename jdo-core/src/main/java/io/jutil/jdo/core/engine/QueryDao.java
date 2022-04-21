@@ -23,7 +23,7 @@ public abstract class QueryDao<P, R> {
 	protected final Class<R> returnClazz;
 
 	@SuppressWarnings("unchecked")
-	public QueryDao() {
+	protected QueryDao() {
 		Class<?> clazz = this.getClass();
 		if (clazz.getName().contains("$$")) {
 			clazz = clazz.getSuperclass();

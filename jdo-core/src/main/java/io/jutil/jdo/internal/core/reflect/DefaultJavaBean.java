@@ -51,7 +51,6 @@ public class DefaultJavaBean extends DefaultAnnotationOperation implements JavaB
 	private MultiMap<String, BeanMethod> setterMap;
 	private List<BeanMethod> allMethodList;
 	private Map<MethodSignature, BeanMethod> methodMap;
-	private List<BeanMethod> otherMethodList;
 
 	private Map<String, BeanField> fieldMap;
 
@@ -285,7 +284,6 @@ public class DefaultJavaBean extends DefaultAnnotationOperation implements JavaB
 		this.setterMap = MultiMap.copyOf(setter);
 		this.allMethodList = List.copyOf(all);
 		this.methodMap = Map.copyOf(map);
-		this.otherMethodList = List.copyOf(other);
 	}
 
 	private void parseField() {

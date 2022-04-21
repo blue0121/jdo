@@ -91,7 +91,7 @@ public class ClassScanner {
 					}
 				}
 			} catch (IOException e) {
-				logger.error("扫描包出错：" + dir, e);
+				logger.error("扫描包出错: " + dir, e);
 			}
 		}
 	}
@@ -110,7 +110,7 @@ public class ClassScanner {
 					try {
 						handler.handle(loader.loadClass(clazz));
 					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
+						logger.warn("找不到类: " + clazz, e);
 					}
 				}
 			}
@@ -139,6 +139,7 @@ public class ClassScanner {
 			try {
 				handler.handle(loader.loadClass(clazz));
 			} catch (ClassNotFoundException e) {
+				logger.warn("找不到类: " + clazz, e);
 			}
 
 		}

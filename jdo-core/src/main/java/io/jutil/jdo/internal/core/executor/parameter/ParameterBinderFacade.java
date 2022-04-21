@@ -138,7 +138,7 @@ public class ParameterBinderFacade {
 			}
 			return binderMap.computeIfAbsent(key, k -> factory.getBinder(key));
 		} while (clazz != null);
-		throw new UnsupportedOperationException("不支持类型: " + clazz.getName());
+		throw new UnsupportedOperationException("不支持类型: " + key.getName());
 	}
 
 	protected ParserFactory getParserFactory() {

@@ -26,36 +26,36 @@ public class DataSourceFactory implements AutoCloseable {
 	}
 
 	private DruidDataSource initDataSource() {
-		var dataSource = new DruidDataSource();
-		dataSource.setUrl(options.getUrl());
-		dataSource.setUsername(options.getUsername());
-		dataSource.setPassword(options.getPassword());
+		var ds = new DruidDataSource();
+		ds.setUrl(options.getUrl());
+		ds.setUsername(options.getUsername());
+		ds.setPassword(options.getPassword());
 
-		dataSource.setInitialSize(options.getInitialSize());
-		dataSource.setMinIdle(options.getMinIdle());
-		dataSource.setMaxActive(options.getMaxActive());
-		dataSource.setMaxWait(options.getMaxWait());
+		ds.setInitialSize(options.getInitialSize());
+		ds.setMinIdle(options.getMinIdle());
+		ds.setMaxActive(options.getMaxActive());
+		ds.setMaxWait(options.getMaxWait());
 
-		dataSource.setTimeBetweenEvictionRunsMillis(options.getTimeBetweenEvictionRunsMillis());
-		dataSource.setMinEvictableIdleTimeMillis(options.getMinEvictableIdleTimeMillis());
-		dataSource.setMaxEvictableIdleTimeMillis(options.getMaxEvictableIdleTimeMillis());
+		ds.setTimeBetweenEvictionRunsMillis(options.getTimeBetweenEvictionRunsMillis());
+		ds.setMinEvictableIdleTimeMillis(options.getMinEvictableIdleTimeMillis());
+		ds.setMaxEvictableIdleTimeMillis(options.getMaxEvictableIdleTimeMillis());
 
-		dataSource.setValidationQuery(options.getValidationQuery());
-		dataSource.setTestWhileIdle(options.isTestWhileIdle());
-		dataSource.setTestOnBorrow(options.isTestOnBorrow());
-		dataSource.setTestOnReturn(options.isTestOnReturn());
-		dataSource.setKeepAlive(options.isKeepAlive());
-		dataSource.setPoolPreparedStatements(options.isPoolPreparedStatements());
-		dataSource.setAsyncInit(options.isAsyncInit());
+		ds.setValidationQuery(options.getValidationQuery());
+		ds.setTestWhileIdle(options.isTestWhileIdle());
+		ds.setTestOnBorrow(options.isTestOnBorrow());
+		ds.setTestOnReturn(options.isTestOnReturn());
+		ds.setKeepAlive(options.isKeepAlive());
+		ds.setPoolPreparedStatements(options.isPoolPreparedStatements());
+		ds.setAsyncInit(options.isAsyncInit());
 
 		try {
-			dataSource.setFilters(options.getFilters());
-			dataSource.init();
+			ds.setFilters(options.getFilters());
+			ds.init();
 		} catch (SQLException e) {
 			logger.error("错误, ", e);
 		}
 		logger.info("Druid 数据源初始化, URL: {}", options.getUrl());
-		return dataSource;
+		return ds;
 	}
 
 	public DataSource getDateSource() {

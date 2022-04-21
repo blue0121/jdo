@@ -62,10 +62,10 @@ public class DefaultBeanMethod extends DefaultExecutableOperation implements Bea
 
 	@Override
 	protected Executable findExecutable(Executable src, Class<?> clazz) {
-		for (var method : clazz.getMethods()) {
-			if (src.getName().equals(method.getName())
-					&& Arrays.equals(src.getParameterTypes(), method.getParameterTypes())) {
-				return method;
+		for (var m : clazz.getMethods()) {
+			if (src.getName().equals(m.getName())
+					&& Arrays.equals(src.getParameterTypes(), m.getParameterTypes())) {
+				return m;
 			}
 		}
 		return null;

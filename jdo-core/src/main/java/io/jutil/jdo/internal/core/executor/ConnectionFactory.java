@@ -22,19 +22,16 @@ import java.util.List;
 public class ConnectionFactory {
 	private static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
-	private final DataSource dataSource;
 	private final ParameterBinderFacade binderFacade;
 	private final ThreadLocal<Boolean> tlAutoCommit;
 	private final ThreadLocal<Connection> tlConnection;
 
 	public ConnectionFactory(DataSource dataSource, ParserFactory parserFactory) {
-		this.dataSource = dataSource;
 		this.binderFacade = new ParameterBinderFacade(parserFactory);
 		this.tlAutoCommit = ThreadLocal.withInitial(() -> true);
 		this.tlConnection = ThreadLocal.withInitial(() -> {
 			try {
 				var conn = dataSource.getConnection();
-				//System.out.println("init>>" + conn);
 				boolean autoCommit = tlAutoCommit.get().booleanValue();
 				if (!autoCommit) {
 					conn.setAutoCommit(false);
@@ -52,7 +49,6 @@ public class ConnectionFactory {
 
 	public Connection getConnection() throws SQLException {
 		var conn = tlConnection.get();
-		//System.out.println("get>>" + conn);
 		return conn;
 	}
 
@@ -180,7 +176,6 @@ public class ConnectionFactory {
 			stmt = conn.createStatement();
 			return stmt.executeUpdate(sql);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new JdbcException(e);
 		} finally {
 			this.close(null, stmt, conn);

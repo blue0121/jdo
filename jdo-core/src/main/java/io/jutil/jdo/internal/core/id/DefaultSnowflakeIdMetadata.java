@@ -9,15 +9,14 @@ import java.time.ZoneId;
  * @since 2022-02-18
  */
 public class DefaultSnowflakeIdMetadata implements Metadata {
-	private LocalDateTime dateTime;
-	private long sequence;
-	private long machineId;
+	private final LocalDateTime dateTime;
+	private final long sequence;
+	private final long machineId;
 
 	public DefaultSnowflakeIdMetadata(long timestamp, long sequence, long machineId) {
-		LocalDateTime dateTime = Instant.ofEpochMilli(timestamp)
+		this.dateTime = Instant.ofEpochMilli(timestamp)
 				.atZone(ZoneId.systemDefault())
 				.toLocalDateTime();
-		this.dateTime = dateTime;
 		this.sequence = sequence;
 		this.machineId = machineId;
 	}

@@ -32,13 +32,13 @@ public class DetectDialect {
 			logger.info("数据库: {}[{}], 驱动: {}[{}], url: {}, 用户: {}", productName, productVersion,
 					driverName, driverVersion, url, user);
 
-			return dialect(productName, productVersion, url);
+			return dialect(url);
 		} catch (SQLException e) {
 			throw new JdbcException(e);
 		}
 	}
 
-	private static Dialect dialect(String productName, String productVersion, String url) {
+	private static Dialect dialect(String url) {
 		String jdbcType = StringUtil.getJdbcType(url);
 		Dialect dialect = switch (jdbcType) {
 			case MySQLDialect.PROTOCOL -> new MySQLDialect();
