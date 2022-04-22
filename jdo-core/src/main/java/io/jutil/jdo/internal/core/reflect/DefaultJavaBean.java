@@ -1,8 +1,6 @@
 package io.jutil.jdo.internal.core.reflect;
 
 import io.jutil.jdo.core.collection.MultiMap;
-import io.jutil.jdo.core.convert.ConvertService;
-import io.jutil.jdo.core.convert.ConvertServiceFactory;
 import io.jutil.jdo.core.reflect.BeanConstructor;
 import io.jutil.jdo.core.reflect.BeanField;
 import io.jutil.jdo.core.reflect.BeanMethod;
@@ -37,7 +35,6 @@ public class DefaultJavaBean extends DefaultAnnotationOperation implements JavaB
 	private static final Set<String> METHOD_SET = Set.of("wait", "equals", "toString", "hashCode", "getClass",
 			"notify", "notifyAll");
 
-	private final ConvertService convertService = ConvertServiceFactory.getConvertService();
 	private final Object target;
 	private final Class<?> targetClass;
 
@@ -131,35 +128,6 @@ public class DefaultJavaBean extends DefaultAnnotationOperation implements JavaB
 		}
 
 		return constructor.newInstanceQuietly(args);
-	}
-
-	@Override
-	public Object newInstanceQuietly(Map<String, ?> fieldValueMap, Object... args) {
-		Class<?>[] classes = this.getParamClasses(args);
-		BeanConstructor constructor = this.getConstructor(classes);
-		if (constructor == null) {
-			return null;
-		}
-
-		Object object = constructor.newInstanceQuietly(args);
-		if (object != null && fieldValueMap != null) {
-			for (var field : fieldMap.entrySet()) {
-				Object value = fieldValueMap.get(field.getKey());
-				if (value == null) {
-					continue;
-				}
-
-				Class<?> type = field.getValue().getField().getType();
-				boolean cvt = convertService.canConvert(value.getClass(), type);
-				if (!cvt) {
-					logger.warn("{} 无法转化为 {}", value.getClass(), type);
-					continue;
-				}
-
-				field.getValue().setFieldValue(object, convertService.convert(value, type));
-			}
-		}
-		return object;
 	}
 
 	@Override

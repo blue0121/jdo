@@ -85,15 +85,6 @@ public interface JavaBean extends AnnotationOperation, ColumnNameOperation {
 	Object newInstanceQuietly(Object... args);
 
 	/**
-	 * 实例化对象，并设置字段值，如有异常则返回null
-	 *
-	 * @param fieldValueMap
-	 * @param args
-	 * @return
-	 */
-	Object newInstanceQuietly(Map<String, ?> fieldValueMap, Object... args);
-
-	/**
 	 * 获取所有方法
 	 *
 	 * @return

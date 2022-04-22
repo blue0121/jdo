@@ -4,13 +4,11 @@ module jdo.core {
 	requires java.management;
 	requires org.slf4j;
 	requires druid;
-	requires spring.core;
 
 	requires static lombok;
 
 	exports io.jutil.jdo.core.annotation;
 	exports io.jutil.jdo.core.collection;
-	exports io.jutil.jdo.core.convert;
 	exports io.jutil.jdo.core.engine;
 	exports io.jutil.jdo.core.exception;
 	exports io.jutil.jdo.core.parser;

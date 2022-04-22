@@ -85,16 +85,6 @@ public class JavaBeanTest {
 	}*/
 
 	@Test
-	public void testNewInstance() {
-		JavaBean bean = JavaBean.create(TestModel.class);
-		Map<String, Object> map = Map.of("username", "blue", "password", 123456);
-		TestModel model = (TestModel) bean.newInstanceQuietly(map);
-		Assertions.assertNotNull(model);
-		Assertions.assertEquals("blue", model.getUsername());
-		Assertions.assertEquals("123456", model.getPassword());
-	}
-
-	@Test
 	public void testGetAllFieldValues() {
 		TestModel model = new TestModel();
 		model.setUsername("blue");

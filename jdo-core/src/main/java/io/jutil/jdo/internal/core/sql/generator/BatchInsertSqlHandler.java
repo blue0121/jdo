@@ -44,6 +44,6 @@ public class BatchInsertSqlHandler extends AbstractSqlHandler {
 			handler.handle(request, response);
 		}
 
-		return  response;
+		return response;
 	}
 }

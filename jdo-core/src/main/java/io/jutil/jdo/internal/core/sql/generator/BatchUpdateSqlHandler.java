@@ -49,6 +49,6 @@ public class BatchUpdateSqlHandler extends AbstractSqlHandler {
 			handler.handle(request, response);
 		}
 
-		return  response;
+		return response;
 	}
 }
