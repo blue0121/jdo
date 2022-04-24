@@ -2,6 +2,7 @@ package test.jutil.jdo.reflect;
 
 import io.jutil.jdo.core.reflect.BeanField;
 import io.jutil.jdo.core.reflect.JavaBean;
+import io.jutil.jdo.core.reflect.JavaBeanCache;
 import io.jutil.jdo.core.reflect.MethodSignature;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -77,12 +78,12 @@ public class JavaBeanTest {
 		Assertions.assertEquals("pass", field2.getFieldValue(null));
 	}
 
-	/*@Test
+	@Test
 	public void testCache() {
-		JavaBean bean1 = JavaBeanCache.getJavaBean(TestModel2.class);
-		JavaBean bean2 = JavaBeanCache.getJavaBean(TestModel2.class);
+		JavaBean bean1 = JavaBeanCache.get(TestModel2.class);
+		JavaBean bean2 = JavaBeanCache.get(TestModel2.class);
 		Assertions.assertTrue(bean1 == bean2);
-	}*/
+	}
 
 	@Test
 	public void testGetAllFieldValues() {

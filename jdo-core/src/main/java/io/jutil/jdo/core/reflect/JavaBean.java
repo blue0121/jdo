@@ -25,7 +25,7 @@ public interface JavaBean extends AnnotationOperation, ColumnNameOperation {
 	}
 
 	/**
-	 * create JavaBean reflection object
+	 * 创建JavaBean反射对象
 	 *
 	 * @param targetClass
 	 * @return
