@@ -33,10 +33,11 @@ public class DetectDialectTest {
 		Mockito.when(conn.getMetaData()).thenReturn(meta);
 		Mockito.when(meta.getURL()).thenReturn(url);
 
-		Dialect dialect = DetectDialect.dialect(ds);
 		if (clazz == null) {
-			Assertions.assertNull(dialect);
+			Assertions.assertThrows(UnsupportedOperationException.class, () -> DetectDialect.dialect(ds),
+					"不支持数据库方言: test");
 		} else {
+			Dialect dialect = DetectDialect.dialect(ds);
 			Assertions.assertNotNull(dialect);
 			Assertions.assertEquals(clazz, dialect.getClass());
 		}

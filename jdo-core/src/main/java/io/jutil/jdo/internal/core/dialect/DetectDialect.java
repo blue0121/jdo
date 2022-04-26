@@ -45,13 +45,11 @@ public class DetectDialect {
 			case PostgreSQLDialect.PROTOCOL -> new PostgreSQLDialect();
 			case OracleDialect.PROTOCOL -> new OracleDialect();
 			case HyperSQLDialect.PROTOCOL -> new HyperSQLDialect();
-			default -> null;
+			case H2Dialect.PROTOCOL -> new H2Dialect();
+			default -> throw new UnsupportedOperationException("不支持数据库方言: " + jdbcType);
 		};
 
-		if (dialect != null) {
-			logger.info("数据库方言: {}", dialect.getClass().getName());
-		}
-
+		logger.info("数据库方言: {}", dialect.getClass().getName());
 		return dialect;
 	}
 

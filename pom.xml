@@ -27,7 +27,7 @@
 		<spring.boot.version>2.6.3</spring.boot.version>
 
 		<!-- test -->
-		<hsqldb.version>2.6.1</hsqldb.version>
+		<h2.version>2.1.212</h2.version>
 		<junit.platform.version>1.8.2</junit.platform.version>
 		<junit.jupiter.version>5.8.2</junit.jupiter.version>
 		<mockito.version>4.5.1</mockito.version>
