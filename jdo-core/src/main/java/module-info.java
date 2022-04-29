@@ -13,6 +13,7 @@ module jdo.core {
 	exports io.jutil.jdo.core.exception;
 	exports io.jutil.jdo.core.parser;
 	exports io.jutil.jdo.core.reflect;
+	exports io.jutil.jdo.core.reflect2;
 
 
 }
