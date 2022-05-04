@@ -1,10 +1,10 @@
 package io.jutil.jdo.internal.core.reflect2;
 
-import io.jutil.jdo.core.reflect2.AnnotationMetadata;
 import io.jutil.jdo.core.reflect2.ParameterOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +21,7 @@ public class DefaultParameterOperation extends DefaultAnnotationOperation implem
 	private final List<Parameter> parameterList;
 
 	public DefaultParameterOperation(List<Parameter> parameterList) {
+		super(parameterList.get(0));
 		this.parameter = parameterList.get(0);
 		this.parameterList = parameterList;
 		this.parseAnnotation();
@@ -30,15 +31,14 @@ public class DefaultParameterOperation extends DefaultAnnotationOperation implem
 	}
 
 	private void parseAnnotation() {
-		Map<Class<?>, AnnotationMetadata> annotationMap = new HashMap<>();
+		Map<Class<?>, Annotation> annotationMap = new HashMap<>();
 		for (var param : parameterList) {
 			for (var annotation : param.getDeclaredAnnotations()) {
 				if (annotationMap.containsKey(annotation.annotationType())) {
 					continue;
 				}
 
-				var metadata = new DefaultAnnotationMetadata(annotation);
-				annotationMap.put(annotation.annotationType(), metadata);
+				annotationMap.put(annotation.annotationType(), annotation);
 			}
 		}
 

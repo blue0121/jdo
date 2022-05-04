@@ -1,6 +1,6 @@
 package io.jutil.jdo.core.reflect2;
 
-import io.jutil.jdo.core.reflect.ExecutableOperation;
+import io.jutil.jdo.core.reflect.MethodSignature;
 
 /**
  * 方法操作
@@ -9,6 +9,13 @@ import io.jutil.jdo.core.reflect.ExecutableOperation;
  * @since 2022-04-28
  */
 public interface MethodOperation extends ExecutableOperation {
+
+	/**
+	 * 方法签名
+	 *
+	 * @return
+	 */
+	MethodSignature getMethodSignature();
 
 	/**
 	 * 返回类型

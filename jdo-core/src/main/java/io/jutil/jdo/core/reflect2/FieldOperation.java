@@ -1,5 +1,6 @@
 package io.jutil.jdo.core.reflect2;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -26,30 +27,32 @@ public interface FieldOperation extends AnnotationOperation, NameOperation {
 	 * 根据注解类型获取Getter方法注解，包括超类和接口
 	 *
 	 * @param annotationClass
+	 * @param <T>
 	 * @return
 	 */
-	AnnotationMetadata getGetterAnnotation(Class<?> annotationClass);
+	<T extends Annotation> T getGetterAnnotation(Class<?> annotationClass);
 
 	/**
 	 * 获取Getter方法所有注解，包括超类和接口
 	 *
 	 * @return
 	 */
-	List<AnnotationMetadata> getGetterAnnotations();
+	List<Annotation> getGetterAnnotations();
 
 	/**
 	 * 根据注解类型获取Setter方法注解，包括超类和接口
 	 *
 	 * @param annotationClass
+	 * @param <T>
 	 * @return
 	 */
-	AnnotationMetadata getSetterAnnotation(Class<?> annotationClass);
+	<T extends Annotation> T getSetterAnnotation(Class<?> annotationClass);
 
 	/**
 	 * 获取Setter方法所有注解，包括超类和接口
 	 *
 	 * @return
 	 */
-	List<AnnotationMetadata> getSetterAnnotations();
+	List<Annotation> getSetterAnnotations();
 
 }
