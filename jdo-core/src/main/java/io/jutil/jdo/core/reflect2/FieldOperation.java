@@ -10,6 +10,13 @@ import java.util.List;
 public interface FieldOperation extends AnnotationOperation, NameOperation {
 
 	/**
+	 * 字段名称
+	 *
+	 * @return
+	 */
+	String getFieldName();
+
+	/**
 	 * 字段类型
 	 *
 	 * @return

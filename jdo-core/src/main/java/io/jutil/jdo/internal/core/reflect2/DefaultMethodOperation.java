@@ -1,9 +1,7 @@
 package io.jutil.jdo.internal.core.reflect2;
 
-import io.jutil.jdo.core.reflect.MethodSignature;
 import io.jutil.jdo.core.reflect2.MethodOperation;
-import io.jutil.jdo.internal.core.reflect.DefaultBeanMethod;
-import io.jutil.jdo.internal.core.reflect.DefaultMethodSignature;
+import io.jutil.jdo.core.reflect2.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +15,7 @@ import java.util.List;
  * @since 2022-05-01
  */
 public abstract class DefaultMethodOperation extends DefaultExecutableOperation implements MethodOperation {
-	private static Logger logger = LoggerFactory.getLogger(DefaultBeanMethod.class);
+	private static Logger logger = LoggerFactory.getLogger(DefaultMethodOperation.class);
 
 	private final static String SET_PREFIX = "set";
 	private final static String GET_PREFIX = "get";

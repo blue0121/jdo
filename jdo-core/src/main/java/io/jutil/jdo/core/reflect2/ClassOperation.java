@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Jin Zheng
  * @since 2022-04-28
  */
-public interface ClassOperation {
+public interface ClassOperation extends AnnotationOperation, NameOperation {
 
 	/**
 	 * 获取目标类型
