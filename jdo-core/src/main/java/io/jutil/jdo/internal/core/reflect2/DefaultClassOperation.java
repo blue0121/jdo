@@ -214,8 +214,10 @@ public class DefaultClassOperation extends DefaultAnnotationOperation implements
 	private void parseField() {
 		Map<String, ClassFieldOperation> beanFieldMap = new LinkedHashMap<>();
 		Map<String, Field> map = new LinkedHashMap<>();
-		this.filterField(this.targetClass.getDeclaredFields(), map);
-		this.filterField(this.targetClass.getFields(), map);
+		for (var clazz : superClassList) {
+			this.filterField(clazz.getDeclaredFields(), map);
+		}
+
 		for (var entry : map.entrySet()) {
 			var getter = getterMap.get(entry.getKey());
 			var setterSet = setterMap.get(entry.getKey());
