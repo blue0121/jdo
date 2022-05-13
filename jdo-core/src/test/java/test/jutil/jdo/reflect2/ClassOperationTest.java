@@ -28,7 +28,7 @@ public class ClassOperationTest {
 	@CsvSource({"test.jutil.jdo.reflect2.ClassOperationTest$CommonClass,false",
 			"test.jutil.jdo.reflect2.ClassOperationTest$CommonClass2,true"})
 	public void testParse(Class<?> targetClass, boolean isPublic) {
-		var clazz = ReflectFactory.get(targetClass);
+		var clazz = ReflectFactory.getClassOperation(targetClass);
 		Assertions.assertEquals(targetClass, clazz.getTargetClass());
 		Assertions.assertNull(clazz.getAnnotation(Common.class));
 		Assertions.assertTrue(clazz.getAnnotations().isEmpty());
@@ -60,7 +60,7 @@ public class ClassOperationTest {
 	public void testValue(Class<?> targetClass) {
 		String username = "username";
 		String password = "password";
-		var clazz = ReflectFactory.get(targetClass);
+		var clazz = ReflectFactory.getClassOperation(targetClass);
 		Object target = switch (targetClass.getSimpleName()) {
 			case "CommonClass" -> new CommonClass(username, password);
 			case "CommonClass2" -> new CommonClass2(username, password);
@@ -73,8 +73,8 @@ public class ClassOperationTest {
 
 	@Test
 	public void testCache() {
-		var class1 = ReflectFactory.get(CommonClass.class);
-		var class2 = ReflectFactory.get(CommonClass.class);
+		var class1 = ReflectFactory.getClassOperation(CommonClass.class);
+		var class2 = ReflectFactory.getClassOperation(CommonClass.class);
 		Assertions.assertSame(class1, class2);
 	}
 

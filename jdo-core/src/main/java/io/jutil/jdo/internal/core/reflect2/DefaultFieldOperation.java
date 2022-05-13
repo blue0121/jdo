@@ -37,7 +37,7 @@ public abstract class DefaultFieldOperation extends DefaultAnnotationOperation i
 		this.parseAnnotation();
 		if (logger.isDebugEnabled()) {
 			logger.debug("字段: {}, {}, Setter方法: {}, Getter方法: {}, 字段注解: {}," +
-							" Getter方法注解: {}, Getter方法注解: {}",
+							" Getter方法注解: {}, Setter方法注解: {}",
 					fieldName, field != null, setterMethod != null ? setterMethod.getName() : null,
 					getterMethod != null ? getterMethod.getName() : null,
 					this.getAnnotations(), getterAnnotationList, setterAnnotationList);
@@ -118,6 +118,6 @@ public abstract class DefaultFieldOperation extends DefaultAnnotationOperation i
 
 	@Override
 	public String getName() {
-		return field.getName();
+		return fieldName;
 	}
 }

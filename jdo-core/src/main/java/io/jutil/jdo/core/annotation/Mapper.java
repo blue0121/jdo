@@ -16,9 +16,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Mapper {
-	/**
-	 * 映射字段名，默认映射为大小写字段名<br/>
-	 * user_id => userId
-	 */
-	String name() default "";
+
 }

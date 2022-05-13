@@ -24,11 +24,9 @@ public class ReflectFactory {
 	 * @param targetClass
 	 * @return
 	 */
-	public static ClassOperation get(Class<?> targetClass) {
+	public static ClassOperation getClassOperation(Class<?> targetClass) {
 		return classOperationMap.computeIfAbsent(targetClass, DefaultClassOperation::new);
 	}
-
-
 
 	/**
 	 * 创建方法签名对象
@@ -37,7 +35,7 @@ public class ReflectFactory {
 	 * @param parameterTypes
 	 * @return
 	 */
-	static MethodSignature create(String name, Class<?>... parameterTypes) {
+	public static MethodSignature createMethodSignature(String name, Class<?>... parameterTypes) {
 		return new DefaultMethodSignature(name, parameterTypes);
 	}
 
@@ -48,7 +46,7 @@ public class ReflectFactory {
 	 * @param parameterTypes
 	 * @return
 	 */
-	static MethodSignature create(String name, Collection<Class<?>> parameterTypes) {
+	public static MethodSignature createMethodSignature(String name, Collection<Class<?>> parameterTypes) {
 		return new DefaultMethodSignature(name, parameterTypes);
 	}
 
@@ -58,7 +56,7 @@ public class ReflectFactory {
 	 * @param method
 	 * @return
 	 */
-	static MethodSignature create(Method method) {
+	public static MethodSignature createMethodSignature(Method method) {
 		return new DefaultMethodSignature(method);
 	}
 
