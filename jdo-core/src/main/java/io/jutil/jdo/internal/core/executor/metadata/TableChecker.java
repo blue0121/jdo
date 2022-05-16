@@ -1,6 +1,6 @@
 package io.jutil.jdo.internal.core.executor.metadata;
 
-import io.jutil.jdo.core.parser2.EntityMetadata;
+import io.jutil.jdo.core.parser.EntityMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +15,10 @@ import java.util.List;
 public class TableChecker {
 	private static Logger logger = LoggerFactory.getLogger(TableChecker.class);
 
-	private final io.jutil.jdo.internal.core.parser2.MetadataCache configCache;
+	private final io.jutil.jdo.internal.core.parser.MetadataCache configCache;
 	private final MetadataCache metadataCache;
 
-	public TableChecker(DataSource ds, io.jutil.jdo.internal.core.parser2.MetadataCache cache) {
+	public TableChecker(DataSource ds, io.jutil.jdo.internal.core.parser.MetadataCache cache) {
 		this.configCache = cache;
 		this.metadataCache = new MetadataCache();
 	}

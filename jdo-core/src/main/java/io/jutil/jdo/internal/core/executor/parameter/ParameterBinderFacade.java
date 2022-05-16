@@ -1,6 +1,6 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
-import io.jutil.jdo.internal.core.parser2.ParserFacade;
+import io.jutil.jdo.internal.core.parser.ParserFacade;
 import io.jutil.jdo.internal.core.util.ObjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

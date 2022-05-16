@@ -1,7 +1,7 @@
 package io.jutil.jdo.core.engine;
 
 import io.jutil.jdo.core.annotation.LockModeType;
-import io.jutil.jdo.core.parser2.EntityMetadata;
+import io.jutil.jdo.core.parser.EntityMetadata;
 
 import java.util.List;
 import java.util.Map;

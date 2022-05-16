@@ -1,7 +1,7 @@
 package io.jutil.jdo.internal.core.util;
 
-import io.jutil.jdo.core.parser2.EntityMetadata;
-import io.jutil.jdo.core.parser2.VersionMetadata;
+import io.jutil.jdo.core.parser.EntityMetadata;
+import io.jutil.jdo.core.parser.VersionMetadata;
 
 import java.util.Map;
 

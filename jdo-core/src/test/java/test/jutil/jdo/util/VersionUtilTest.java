@@ -1,7 +1,7 @@
 package test.jutil.jdo.util;
 
-import io.jutil.jdo.core.parser2.EntityMetadata;
-import io.jutil.jdo.core.parser2.VersionMetadata;
+import io.jutil.jdo.core.parser.EntityMetadata;
+import io.jutil.jdo.core.parser.VersionMetadata;
 import io.jutil.jdo.internal.core.util.VersionUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

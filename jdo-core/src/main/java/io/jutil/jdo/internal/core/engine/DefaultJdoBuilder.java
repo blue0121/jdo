@@ -8,7 +8,7 @@ import io.jutil.jdo.internal.core.dialect.DetectDialect;
 import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.DataSourceFactory;
 import io.jutil.jdo.internal.core.executor.metadata.TableChecker;
-import io.jutil.jdo.internal.core.parser2.ParserFacade;
+import io.jutil.jdo.internal.core.parser.ParserFacade;
 import io.jutil.jdo.internal.core.path.ClassScanner;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;

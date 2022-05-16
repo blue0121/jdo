@@ -1,8 +1,8 @@
 package test.jutil.jdo.executor.parameter;
 
 import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFacade;
-import io.jutil.jdo.internal.core.parser2.MetadataCache;
-import io.jutil.jdo.internal.core.parser2.ParserFacade;
+import io.jutil.jdo.internal.core.parser.MetadataCache;
+import io.jutil.jdo.internal.core.parser.ParserFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

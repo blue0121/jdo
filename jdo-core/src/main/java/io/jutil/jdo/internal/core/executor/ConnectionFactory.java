@@ -2,7 +2,7 @@ package io.jutil.jdo.internal.core.executor;
 
 import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFacade;
-import io.jutil.jdo.internal.core.parser2.ParserFacade;
+import io.jutil.jdo.internal.core.parser.ParserFacade;
 import io.jutil.jdo.internal.core.util.JdbcUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

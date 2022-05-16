@@ -1,11 +1,11 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import io.jutil.jdo.core.exception.JdbcException;
-import io.jutil.jdo.core.parser2.EntityMetadata;
-import io.jutil.jdo.core.parser2.FieldMetadata;
-import io.jutil.jdo.core.reflect2.ClassFieldOperation;
-import io.jutil.jdo.core.reflect2.ClassOperation;
-import io.jutil.jdo.internal.core.parser2.MetadataCache;
+import io.jutil.jdo.core.parser.EntityMetadata;
+import io.jutil.jdo.core.parser.FieldMetadata;
+import io.jutil.jdo.core.reflect.ClassFieldOperation;
+import io.jutil.jdo.core.reflect.ClassOperation;
+import io.jutil.jdo.internal.core.parser.MetadataCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

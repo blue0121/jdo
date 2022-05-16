@@ -2,8 +2,8 @@ package test.jutil.jdo.sql;
 
 import io.jutil.jdo.internal.core.dialect.Dialect;
 import io.jutil.jdo.internal.core.dialect.MySQLDialect;
-import io.jutil.jdo.internal.core.parser2.MetadataCache;
-import io.jutil.jdo.internal.core.parser2.ParserFacade;
+import io.jutil.jdo.internal.core.parser.MetadataCache;
+import io.jutil.jdo.internal.core.parser.ParserFacade;
 import io.jutil.jdo.internal.core.sql.SqlHandlerFacade;
 import test.jutil.jdo.model.GroupEntity;
 import test.jutil.jdo.model.GroupMapper;

@@ -11,8 +11,8 @@ module jdo.core {
 	exports io.jutil.jdo.core.collection;
 	exports io.jutil.jdo.core.engine;
 	exports io.jutil.jdo.core.exception;
-	exports io.jutil.jdo.core.parser2;
-	exports io.jutil.jdo.core.reflect2;
+	exports io.jutil.jdo.core.parser;
+	exports io.jutil.jdo.core.reflect;
 
 
 }

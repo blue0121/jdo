@@ -2,10 +2,10 @@ package test.jutil.jdo.util;
 
 import io.jutil.jdo.core.annotation.GeneratorType;
 import io.jutil.jdo.core.exception.JdbcException;
-import io.jutil.jdo.core.parser2.EntityMetadata;
-import io.jutil.jdo.core.parser2.IdMetadata;
-import io.jutil.jdo.core.parser2.IdType;
-import io.jutil.jdo.core.reflect2.ClassFieldOperation;
+import io.jutil.jdo.core.parser.EntityMetadata;
+import io.jutil.jdo.core.parser.IdMetadata;
+import io.jutil.jdo.core.parser.IdType;
+import io.jutil.jdo.core.reflect.ClassFieldOperation;
 import io.jutil.jdo.internal.core.executor.KeyHolder;
 import io.jutil.jdo.internal.core.util.IdUtil;
 import org.junit.jupiter.api.Assertions;

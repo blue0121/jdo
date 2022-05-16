@@ -1,6 +1,6 @@
 package io.jutil.jdo.internal.core.sql;
 
-import io.jutil.jdo.core.parser2.EntityMetadata;
+import io.jutil.jdo.core.parser.EntityMetadata;
 import lombok.Getter;
 
 import java.util.List;

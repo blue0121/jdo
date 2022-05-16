@@ -1,10 +1,10 @@
 package io.jutil.jdo.internal.core.sql;
 
 import io.jutil.jdo.core.exception.EntityFieldException;
-import io.jutil.jdo.core.parser2.ColumnMetadata;
-import io.jutil.jdo.core.parser2.FieldMetadata;
-import io.jutil.jdo.core.parser2.IdMetadata;
-import io.jutil.jdo.core.parser2.VersionMetadata;
+import io.jutil.jdo.core.parser.ColumnMetadata;
+import io.jutil.jdo.core.parser.FieldMetadata;
+import io.jutil.jdo.core.parser.IdMetadata;
+import io.jutil.jdo.core.parser.VersionMetadata;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;

@@ -1,8 +1,8 @@
 package io.jutil.jdo.internal.core.sql.map;
 
 import io.jutil.jdo.core.exception.EntityFieldException;
-import io.jutil.jdo.core.parser2.IdMetadata;
-import io.jutil.jdo.core.parser2.IdType;
+import io.jutil.jdo.core.parser.IdMetadata;
+import io.jutil.jdo.core.parser.IdType;
 import io.jutil.jdo.internal.core.id.IdGenerator;
 import io.jutil.jdo.internal.core.id.SnowflakeId;
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;

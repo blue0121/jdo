@@ -1,6 +1,6 @@
 package io.jutil.jdo.internal.core.sql.generator;
 
-import io.jutil.jdo.core.parser2.EntityMetadata;
+import io.jutil.jdo.core.parser.EntityMetadata;
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
