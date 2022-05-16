@@ -1,6 +1,6 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
-import io.jutil.jdo.internal.core.parser.ParserFactory;
+import io.jutil.jdo.internal.core.parser2.ParserFacade;
 import io.jutil.jdo.internal.core.util.ObjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +31,12 @@ import java.util.concurrent.ConcurrentMap;
 public class ParameterBinderFacade {
 	private static Logger logger = LoggerFactory.getLogger(ParameterBinderFacade.class);
 
-	private final ParserFactory parserFactory;
+	private final ParserFacade parserFacade;
 	private final ConcurrentMap<Class<?>, ParameterBinder<?>> binderMap = new ConcurrentHashMap<>();
 	private final Map<Class<?>, ParameterBindFactory<?>> factoryMap = new HashMap<>();
 
-	public ParameterBinderFacade(ParserFactory parserFactory) {
-		this.parserFactory = parserFactory;
+	public ParameterBinderFacade(ParserFacade parserFacade) {
+		this.parserFacade = parserFacade;
 		this.init();
 		this.log();
 	}
@@ -141,7 +141,7 @@ public class ParameterBinderFacade {
 		throw new UnsupportedOperationException("不支持类型: " + key.getName());
 	}
 
-	protected ParserFactory getParserFactory() {
-		return parserFactory;
+	protected ParserFacade getParserFacade() {
+		return parserFacade;
 	}
 }

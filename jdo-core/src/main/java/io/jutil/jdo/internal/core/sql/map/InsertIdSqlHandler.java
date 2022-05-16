@@ -1,8 +1,8 @@
 package io.jutil.jdo.internal.core.sql.map;
 
 import io.jutil.jdo.core.exception.EntityFieldException;
-import io.jutil.jdo.core.parser.IdConfig;
-import io.jutil.jdo.core.parser.IdType;
+import io.jutil.jdo.core.parser2.IdMetadata;
+import io.jutil.jdo.core.parser2.IdType;
 import io.jutil.jdo.internal.core.id.IdGenerator;
 import io.jutil.jdo.internal.core.id.SnowflakeId;
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
@@ -24,7 +24,7 @@ public class InsertIdSqlHandler extends AbstractSqlHandler {
 
     @Override
     public void handle(SqlRequest request, SqlResponse response) {
-        var idMap = request.getConfig().getIdMap();
+        var idMap = request.getMetadata().getIdMap();
         for (var entry : idMap.entrySet()) {
             var id = entry.getValue();
             var field = id.getFieldName();
@@ -60,11 +60,11 @@ public class InsertIdSqlHandler extends AbstractSqlHandler {
         }
     }
 
-    private void handleAssigned(SqlRequest request, SqlResponse response, IdConfig id) {
+    private void handleAssigned(SqlRequest request, SqlResponse response, IdMetadata id) {
         var map = request.getMap();
         Object value = null;
         if (map == null) {
-            var beanField = id.getBeanField();
+            var beanField = id.getFieldOperation();
             value = beanField.getFieldValue(request.getTarget());
         } else {
             value = map.get(id.getFieldName());

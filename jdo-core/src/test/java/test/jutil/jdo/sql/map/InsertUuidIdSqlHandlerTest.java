@@ -25,15 +25,15 @@ public class InsertUuidIdSqlHandlerTest extends SqlHandlerTest {
 	private SqlHandler handler = new InsertIdSqlHandler(SnowflakeIdFactory.getSingleSnowflakeId());
 
 	public InsertUuidIdSqlHandlerTest() {
-		parseFactory.parse(UuidIntIdEntity.class);
-		parseFactory.parse(UuidLongIdEntity.class);
-		parseFactory.parse(UuidStringIdEntity.class);
+		parserFacade.parse(UuidIntIdEntity.class);
+		parserFacade.parse(UuidLongIdEntity.class);
+		parserFacade.parse(UuidStringIdEntity.class);
 	}
 
 	@ParameterizedTest
 	@CsvSource({"true,-1","true,10","false,-1","false,10"})
 	public void testUuidInt(boolean isEntity, int id) {
-		var config = configCache.loadEntityConfig(UuidIntIdEntity.class);
+		var config = metadataCache.loadEntityMetadata(UuidIntIdEntity.class);
 		SqlRequest request = null;
 		if (isEntity) {
 			var entity = new UuidIntIdEntity();
@@ -55,7 +55,7 @@ public class InsertUuidIdSqlHandlerTest extends SqlHandlerTest {
 	@ParameterizedTest
 	@CsvSource({"true,-1","true,10","false,-1","false,10"})
 	public void testUuidLong(boolean isEntity, long id) {
-		var config = configCache.loadEntityConfig(UuidLongIdEntity.class);
+		var config = metadataCache.loadEntityMetadata(UuidLongIdEntity.class);
 		SqlRequest request = null;
 		if (isEntity) {
 			var entity = new UuidLongIdEntity();
@@ -79,7 +79,7 @@ public class InsertUuidIdSqlHandlerTest extends SqlHandlerTest {
 	@ParameterizedTest
 	@CsvSource({"true,","true,abc","false,","false,abc"})
 	public void testUuidString(boolean isEntity, String id) {
-		var config = configCache.loadEntityConfig(UuidStringIdEntity.class);
+		var config = metadataCache.loadEntityMetadata(UuidStringIdEntity.class);
 		SqlRequest request = null;
 		if (isEntity) {
 			var entity = new UuidStringIdEntity();

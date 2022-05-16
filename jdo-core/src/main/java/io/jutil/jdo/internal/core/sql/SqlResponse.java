@@ -1,6 +1,6 @@
 package io.jutil.jdo.internal.core.sql;
 
-import io.jutil.jdo.core.parser.EntityConfig;
+import io.jutil.jdo.core.parser2.EntityMetadata;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
  * @since 2022-03-21
  */
 public class SqlResponse {
-	private final EntityConfig config;
+	private final EntityMetadata metadata;
 	private final Map<String, Object> paramMap = new HashMap<>();
 	private String sql;
 	private boolean isForceVersion;
@@ -20,12 +20,12 @@ public class SqlResponse {
 	private final List<Object> paramList = new ArrayList<>();
 	private final List<List<?>> batchParamList = new ArrayList<>();
 
-	public SqlResponse(EntityConfig config) {
-		this.config = config;
+	public SqlResponse(EntityMetadata metadata) {
+		this.metadata = metadata;
 	}
 
-	public EntityConfig getConfig() {
-		return config;
+	public EntityMetadata getMetadata() {
+		return metadata;
 	}
 
 	public void putParam(String field, Object value) {

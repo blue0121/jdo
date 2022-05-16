@@ -22,13 +22,13 @@ public class ColumnSqlHandlerTest extends SqlHandlerTest {
 	private SqlHandler handler = new ColumnSqlHandler();
 
 	public ColumnSqlHandlerTest() {
-		parseFactory.parse(ColumnEntity.class);
+		parserFacade.parse(ColumnEntity.class);
 	}
 
 	@Test
 	public void testHandleObject1() {
 		var column = new ColumnEntity();
-		var config = configCache.loadEntityConfig(ColumnEntity.class);
+		var config = metadataCache.loadEntityMetadata(ColumnEntity.class);
 		var request = SqlRequest.create(column, config, false);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -40,7 +40,7 @@ public class ColumnSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testHandleObject2() {
 		var column = new ColumnEntity();
-		var config = configCache.loadEntityConfig(ColumnEntity.class);
+		var config = metadataCache.loadEntityMetadata(ColumnEntity.class);
 		var request = SqlRequest.create(column, config, true);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -50,7 +50,7 @@ public class ColumnSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testHandleMap1() {
 		Map<String, Object> map = new HashMap<>();
-		var config = configCache.loadEntityConfig(ColumnEntity.class);
+		var config = metadataCache.loadEntityMetadata(ColumnEntity.class);
 		var request = SqlRequest.create(map, config);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -61,7 +61,7 @@ public class ColumnSqlHandlerTest extends SqlHandlerTest {
 	public void testHandleMap2() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("test", "test");
-		var config = configCache.loadEntityConfig(ColumnEntity.class);
+		var config = metadataCache.loadEntityMetadata(ColumnEntity.class);
 		var request = SqlRequest.create(map, config);
 		handler.handle(request, response);
 		var param = response.toParamMap();

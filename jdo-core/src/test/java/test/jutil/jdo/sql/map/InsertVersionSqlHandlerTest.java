@@ -23,13 +23,13 @@ public class InsertVersionSqlHandlerTest extends SqlHandlerTest {
 	private SqlHandler handler = new InsertVersionSqlHandler();
 
 	public InsertVersionSqlHandlerTest() {
-		parseFactory.parse(ForceVersionEntity.class);
+		parserFacade.parse(ForceVersionEntity.class);
 	}
 
 	@Test
 	public void testHandleForceVersionEntity1() {
 		var version = new ForceVersionEntity();
-		var config = configCache.loadEntityConfig(ForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(ForceVersionEntity.class);
 		var request = SqlRequest.create(version, config, false);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -41,7 +41,7 @@ public class InsertVersionSqlHandlerTest extends SqlHandlerTest {
 	public void testHandleForceVersionEntity2() {
 		var version = new ForceVersionEntity();
 		version.version = 10;
-		var config = configCache.loadEntityConfig(ForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(ForceVersionEntity.class);
 		var request = SqlRequest.create(version, config, false);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -52,7 +52,7 @@ public class InsertVersionSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testHandleMap1() {
 		Map<String, Object> map = new HashMap<>();
-		var config = configCache.loadEntityConfig(ForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(ForceVersionEntity.class);
 		var request = SqlRequest.create(map, config);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -64,7 +64,7 @@ public class InsertVersionSqlHandlerTest extends SqlHandlerTest {
 	public void testHandleMap2() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("version", 10);
-		var config = configCache.loadEntityConfig(ForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(ForceVersionEntity.class);
 		var request = SqlRequest.create(map, config);
 		handler.handle(request, response);
 		var param = response.toParamMap();

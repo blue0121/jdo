@@ -17,7 +17,7 @@ public class UpdateIdSqlHandler extends IdSqlHandler {
 	public void handle(SqlRequest request, SqlResponse response) {
 		super.handle(request, response);
 
-		var config = request.getConfig();
+		var config = request.getMetadata();
 		var idMap = config.getIdMap();
 		var param = response.toParamMap();
 		for (var entry : idMap.entrySet()) {

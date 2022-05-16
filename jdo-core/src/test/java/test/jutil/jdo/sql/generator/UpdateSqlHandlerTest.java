@@ -28,7 +28,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
     public void testSql1() {
 		response.putParam("name", "blue");
 		response.putParam("id", 1);
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 	    System.out.println(response.getSql());
@@ -41,7 +41,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 		response.putParam("name", "blue");
 		response.putParam("count", 1);
 		response.putParam("id", 1);
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
@@ -54,7 +54,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 		response.putParam("name", "blue");
 		response.putParam("id", 1);
 		response.putParam("version", 1);
-		var config = configCache.loadEntityConfig(UserEntity.class);
+		var config = metadataCache.loadEntityMetadata(UserEntity.class);
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
@@ -65,7 +65,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 
 	@Test
 	public void testSqlFailure1() {
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, config);
 		Assertions.assertThrows(NullPointerException.class, () -> handler.handle(request, response),
 				"参数 不能为空");
@@ -74,7 +74,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure2() {
 		response.putParam("aaa", "aaa");
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, config);
 		Assertions.assertThrows(JdbcException.class, () -> handler.handle(request, response),
 				"字段 [aaa] 不存在");
@@ -83,7 +83,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure3() {
 		response.putParam("name", "blue");
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, config);
 		Assertions.assertThrows(JdbcException.class, () -> handler.handle(request, response),
 				"@Id 不能为空");
@@ -92,7 +92,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure4() {
 		response.putParam("id", 1);
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, config);
 		Assertions.assertThrows(JdbcException.class, () -> handler.handle(request, response),
 				"@Column 不能为空");

@@ -25,13 +25,13 @@ public class UpdateIdSqlHandlerTest extends SqlHandlerTest {
 	private SqlHandler handler = new UpdateIdSqlHandler();
 
 	public UpdateIdSqlHandlerTest() {
-		parseFactory.parse(IdEntity.class);
+		parserFacade.parse(IdEntity.class);
 	}
 
 	@ParameterizedTest
 	@CsvSource({"true,-1","true,10","false,-1","false,10"})
 	public void testHandle(boolean isEntity, int id) {
-		var config = configCache.loadEntityConfig(IdEntity.class);
+		var config = metadataCache.loadEntityMetadata(IdEntity.class);
 		SqlRequest request = null;
 		if (isEntity) {
 			var entity = new IdEntity();
@@ -62,7 +62,7 @@ public class UpdateIdSqlHandlerTest extends SqlHandlerTest {
 	public void testHandleMap() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("test", "test");
-		var config = configCache.loadEntityConfig(IdEntity.class);
+		var config = metadataCache.loadEntityMetadata(IdEntity.class);
 		var request = SqlRequest.create(map, config);
 		Assertions.assertThrows(EntityFieldException.class, () -> handler.handle(request, response));
 	}

@@ -15,7 +15,7 @@ public class IdSqlHandler extends AbstractSqlHandler {
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {
-		var config = request.getConfig();
+		var config = request.getMetadata();
 		var idMap = config.getIdMap();
 		var map = request.getMap();
 		if (map == null) {

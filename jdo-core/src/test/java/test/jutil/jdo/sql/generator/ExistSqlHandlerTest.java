@@ -27,7 +27,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 	public void testSql1() {
 		response.putParam("name", "blue");
 		response.putParam("id", 1);
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, List.of("name"), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
@@ -39,7 +39,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 	public void testSql2() {
 		response.putParam("name", "blue");
 		response.putParam("id", 1);
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, List.of(), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
@@ -50,7 +50,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSql3() {
 		response.putParam("name", "blue");
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, List.of("name"), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
@@ -60,7 +60,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 
 	@Test
 	public void testSqlFailure1() {
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, List.of(), config);
 		Assertions.assertThrows(JdbcException.class, () -> handler.handle(request, response),
 				"@Column 或 @Id 不能为空");
@@ -69,7 +69,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testSqlFailure2() {
 		response.putParam("aaa", "aaa");
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, List.of("aaa"), config);
 		Assertions.assertThrows(JdbcException.class, () -> handler.handle(request, response),
 				"字段 [aaa] 不存在");

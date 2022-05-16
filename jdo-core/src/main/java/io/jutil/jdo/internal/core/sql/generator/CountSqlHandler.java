@@ -21,7 +21,7 @@ public class CountSqlHandler extends AbstractSqlHandler {
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {
-		var config = request.getConfig();
+		var config = request.getMetadata();
 		var map = response.toParamMap();
 		AssertUtil.notEmpty(map, "参数");
 

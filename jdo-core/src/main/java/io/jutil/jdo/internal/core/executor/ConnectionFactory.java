@@ -2,7 +2,7 @@ package io.jutil.jdo.internal.core.executor;
 
 import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFacade;
-import io.jutil.jdo.internal.core.parser.ParserFactory;
+import io.jutil.jdo.internal.core.parser2.ParserFacade;
 import io.jutil.jdo.internal.core.util.JdbcUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +26,13 @@ public class ConnectionFactory {
 	private final ThreadLocal<Boolean> tlAutoCommit;
 	private final ThreadLocal<Connection> tlConnection;
 
-	public ConnectionFactory(DataSource dataSource, ParserFactory parserFactory) {
-		this.binderFacade = new ParameterBinderFacade(parserFactory);
+	public ConnectionFactory(DataSource dataSource, ParserFacade parserFacade) {
+		this.binderFacade = new ParameterBinderFacade(parserFacade);
 		this.tlAutoCommit = ThreadLocal.withInitial(() -> true);
 		this.tlConnection = ThreadLocal.withInitial(() -> {
 			try {
 				var conn = dataSource.getConnection();
-				boolean autoCommit = tlAutoCommit.get().booleanValue();
+				boolean autoCommit = tlAutoCommit.get();
 				if (!autoCommit) {
 					conn.setAutoCommit(false);
 				}
@@ -53,7 +53,7 @@ public class ConnectionFactory {
 	}
 
 	public void close(ResultSet rs, Statement stmt, Connection conn) {
-		var autoCommit = this.tlAutoCommit.get().booleanValue();
+		var autoCommit = this.tlAutoCommit.get();
 		if (autoCommit) {
 			JdbcUtil.close(rs, stmt, conn);
 			tlConnection.remove();

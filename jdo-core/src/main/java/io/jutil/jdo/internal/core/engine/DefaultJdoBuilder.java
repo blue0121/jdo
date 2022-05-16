@@ -8,7 +8,7 @@ import io.jutil.jdo.internal.core.dialect.DetectDialect;
 import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.DataSourceFactory;
 import io.jutil.jdo.internal.core.executor.metadata.TableChecker;
-import io.jutil.jdo.internal.core.parser.ParserFactory;
+import io.jutil.jdo.internal.core.parser2.ParserFacade;
 import io.jutil.jdo.internal.core.path.ClassScanner;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class DefaultJdoBuilder implements JdoBuilder {
 	private DataSourceOptions dataSourceOptions;
 	private DataSourceFactory dataSourceFactory;
 	private JdoTemplate jdoTemplate;
-	private ParserFactory parserFactory;
+	private ParserFacade parserFacade;
 	private final List<Class<?>> clazzList = new ArrayList<>();
 	private final List<String> pkgList = new ArrayList<>();
 
@@ -37,12 +37,12 @@ public class DefaultJdoBuilder implements JdoBuilder {
 	public Jdo build() {
 		this.dataSourceFactory = new DataSourceFactory(dataSourceOptions);
 		var dialect = DetectDialect.dialect(dataSourceFactory.getDateSource());
-		this.parserFactory = new ParserFactory(dialect, true);
-		var connectionFactory = new ConnectionFactory(dataSourceFactory.getDateSource(), parserFactory);
-		this.jdoTemplate = new DefaultJdoTemplate(parserFactory, connectionFactory);
+		this.parserFacade = new ParserFacade(dialect, true);
+		var connectionFactory = new ConnectionFactory(dataSourceFactory.getDateSource(), parserFacade);
+		this.jdoTemplate = new DefaultJdoTemplate(parserFacade, connectionFactory);
 
 		this.parseClazz();
-		var tableChecker = new TableChecker(dataSourceFactory.getDateSource(), parserFactory.getConfigCache());
+		var tableChecker = new TableChecker(dataSourceFactory.getDateSource(), parserFacade.getMetadataCache());
 		tableChecker.check();
 
 		DefaultJdo jdo = new DefaultJdo(this);
@@ -77,9 +77,9 @@ public class DefaultJdoBuilder implements JdoBuilder {
 
 	private void parseClazz() {
 		for (var clazz : clazzList) {
-			parserFactory.parse(clazz);
+			parserFacade.parse(clazz);
 		}
-		ClassScanner scanner = new ClassScanner(c -> parserFactory.parse(c));
+		ClassScanner scanner = new ClassScanner(c -> parserFacade.parse(c));
 		scanner.scan(pkgList);
 	}
 

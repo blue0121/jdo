@@ -21,13 +21,13 @@ public class DeleteBySqlHandler extends AbstractSqlHandler {
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {
-		var config = request.getConfig();
+		var config = request.getMetadata();
 		var map = response.toParamMap();
 		AssertUtil.notEmpty(map, "参数");
 
 		var idMap = config.getIdMap();
 		var columnMap = config.getColumnMap();
-		var version = config.getVersionConfig();
+		var version = config.getVersionMetadata();
 		List<String> columnList = new ArrayList<>();
 		for (var entry : map.entrySet()) {
 			var whereColumn = this.getColumnString(entry.getKey(), idMap, columnMap, version);

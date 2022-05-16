@@ -17,14 +17,14 @@ public class UpdateVersionSqlHandler extends VersionSqlHandler {
 	public void handle(SqlRequest request, SqlResponse response) {
 		super.handle(request, response);
 
-		var version = request.getConfig().getVersionConfig();
+		var version = request.getMetadata().getVersionMetadata();
 		if (version == null || !version.isForce()) {
 			return;
 		}
 
 		var object = response.toParamMap().get(version.getFieldName());
 		if (object == null) {
-			throw new VersionException(request.getClazz(), "缺少版本号");
+			throw new VersionException(request.getTargetClass(), "缺少版本号");
 		}
 	}
 }

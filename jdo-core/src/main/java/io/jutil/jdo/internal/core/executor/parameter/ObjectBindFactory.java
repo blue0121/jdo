@@ -1,11 +1,11 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import io.jutil.jdo.core.exception.JdbcException;
-import io.jutil.jdo.core.parser.EntityConfig;
-import io.jutil.jdo.core.parser.FieldConfig;
-import io.jutil.jdo.core.reflect.BeanField;
-import io.jutil.jdo.core.reflect.JavaBean;
-import io.jutil.jdo.internal.core.parser.ConfigCache;
+import io.jutil.jdo.core.parser2.EntityMetadata;
+import io.jutil.jdo.core.parser2.FieldMetadata;
+import io.jutil.jdo.core.reflect2.ClassFieldOperation;
+import io.jutil.jdo.core.reflect2.ClassOperation;
+import io.jutil.jdo.internal.core.parser2.MetadataCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,21 +36,21 @@ public class ObjectBindFactory implements ParameterBindFactory<Object> {
 		private static Logger logger = LoggerFactory.getLogger(ObjectBindFactory.class);
 
 		private final ParameterBinderFacade binderFacade;
-		private final ConfigCache configCache;
+		private final MetadataCache metadataCache;
 		private final Class<Object> clazz;
-		private final JavaBean javaBean;
-		private final Map<String, BeanField> fieldMap = new HashMap<>();
+		private final ClassOperation classOperation;
+		private final Map<String, ClassFieldOperation> fieldMap = new HashMap<>();
 
 		public ObjectBinder(ParameterBinderFacade binderFacade, Class<Object> clazz) {
 			this.binderFacade = binderFacade;
-			this.configCache = binderFacade.getParserFactory().getConfigCache();
+			this.metadataCache = binderFacade.getParserFacade().getMetadataCache();
 			this.clazz = clazz;
-			var config = configCache.load(clazz);
-			this.javaBean = config.getJavaBean();
+			var config = metadataCache.load(clazz);
+			this.classOperation = config.getClassOperation();
 			config.getColumnMap().forEach((k, v) -> this.setFieldMap(v));
-			if (config instanceof EntityConfig c) {
+			if (config instanceof EntityMetadata c) {
 				c.getIdMap().forEach((k, v) -> this.setFieldMap(v));
-				this.setFieldMap(c.getVersionConfig());
+				this.setFieldMap(c.getVersionMetadata());
 				c.getExtraMap().forEach((k, v) -> this.setFieldMap(v));
 			}
 		}
@@ -65,27 +65,27 @@ public class ObjectBindFactory implements ParameterBindFactory<Object> {
 			throw new UnsupportedOperationException("不支持类型: " + clazz.getName());
 		}
 
-		private void setFieldMap(FieldConfig field) {
+		private void setFieldMap(FieldMetadata field) {
 			if (field == null) {
 				return;
 			}
 
-			fieldMap.put(field.getColumnName().toLowerCase(), field.getBeanField());
-			fieldMap.put(field.getColumnName().toUpperCase(), field.getBeanField());
+			fieldMap.put(field.getColumnName().toLowerCase(), field.getFieldOperation());
+			fieldMap.put(field.getColumnName().toUpperCase(), field.getFieldOperation());
 		}
 
 		@Override
 		public Object fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
-			Object object = javaBean.newInstanceQuietly();
+			Object object = classOperation.newInstanceQuietly();
 			if (object == null) {
-				throw new JdbcException("无法实例化: " + javaBean.getName());
+				throw new JdbcException("无法实例化: " + classOperation.getName());
 			}
 
 			for (int j = 1; j <= rsmd.getColumnCount(); j++) {
 				String label = rsmd.getColumnLabel(j);
-				BeanField field = fieldMap.get(label);
+				var field = fieldMap.get(label);
 				if (field != null) {
-					Class<?> type = field.getField().getType();
+					Class<?> type = field.getType();
 					var binder = binderFacade.getBinder(type);
 					if (logger.isDebugEnabled()) {
 						logger.debug("找到 [{}] ParameterBinder: {}", type.getSimpleName(), binder.getClass().getSimpleName());

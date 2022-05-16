@@ -1,7 +1,5 @@
 package io.jutil.jdo.core.reflect2;
 
-import io.jutil.jdo.core.reflect.NameOperation;
-
 /**
  * 方法签名
  *

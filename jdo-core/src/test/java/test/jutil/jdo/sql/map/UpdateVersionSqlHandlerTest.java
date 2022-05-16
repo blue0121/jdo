@@ -24,15 +24,15 @@ public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	private SqlHandler handler = new UpdateVersionSqlHandler();
 
 	public UpdateVersionSqlHandlerTest() {
-		parseFactory.parse(ForceVersionEntity.class);
-		parseFactory.parse(NonForceVersionEntity.class);
+		parserFacade.parse(ForceVersionEntity.class);
+		parserFacade.parse(NonForceVersionEntity.class);
 	}
 
 	@Test
 	public void testHandleForceVersionEntity1() {
 		var version = new ForceVersionEntity();
 		version.version = 10;
-		var config = configCache.loadEntityConfig(ForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(ForceVersionEntity.class);
 		var request = SqlRequest.create(version, config, true);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -43,7 +43,7 @@ public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testHandleForceVersionEntity2() {
 		var version = new ForceVersionEntity();
-		var config = configCache.loadEntityConfig(ForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(ForceVersionEntity.class);
 		var request = SqlRequest.create(version, config, true);
 		Assertions.assertThrows(VersionException.class, () -> handler.handle(request, response));
 	}
@@ -51,7 +51,7 @@ public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testHandleNonForceVersionEntity1() {
 		var version = new NonForceVersionEntity();
-		var config = configCache.loadEntityConfig(NonForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(NonForceVersionEntity.class);
 		var request = SqlRequest.create(version, config, true);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -62,7 +62,7 @@ public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	public void testHandleNonForceVersionEntity2() {
 		var version = new NonForceVersionEntity();
 		version.version = 10;
-		var config = configCache.loadEntityConfig(NonForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(NonForceVersionEntity.class);
 		var request = SqlRequest.create(version, config, true);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -74,7 +74,7 @@ public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	public void testHandleForceVersionMap1() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("version", 10);
-		var config = configCache.loadEntityConfig(ForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(ForceVersionEntity.class);
 		var request = SqlRequest.create(map, config);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -85,7 +85,7 @@ public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testHandleForceVersionMap2() {
 		Map<String, Object> map = new HashMap<>();
-		var config = configCache.loadEntityConfig(ForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(ForceVersionEntity.class);
 		var request = SqlRequest.create(map, config);
 		Assertions.assertThrows(VersionException.class, () -> handler.handle(request, response));
 	}
@@ -94,7 +94,7 @@ public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	public void testHandleNonForceVersionMap1() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("version", 10);
-		var config = configCache.loadEntityConfig(NonForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(NonForceVersionEntity.class);
 		var request = SqlRequest.create(map, config);
 		handler.handle(request, response);
 		var param = response.toParamMap();
@@ -105,7 +105,7 @@ public class UpdateVersionSqlHandlerTest extends SqlHandlerTest {
 	@Test
 	public void testHandleNonForceVersionMap2() {
 		Map<String, Object> map = new HashMap<>();
-		var config = configCache.loadEntityConfig(NonForceVersionEntity.class);
+		var config = metadataCache.loadEntityMetadata(NonForceVersionEntity.class);
 		var request = SqlRequest.create(map, config);
 		handler.handle(request, response);
 		var param = response.toParamMap();

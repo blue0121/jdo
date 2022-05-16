@@ -2,7 +2,6 @@ package io.jutil.jdo.core.engine;
 
 import io.jutil.jdo.core.collection.Page;
 import io.jutil.jdo.core.exception.JdbcException;
-import io.jutil.jdo.core.parser.EntityConfig;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -129,7 +128,7 @@ public abstract class QueryDao<P, R> {
 	 * @return select 查询语句
 	 */
 	protected StringBuilder selectCount() {
-		EntityConfig entityConfig = jdoTemplate.checkEntityConfig(returnClazz);
+		var entityConfig = jdoTemplate.checkEntityConfig(returnClazz);
 		StringBuilder sql = new StringBuilder(String.format(COUNT_TPL, entityConfig.getEscapeTableName()));
 		return sql;
 	}
@@ -140,7 +139,7 @@ public abstract class QueryDao<P, R> {
 	 * @return select 查询语句
 	 */
 	protected StringBuilder select() {
-		EntityConfig entityConfig = jdoTemplate.checkEntityConfig(returnClazz);
+		var entityConfig = jdoTemplate.checkEntityConfig(returnClazz);
 		StringBuilder sql = new StringBuilder(String.format(SELECT_TPL, entityConfig.getEscapeTableName()));
 		return sql;
 	}
@@ -161,8 +160,8 @@ public abstract class QueryDao<P, R> {
 			return;
 		}
 
-		EntityConfig entityConfig = jdoTemplate.checkEntityConfig(returnClazz);
-		var id = entityConfig.getIdConfig();
+		var entityConfig = jdoTemplate.checkEntityConfig(returnClazz);
+		var id = entityConfig.getIdMetadata();
 		if (id == null) {
 			return;
 		}

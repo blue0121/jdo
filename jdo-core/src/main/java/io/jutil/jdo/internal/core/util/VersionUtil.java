@@ -1,7 +1,7 @@
 package io.jutil.jdo.internal.core.util;
 
-import io.jutil.jdo.core.parser.EntityConfig;
-import io.jutil.jdo.core.parser.VersionConfig;
+import io.jutil.jdo.core.parser2.EntityMetadata;
+import io.jutil.jdo.core.parser2.VersionMetadata;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ public class VersionUtil {
 	private VersionUtil() {
 	}
 
-	public static void generate(Map<String, Object> map, VersionConfig config) {
+	public static void generate(Map<String, Object> map, VersionMetadata config) {
 		if (config == null) {
 			return;
 		}
@@ -25,8 +25,8 @@ public class VersionUtil {
 	}
 
 
-	public static boolean isForce(EntityConfig config) {
-		var verConfig = config.getVersionConfig();
+	public static boolean isForce(EntityMetadata config) {
+		var verConfig = config.getVersionMetadata();
 		if (verConfig == null) {
 			return false;
 		}

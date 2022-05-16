@@ -1,8 +1,8 @@
 package test.jutil.jdo.executor.parameter;
 
 import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFacade;
-import io.jutil.jdo.internal.core.parser.ConfigCache;
-import io.jutil.jdo.internal.core.parser.ParserFactory;
+import io.jutil.jdo.internal.core.parser2.MetadataCache;
+import io.jutil.jdo.internal.core.parser2.ParserFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -27,9 +27,9 @@ public abstract class BaseBinderTest {
 	@Mock
 	protected ResultSet rs;
 	@Mock
-	protected ParserFactory parserFactory;
+	protected ParserFacade parserFacade;
 	@Mock
-	protected ConfigCache configCache;
+	protected MetadataCache metadataCache;
 
 	protected ParameterBinderFacade facade;
 
@@ -38,7 +38,7 @@ public abstract class BaseBinderTest {
 
 	@BeforeEach
 	public void beforeEach() throws SQLException {
-		facade = new ParameterBinderFacade(parserFactory);
+		facade = new ParameterBinderFacade(parserFacade);
 		Mockito.doReturn(true, false).when(rs).next();
 	}
 

@@ -15,7 +15,7 @@ public class InsertVersionSqlHandler extends AbstractSqlHandler {
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {
-		var version = request.getConfig().getVersionConfig();
+		var version = request.getMetadata().getVersionMetadata();
 		if (version == null) {
 			return;
 		}
@@ -24,7 +24,7 @@ public class InsertVersionSqlHandler extends AbstractSqlHandler {
 		var map = request.getMap();
 		Object value = null;
 		if (map == null) {
-			var beanField = version.getBeanField();
+			var beanField = version.getFieldOperation();
 			value = beanField.getFieldValue(request.getTarget());
 			if (value == null) {
 				value = version.getDefaultValue();

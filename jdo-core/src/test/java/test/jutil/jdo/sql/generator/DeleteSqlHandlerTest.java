@@ -24,7 +24,7 @@ public class DeleteSqlHandlerTest extends SqlHandlerTest {
 
     @Test
     public void testSql1() {
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 	    var request = SqlRequest.create(GroupEntity.class, List.of(1), config);
 	    handler.handle(request, response);
 	    System.out.println(response.getSql());
@@ -34,7 +34,7 @@ public class DeleteSqlHandlerTest extends SqlHandlerTest {
 
 	@Test
 	public void testSql2() {
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(GroupEntity.class, List.of(1, 2), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
@@ -44,7 +44,7 @@ public class DeleteSqlHandlerTest extends SqlHandlerTest {
 
 	@Test
 	public void testSqlFailure1() {
-		var config = configCache.loadEntityConfig(GroupEntity.class);
+		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
 		var request = SqlRequest.create(null, config);
 		Assertions.assertThrows(NullPointerException.class, () -> handler.handle(request, response),
 				"参数 不能为空");

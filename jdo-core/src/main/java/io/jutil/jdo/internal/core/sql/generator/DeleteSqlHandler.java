@@ -19,19 +19,19 @@ public class DeleteSqlHandler extends AbstractSqlHandler {
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {
-		var config = request.getConfig();
+		var config = request.getMetadata();
 		var args = request.getArgs();
 		AssertUtil.notEmpty(args, "参数");
 
 		var id = IdUtil.checkSingleId(config);
 		if (args.size() == 1) {
-			var sqlItem = config.getSqlConfig().getDeleteById();
+			var sqlItem = config.getSqlMetadata().getDeleteById();
 			response.setSql(sqlItem.getSql());
 			response.addParam(args.get(0));
 			return;
 		}
 
-		var sqlItem = config.getSqlConfig().getDeleteByIdList();
+		var sqlItem = config.getSqlMetadata().getDeleteByIdList();
 		var sql = String.format(sqlItem.getSql(), StringUtil.repeat(SqlConst.PLACEHOLDER, args.size(), SqlConst.SEPARATOR));
 		response.setSql(sql);
 		for (var arg : args) {

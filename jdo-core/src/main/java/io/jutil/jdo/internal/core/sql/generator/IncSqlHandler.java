@@ -23,7 +23,7 @@ public class IncSqlHandler extends AbstractSqlHandler {
 
 	@Override
 	public void handle(SqlRequest request, SqlResponse response) {
-		var config = request.getConfig();
+		var config = request.getMetadata();
 		var map = response.toParamMap();
 		AssertUtil.notEmpty(map, "参数");
 
@@ -35,7 +35,7 @@ public class IncSqlHandler extends AbstractSqlHandler {
 			if (column == null) {
 				continue;
 			}
-			if (!NumberUtil.isNumber(column.getBeanField().getField().getType())) {
+			if (!NumberUtil.isNumber(column.getFieldOperation().getType())) {
 				throw new EntityFieldException(entry.getKey(), "不是数字");
 			}
 			if (!NumberUtil.isNumber(entry.getValue().getClass())) {
@@ -45,7 +45,7 @@ public class IncSqlHandler extends AbstractSqlHandler {
 			response.addName(entry.getKey());
 		}
 
-		var id = config.getIdConfig();
+		var id = config.getIdMetadata();
 		var whereId = id.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER;
 		response.addName(id.getFieldName());
 

@@ -1,7 +1,6 @@
 package io.jutil.jdo.internal.core.executor.metadata;
 
-import io.jutil.jdo.core.parser.EntityConfig;
-import io.jutil.jdo.internal.core.parser.ConfigCache;
+import io.jutil.jdo.core.parser2.EntityMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,17 +15,17 @@ import java.util.List;
 public class TableChecker {
 	private static Logger logger = LoggerFactory.getLogger(TableChecker.class);
 
-	private final ConfigCache configCache;
+	private final io.jutil.jdo.internal.core.parser2.MetadataCache configCache;
 	private final MetadataCache metadataCache;
 
-	public TableChecker(DataSource ds, ConfigCache cache) {
+	public TableChecker(DataSource ds, io.jutil.jdo.internal.core.parser2.MetadataCache cache) {
 		this.configCache = cache;
 		this.metadataCache = new MetadataCache();
 	}
 
 	public void check() {
 		List<String> lackList = new ArrayList<>();
-		for (var entry : configCache.allEntityConfig().entrySet()) {
+		for (var entry : configCache.allEntityMetadata().entrySet()) {
 			var config = entry.getValue();
 			var table = metadataCache.getTable(config.getTableName());
 			if (table == null) {
@@ -40,12 +39,12 @@ public class TableChecker {
 		}
 	}
 
-	private void checkColumn(TableMetadata table, EntityConfig config) {
+	private void checkColumn(TableMetadata table, EntityMetadata config) {
 		var idMap = table.getIdMap();
 		var columnMap = table.getColumnMap();
 		List<String> lackList = new ArrayList<>();
 
-		var version = config.getVersionConfig();
+		var version = config.getVersionMetadata();
 		if (version != null && !columnMap.containsKey(version.getColumnName())) {
 			lackList.add(version.getColumnName());
 		}

@@ -1,7 +1,7 @@
 package io.jutil.jdo.core.engine;
 
 import io.jutil.jdo.core.annotation.LockModeType;
-import io.jutil.jdo.core.parser.EntityConfig;
+import io.jutil.jdo.core.parser2.EntityMetadata;
 
 import java.util.List;
 import java.util.Map;
@@ -289,6 +289,6 @@ public interface JdoTemplate {
 	 * @param clazz 对象类型
 	 * @return
 	 */
-	EntityConfig checkEntityConfig(Class<?> clazz);
+	EntityMetadata checkEntityConfig(Class<?> clazz);
 
 }

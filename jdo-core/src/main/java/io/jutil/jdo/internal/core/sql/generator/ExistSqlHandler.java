@@ -5,7 +5,6 @@ import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlConst;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
-import io.jutil.jdo.internal.core.util.ObjectUtil;
 import io.jutil.jdo.internal.core.util.StringUtil;
 import lombok.NoArgsConstructor;
 
@@ -24,7 +23,7 @@ public class ExistSqlHandler extends AbstractSqlHandler {
 	public void handle(SqlRequest request, SqlResponse response) {
 		List<?> args = request.getArgs() == null ? List.of() : request.getArgs();
 		var map = response.toParamMap();
-		var config = request.getConfig();
+		var config = request.getMetadata();
 
 		List<String> columnList = new ArrayList<>();
 		if (!args.isEmpty()) {
@@ -42,7 +41,7 @@ public class ExistSqlHandler extends AbstractSqlHandler {
 		for (var entry : idMap.entrySet()) {
 			var id = entry.getValue();
 			var value = map.get(entry.getKey());
-			if (!ObjectUtil.isEmpty(value)) {
+			if (!this.isEmpty(value)) {
 				columnList.add(id.getEscapeColumnName() + op);
 				response.addName(id.getFieldName());
 			}

@@ -86,7 +86,7 @@ public class SqlHandlerFacade {
 	}
 
 	public SqlResponse handle(SqlType type, SqlRequest request) {
-		var response = new SqlResponse(request.getConfig());
+		var response = new SqlResponse(request.getMetadata());
 		var handlers = this.getHandlers(type);
 		for (var handler : handlers) {
 			handler.handle(request, response);

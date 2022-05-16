@@ -1,6 +1,6 @@
 package io.jutil.jdo.internal.core.sql;
 
-import io.jutil.jdo.core.parser.EntityConfig;
+import io.jutil.jdo.core.parser2.EntityMetadata;
 import lombok.Getter;
 
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.Map;
 @Getter
 public class SqlRequest {
 	private Object target;
-	private Class<?> clazz;
-	private EntityConfig config;
+	private Class<?> targetClass;
+	private EntityMetadata metadata;
 	private String field;
 	private Map<String, ?> map;
 	private List<?> args;
@@ -23,58 +23,58 @@ public class SqlRequest {
 	private SqlRequest() {
 	}
 
-	public static SqlRequest create(Map<String, ?> map, EntityConfig config) {
+	public static SqlRequest create(Map<String, ?> map, EntityMetadata metadata) {
 		var request = new SqlRequest();
 		request.map = map;
-		request.clazz = Map.class;
-		request.config = config;
+		request.targetClass = Map.class;
+		request.metadata = metadata;
 		request.dynamic = true;
 		return request;
 	}
 
-	public static SqlRequest create(String field, Map<String, ?> map, EntityConfig config) {
+	public static SqlRequest create(String field, Map<String, ?> map, EntityMetadata metadata) {
 		var request = new SqlRequest();
 		request.field = field;
 		request.map = map;
-		request.clazz = Map.class;
-		request.config = config;
+		request.targetClass = Map.class;
+		request.metadata = metadata;
 		request.dynamic = true;
 		return request;
 	}
 
-	public static SqlRequest create(Object target, EntityConfig config, boolean dynamic) {
+	public static SqlRequest create(Object target, EntityMetadata metadata, boolean dynamic) {
 		var request = new SqlRequest();
 		request.target = target;
-		request.clazz = target.getClass();
-		request.config = config;
+		request.targetClass = target.getClass();
+		request.metadata = metadata;
 		request.dynamic = dynamic;
 		return request;
 	}
 
-	public static SqlRequest create(Object target, List<?> args, EntityConfig config) {
+	public static SqlRequest create(Object target, List<?> args, EntityMetadata metadata) {
 		var request = new SqlRequest();
 		request.target = target;
 		request.args = args;
-		request.clazz = target.getClass();
-		request.config = config;
+		request.targetClass = target.getClass();
+		request.metadata = metadata;
 		request.dynamic = true;
 		return request;
 	}
 
-	public static SqlRequest create(Class<?> clazz, List<?> args, EntityConfig config) {
+	public static SqlRequest create(Class<?> clazz, List<?> args, EntityMetadata metadata) {
 		var request = new SqlRequest();
 		request.args = args;
-		request.clazz = clazz;
-		request.config = config;
+		request.targetClass = clazz;
+		request.metadata = metadata;
 		request.dynamic = true;
 		return request;
 	}
 
-	public static SqlRequest createForBatch(List<?> args, EntityConfig config) {
+	public static SqlRequest createForBatch(List<?> args, EntityMetadata metadata) {
 		var request = new SqlRequest();
 		request.args = args;
-		request.clazz = config.getClazz();
-		request.config = config;
+		request.targetClass = metadata.getTargetClass();
+		request.metadata = metadata;
 		request.dynamic = false;
 		return request;
 	}

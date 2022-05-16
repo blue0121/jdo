@@ -15,7 +15,7 @@ public class ColumnSqlHandler extends AbstractSqlHandler {
 
     @Override
     public void handle(SqlRequest request, SqlResponse response) {
-        var config = request.getConfig();
+        var config = request.getMetadata();
         var columnMap = config.getColumnMap();
         var map = request.getMap();
         if (map == null) {

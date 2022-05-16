@@ -1,6 +1,6 @@
 package io.jutil.jdo.internal.core.sql.generator;
 
-import io.jutil.jdo.core.parser.EntityConfig;
+import io.jutil.jdo.core.parser2.EntityMetadata;
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
@@ -21,15 +21,15 @@ public class BatchInsertSqlHandler extends AbstractSqlHandler {
 
 	@Override
     public void handle(SqlRequest request, SqlResponse response) {
-		var config = request.getConfig();
+		var config = request.getMetadata();
 		var objectList = request.getArgs();
-		var sqlItem = config.getSqlConfig().getInsert();
+		var sqlItem = config.getSqlMetadata().getInsert();
 		response.setSql(sqlItem.getSql());
 
 		for (var object : objectList) {
 			var req = SqlRequest.create(object, config, false);
 			var resp = this.handle(config, req);
-			for (var name : sqlItem.getParamNameList()) {
+			for (var name : sqlItem.getParameterNameList()) {
 				resp.addName(name);
 			}
 			parameterSqlHandler.handle(req, resp);
@@ -38,7 +38,7 @@ public class BatchInsertSqlHandler extends AbstractSqlHandler {
 		}
     }
 
-	private SqlResponse handle(EntityConfig config, SqlRequest request) {
+	private SqlResponse handle(EntityMetadata config, SqlRequest request) {
 		var response = new SqlResponse(config);
 		for (var handler : mapHandlers) {
 			handler.handle(request, response);

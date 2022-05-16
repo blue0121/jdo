@@ -51,7 +51,7 @@ public class ParserFacade implements Parser {
                 return m;
             }
         }
-        throw new UnsupportedOperationException("找不到类的处理器: " + clazz.getName());
+        return null;
     }
 
     public Dialect getDialect() {

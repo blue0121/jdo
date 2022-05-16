@@ -4,14 +4,14 @@ import io.jutil.jdo.core.annotation.LockModeType;
 import io.jutil.jdo.core.engine.JdoTemplate;
 import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.core.exception.VersionException;
-import io.jutil.jdo.core.parser.ConfigType;
-import io.jutil.jdo.core.parser.EntityConfig;
+import io.jutil.jdo.core.parser2.EntityMetadata;
+import io.jutil.jdo.core.parser2.MetadataType;
 import io.jutil.jdo.internal.core.dialect.Dialect;
 import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.GenerateKeyHolder;
 import io.jutil.jdo.internal.core.executor.KeyHolder;
-import io.jutil.jdo.internal.core.parser.ConfigCache;
-import io.jutil.jdo.internal.core.parser.ParserFactory;
+import io.jutil.jdo.internal.core.parser2.MetadataCache;
+import io.jutil.jdo.internal.core.parser2.ParserFacade;
 import io.jutil.jdo.internal.core.sql.SqlHandlerFacade;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlType;
@@ -34,13 +34,13 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	private static Logger logger = LoggerFactory.getLogger(DefaultJdoTemplate.class);
 
 	private final Dialect dialect;
-	private final ConfigCache configCache;
+	private final MetadataCache configCache;
 	private final SqlHandlerFacade sqlHandlerFacade;
 	private final ConnectionFactory connectionFactory;
 
-	public DefaultJdoTemplate(ParserFactory parserFactory, ConnectionFactory connectionFactory) {
+	public DefaultJdoTemplate(ParserFacade parserFactory, ConnectionFactory connectionFactory) {
 		this.dialect = parserFactory.getDialect();
-		this.configCache = parserFactory.getConfigCache();
+		this.configCache = parserFactory.getMetadataCache();
 		this.sqlHandlerFacade = new SqlHandlerFacade();
 		this.connectionFactory = connectionFactory;
 	}
@@ -49,13 +49,13 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int save(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "对象");
 
-		var config = configCache.loadEntityConfig(object.getClass());
+		var config = configCache.loadEntityMetadata(object.getClass());
 		var request = SqlRequest.create(object, config, dynamic);
 		var response = sqlHandlerFacade.handle(SqlType.INSERT, request);
 
 		KeyHolder holder = new GenerateKeyHolder();
 		int count = connectionFactory.execute(response.getSql(), response.toParamList(), holder);
-		IdUtil.setId(holder, object, response.getConfig());
+		IdUtil.setId(holder, object, response.getMetadata());
 		return count;
 	}
 
@@ -64,7 +64,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.INSERT, request);
 
@@ -75,7 +75,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int[] saveList(List<?> objectList) {
 		AssertUtil.notEmpty(objectList, "ObjectList");
 
-		var config = configCache.loadEntityConfig(objectList.get(0).getClass());
+		var config = configCache.loadEntityMetadata(objectList.get(0).getClass());
 		var request = SqlRequest.createForBatch(objectList, config);
 		var response = sqlHandlerFacade.handle(SqlType.BATCH_INSERT, request);
 
@@ -89,7 +89,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public int update(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "Object");
 
-		var config = configCache.loadEntityConfig(object.getClass());
+		var config = configCache.loadEntityMetadata(object.getClass());
 		var request = SqlRequest.create(object, config, dynamic);
 		var response = sqlHandlerFacade.handle(SqlType.UPDATE, request);
 
@@ -106,7 +106,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(id, "主键");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var idConfig = IdUtil.checkSingleId(config);
 		var map = MapUtil.merge(param, idConfig.getFieldName(), id);
 		var request = SqlRequest.create(map, config);
@@ -124,7 +124,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(objectList, "ObjectList");
 
 		var clazz = objectList.get(0).getClass();
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.createForBatch(objectList, config);
 		var response = sqlHandlerFacade.handle(SqlType.BATCH_UPDATE, request);
 
@@ -145,7 +145,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(id, "主键");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var idConfig = IdUtil.checkSingleId(config);
 		var map = MapUtil.merge(param, idConfig.getFieldName(), id);
 		var request = SqlRequest.create(map, config);
@@ -159,7 +159,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notNull(id, "Id");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(clazz, List.of(id), config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE, request);
 
@@ -171,7 +171,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(idList, "Id列表");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(clazz, idList, config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE, request);
 
@@ -183,7 +183,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE_BY, request);
 
@@ -195,7 +195,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notNull(id, "Id");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(clazz, List.of(id), config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_ID, request);
 
@@ -213,7 +213,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(idList, "Id列表");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(clazz, idList, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_ID, request);
 
@@ -222,9 +222,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 			return Map.of();
 		}
 
-		var id = response.getConfig().getIdConfig();
+		var id = response.getMetadata().getIdMetadata();
 		Map<K, T> map = new HashMap<>();
-		var idField = id.getBeanField();
+		var idField = id.getFieldOperation();
 		for (var o : list) {
 			map.put((K)idField.getFieldValue(o), o);
 		}
@@ -238,7 +238,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(field, "字段");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(field, param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, request);
 
@@ -254,7 +254,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET, request);
 
@@ -269,7 +269,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	public boolean exist(Object object, String... names) {
 		AssertUtil.notNull(object, "Object");
 
-		var config = configCache.loadEntityConfig(object.getClass());
+		var config = configCache.loadEntityMetadata(object.getClass());
 		var request = SqlRequest.create(object, Arrays.asList(names), config);
 		var response = sqlHandlerFacade.handle(SqlType.EXIST, request);
 
@@ -286,7 +286,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.COUNT, request);
 
@@ -331,7 +331,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notEmpty(field, "字段");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(field, param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, request);
 
@@ -343,7 +343,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
-		var config = configCache.loadEntityConfig(clazz);
+		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET, request);
 
@@ -356,9 +356,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
     }
 
 	@Override
-	public EntityConfig checkEntityConfig(Class<?> clazz) {
-		boolean existEntity = configCache.exist(clazz, ConfigType.ENTITY);
-		boolean existMapper = configCache.exist(clazz, ConfigType.MAPPER);
+	public EntityMetadata checkEntityConfig(Class<?> clazz) {
+		boolean existEntity = configCache.exist(clazz, MetadataType.ENTITY);
+		boolean existMapper = configCache.exist(clazz, MetadataType.MAPPER);
 		if (!existEntity) {
 			if (existMapper) {
 				throw new JdbcException(clazz.getName() + " 需要覆写 select(), selectCount() 和 orderBy() 方法");
@@ -367,7 +367,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 				throw new JdbcException(clazz.getName() + " 缺少 @Entity 或 @Mapper 注解");
 			}
 		}
-		return configCache.loadEntityConfig(clazz);
+		return configCache.loadEntityMetadata(clazz);
 	}
 
 }

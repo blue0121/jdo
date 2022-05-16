@@ -25,15 +25,15 @@ public class InsertIncrementSqlHandlerTest extends SqlHandlerTest {
     private SqlHandler handler = new InsertIdSqlHandler(SnowflakeIdFactory.getSingleSnowflakeId());
 
 	public InsertIncrementSqlHandlerTest() {
-        parseFactory.parse(IncrementIntIdEntity.class);
-        parseFactory.parse(IncrementLongIdEntity.class);
-        parseFactory.parse(IncrementStringIdEntity.class);
+        parserFacade.parse(IncrementIntIdEntity.class);
+        parserFacade.parse(IncrementLongIdEntity.class);
+        parserFacade.parse(IncrementStringIdEntity.class);
 	}
 
     @ParameterizedTest
     @CsvSource({"true,-1","true,10","false,-1","false,10"})
     public void testIncrementInt(boolean isEntity, int id) {
-        var config = configCache.loadEntityConfig(IncrementIntIdEntity.class);
+        var config = metadataCache.loadEntityMetadata(IncrementIntIdEntity.class);
         SqlRequest request = null;
         if (isEntity) {
             var entity = new IncrementIntIdEntity();
@@ -56,7 +56,7 @@ public class InsertIncrementSqlHandlerTest extends SqlHandlerTest {
     @ParameterizedTest
     @CsvSource({"true,-1","true,10","false,-1","false,10"})
     public void testIncrementLong(boolean isEntity, long id) {
-        var config = configCache.loadEntityConfig(IncrementLongIdEntity.class);
+        var config = metadataCache.loadEntityMetadata(IncrementLongIdEntity.class);
         SqlRequest request = null;
         if (isEntity) {
             var entity = new IncrementLongIdEntity();
@@ -79,7 +79,7 @@ public class InsertIncrementSqlHandlerTest extends SqlHandlerTest {
     @ParameterizedTest
     @CsvSource({"true,","true,abc","false,","false,abc"})
     public void testIncrementString(boolean isEntity, String id) {
-        var config = configCache.loadEntityConfig(IncrementStringIdEntity.class);
+        var config = metadataCache.loadEntityMetadata(IncrementStringIdEntity.class);
         SqlRequest request = null;
         if (isEntity) {
             var entity = new IncrementStringIdEntity();

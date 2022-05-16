@@ -24,15 +24,15 @@ public class InsertAutoIdSqlHandlerTest extends SqlHandlerTest {
 	private SqlHandler handler = new InsertIdSqlHandler(SnowflakeIdFactory.getSingleSnowflakeId());
 
 	public InsertAutoIdSqlHandlerTest() {
-		parseFactory.parse(AutoIntIdEntity.class);
-		parseFactory.parse(AutoLongIdEntity.class);
-		parseFactory.parse(AutoStringIdEntity.class);
+		parserFacade.parse(AutoIntIdEntity.class);
+		parserFacade.parse(AutoLongIdEntity.class);
+		parserFacade.parse(AutoStringIdEntity.class);
 	}
 
 	@ParameterizedTest
 	@CsvSource({"true,-1","true,10","false,-1","false,10"})
 	public void testAutoInt(boolean isEntity, int id) {
-		var config = configCache.loadEntityConfig(AutoIntIdEntity.class);
+		var config = metadataCache.loadEntityMetadata(AutoIntIdEntity.class);
 		SqlRequest request = null;
 		if (isEntity) {
 			var entity = new AutoIntIdEntity();
@@ -55,7 +55,7 @@ public class InsertAutoIdSqlHandlerTest extends SqlHandlerTest {
 	@ParameterizedTest
 	@CsvSource({"true,-1","true,10","false,-1","false,10"})
 	public void testAutoLong(boolean isEntity, long id) {
-		var config = configCache.loadEntityConfig(AutoLongIdEntity.class);
+		var config = metadataCache.loadEntityMetadata(AutoLongIdEntity.class);
 		SqlRequest request = null;
 		if (isEntity) {
 			var entity = new AutoLongIdEntity();
@@ -78,7 +78,7 @@ public class InsertAutoIdSqlHandlerTest extends SqlHandlerTest {
 	@ParameterizedTest
 	@CsvSource({"true,","true,abc","false,","false,abc"})
 	public void testAutoString(boolean isEntity, String id) {
-		var config = configCache.loadEntityConfig(AutoStringIdEntity.class);
+		var config = metadataCache.loadEntityMetadata(AutoStringIdEntity.class);
 		SqlRequest request = null;
 		if (isEntity) {
 			var entity = new AutoStringIdEntity();
