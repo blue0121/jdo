@@ -6,7 +6,6 @@ import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.sql.generator.IncSqlHandler;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import test.jutil.jdo.model.GroupEntity;
 import test.jutil.jdo.model.UserEntity;
@@ -53,16 +52,6 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		Assertions.assertThrows(NullPointerException.class, () -> handler.handle(request, response),
 				"参数 不能为空");
-	}
-
-	@Disabled
-	@Test
-	public void testSqlFailure2() {
-		response.putParam("aaa", "aaa");
-		var config = metadataCache.loadEntityMetadata(GroupEntity.class);
-		var request = SqlRequest.create(null, config);
-		Assertions.assertThrows(JdbcException.class, () -> handler.handle(request, response),
-				"字段 [aaa] 不存在");
 	}
 
 	@Test

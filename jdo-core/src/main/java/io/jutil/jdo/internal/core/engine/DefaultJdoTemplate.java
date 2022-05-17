@@ -7,9 +7,9 @@ import io.jutil.jdo.core.exception.VersionException;
 import io.jutil.jdo.core.parser.EntityMetadata;
 import io.jutil.jdo.core.parser.MetadataType;
 import io.jutil.jdo.internal.core.dialect.Dialect;
-import io.jutil.jdo.internal.core.executor.ConnectionFactory;
 import io.jutil.jdo.internal.core.executor.GenerateKeyHolder;
 import io.jutil.jdo.internal.core.executor.KeyHolder;
+import io.jutil.jdo.internal.core.executor.SqlExecutor;
 import io.jutil.jdo.internal.core.parser.MetadataCache;
 import io.jutil.jdo.internal.core.parser.ParserFacade;
 import io.jutil.jdo.internal.core.sql.SqlHandlerFacade;
@@ -36,13 +36,13 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	private final Dialect dialect;
 	private final MetadataCache configCache;
 	private final SqlHandlerFacade sqlHandlerFacade;
-	private final ConnectionFactory connectionFactory;
+	private final SqlExecutor sqlExecutor;
 
-	public DefaultJdoTemplate(ParserFacade parserFactory, ConnectionFactory connectionFactory) {
+	public DefaultJdoTemplate(ParserFacade parserFactory, SqlExecutor sqlExecutor) {
 		this.dialect = parserFactory.getDialect();
 		this.configCache = parserFactory.getMetadataCache();
 		this.sqlHandlerFacade = new SqlHandlerFacade();
-		this.connectionFactory = connectionFactory;
+		this.sqlExecutor = sqlExecutor;
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var response = sqlHandlerFacade.handle(SqlType.INSERT, request);
 
 		KeyHolder holder = new GenerateKeyHolder();
-		int count = connectionFactory.execute(response.getSql(), response.toParamList(), holder);
+		int count = sqlExecutor.execute(response.getSql(), response.toParamList(), holder);
 		IdUtil.setId(holder, object, response.getMetadata());
 		return count;
 	}
@@ -68,7 +68,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.INSERT, request);
 
-		return connectionFactory.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var response = sqlHandlerFacade.handle(SqlType.BATCH_INSERT, request);
 
 		KeyHolder holder = new GenerateKeyHolder();
-		int[] count = connectionFactory.executeBatch(response.getSql(), response.toBatchParamList(), holder);
+		int[] count = sqlExecutor.executeBatch(response.getSql(), response.toBatchParamList(), holder);
 		IdUtil.setId(holder, objectList, config);
 		return count;
 	}
@@ -93,7 +93,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(object, config, dynamic);
 		var response = sqlHandlerFacade.handle(SqlType.UPDATE, request);
 
-		int count = connectionFactory.execute(response.getSql(), response.toParamList());
+		int count = sqlExecutor.execute(response.getSql(), response.toParamList());
 		if (response.isForceVersion() && count <= 0) {
 			throw new VersionException(object.getClass());
 		}
@@ -112,7 +112,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(map, config);
 		var response = sqlHandlerFacade.handle(SqlType.UPDATE, request);
 
-		int count = connectionFactory.execute(response.getSql(), response.toParamList());
+		int count = sqlExecutor.execute(response.getSql(), response.toParamList());
 		if (response.isForceVersion() && count <= 0) {
 			throw new VersionException(clazz);
 		}
@@ -128,7 +128,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.createForBatch(objectList, config);
 		var response = sqlHandlerFacade.handle(SqlType.BATCH_UPDATE, request);
 
-		int[] count = connectionFactory.executeBatch(response.getSql(), response.toBatchParamList());
+		int[] count = sqlExecutor.executeBatch(response.getSql(), response.toBatchParamList());
 		if (response.isForceVersion()) {
 			for (int c : count) {
 				if (c <= 0) {
@@ -151,7 +151,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(map, config);
 		var response = sqlHandlerFacade.handle(SqlType.INC, request);
 
-		return connectionFactory.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(clazz, List.of(id), config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE, request);
 
-		return connectionFactory.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -175,7 +175,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(clazz, idList, config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE, request);
 
-		return connectionFactory.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE_BY, request);
 
-		return connectionFactory.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var response = sqlHandlerFacade.handle(SqlType.GET_ID, request);
 
 		var sql = dialect.lock(dialect.getOne(response.getSql()), type);
-		List<T> list = connectionFactory.query(clazz, sql, response.toParamList());
+		List<T> list = sqlExecutor.query(clazz, sql, response.toParamList());
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -217,7 +217,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(clazz, idList, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_ID, request);
 
-		List<T> list = connectionFactory.query(clazz, response.getSql(), response.toParamList());
+		List<T> list = sqlExecutor.query(clazz, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return Map.of();
 		}
@@ -242,7 +242,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(field, param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, request);
 
-		List<T> list = connectionFactory.query(target, response.getSql(), response.toParamList());
+		List<T> list = sqlExecutor.query(target, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -258,7 +258,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET, request);
 
-		List<T> list = connectionFactory.query(clazz, response.getSql(), response.toParamList());
+		List<T> list = sqlExecutor.query(clazz, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -273,7 +273,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(object, Arrays.asList(names), config);
 		var response = sqlHandlerFacade.handle(SqlType.EXIST, request);
 
-		var list = connectionFactory.query(Integer.class, response.getSql(), response.toParamList());
+		var list = sqlExecutor.query(Integer.class, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			return false;
 		}
@@ -290,7 +290,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.COUNT, request);
 
-		var list = connectionFactory.query(Integer.class, response.getSql(), response.toParamList());
+		var list = sqlExecutor.query(Integer.class, response.getSql(), response.toParamList());
 		if (list.isEmpty()) {
 			logger.warn("No result");
 			return -1;
@@ -300,7 +300,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> T getObject(Class<T> clazz, String sql, List<?> paramList) {
-		List<T> list = connectionFactory.query(clazz, sql, paramList);
+		List<T> list = sqlExecutor.query(clazz, sql, paramList);
 		if (list.isEmpty()) {
 			throw null;
 		}
@@ -321,7 +321,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> List<T> list(Class<T> clazz, String sql, List<?> paramList) {
-		return connectionFactory.query(clazz, sql, paramList);
+		return sqlExecutor.query(clazz, sql, paramList);
 	}
 
 	@Override
@@ -335,7 +335,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(field, param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, request);
 
-		return connectionFactory.query(target, response.getSql(), response.toParamList());
+		return sqlExecutor.query(target, response.getSql(), response.toParamList());
 	}
 
 	@Override
@@ -347,12 +347,12 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET, request);
 
-		return connectionFactory.query(clazz, response.getSql(), response.toParamList());
+		return sqlExecutor.query(clazz, response.getSql(), response.toParamList());
 	}
 
     @Override
     public int execute(String sql) {
-        return connectionFactory.execute(sql);
+        return sqlExecutor.execute(sql);
     }
 
 	@Override
