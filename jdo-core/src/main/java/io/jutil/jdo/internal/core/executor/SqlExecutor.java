@@ -1,7 +1,7 @@
 package io.jutil.jdo.internal.core.executor;
 
 import io.jutil.jdo.core.exception.JdbcException;
-import io.jutil.jdo.internal.core.executor.connection.ConnectionHolder;
+import io.jutil.jdo.core.plugin.ConnectionHolder;
 import io.jutil.jdo.internal.core.executor.parameter.ParameterBinderFacade;
 import io.jutil.jdo.internal.core.parser.ParserFacade;
 import org.slf4j.Logger;

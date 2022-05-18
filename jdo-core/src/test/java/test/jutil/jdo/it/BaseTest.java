@@ -23,10 +23,8 @@ public abstract class BaseTest {
 		DataSourceOptions dsOptions = new DataSourceOptions();
 		dsOptions.setUrl("jdbc:h2:mem:testDB");
 		dsOptions.setUsername("sa");
-		dsOptions.setTestWhileIdle(false);
-		dsOptions.setValidationQuery(null);
 		jdo = JdoBuilder.create()
-				.setDataSourceOptions(dsOptions)
+				.setDataSourceHolder(dsOptions.getDataSourceHolder())
 				.addScanPackages("test.jutil.jdo.model")
 				.build();
 		jdoTemplate = jdo.getJdoTemplate();

@@ -1,4 +1,4 @@
-package io.jutil.jdo.internal.core.executor.connection;
+package io.jutil.jdo.core.plugin;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

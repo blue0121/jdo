@@ -3,7 +3,7 @@ package io.jutil.jdo.internal.core.engine;
 import io.jutil.jdo.core.engine.Jdo;
 import io.jutil.jdo.core.engine.JdoTemplate;
 import io.jutil.jdo.core.engine.TransactionManager;
-import io.jutil.jdo.internal.core.executor.DataSourceFactory;
+import io.jutil.jdo.core.plugin.DataSourceHolder;
 
 /**
  * @author Jin Zheng
@@ -11,12 +11,12 @@ import io.jutil.jdo.internal.core.executor.DataSourceFactory;
  */
 public class DefaultJdo implements Jdo, AutoCloseable {
 
-	private final DataSourceFactory dataSourceFactory;
+	private final DataSourceHolder dataSourceHolder;
 	private final JdoTemplate jdoTemplate;
 	private final TransactionManager transactionManager;
 
 	public DefaultJdo(DefaultJdoBuilder builder) {
-		this.dataSourceFactory = builder.getDataSourceFactory();
+		this.dataSourceHolder = builder.getDataSourceHolder();
 		this.jdoTemplate = builder.getJdoTemplate();
 		this.transactionManager = builder.getTransactionManager();
 	}
@@ -33,6 +33,6 @@ public class DefaultJdo implements Jdo, AutoCloseable {
 
 	@Override
 	public void close() {
-		this.dataSourceFactory.close();
+		this.dataSourceHolder.close();
 	}
 }

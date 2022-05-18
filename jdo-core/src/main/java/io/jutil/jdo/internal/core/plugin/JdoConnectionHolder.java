@@ -1,6 +1,7 @@
-package io.jutil.jdo.internal.core.executor.connection;
+package io.jutil.jdo.internal.core.plugin;
 
 import io.jutil.jdo.core.exception.JdbcException;
+import io.jutil.jdo.core.plugin.ConnectionHolder;
 import io.jutil.jdo.internal.core.util.JdbcUtil;
 
 import javax.sql.DataSource;

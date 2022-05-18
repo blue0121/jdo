@@ -1,4 +1,4 @@
-package io.jutil.jdo.internal.core.executor.connection;
+package io.jutil.jdo.internal.core.plugin;
 
 import io.jutil.jdo.core.engine.TransactionManager;
 import io.jutil.jdo.core.exception.JdbcException;

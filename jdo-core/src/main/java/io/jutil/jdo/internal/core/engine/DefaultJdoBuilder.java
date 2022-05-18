@@ -1,19 +1,19 @@
 package io.jutil.jdo.internal.core.engine;
 
-import io.jutil.jdo.core.engine.DataSourceOptions;
 import io.jutil.jdo.core.engine.Jdo;
 import io.jutil.jdo.core.engine.JdoBuilder;
 import io.jutil.jdo.core.engine.JdoTemplate;
 import io.jutil.jdo.core.engine.TransactionManager;
+import io.jutil.jdo.core.plugin.ConnectionHolder;
+import io.jutil.jdo.core.plugin.DataSourceHolder;
 import io.jutil.jdo.internal.core.dialect.DetectDialect;
-import io.jutil.jdo.internal.core.executor.DataSourceFactory;
 import io.jutil.jdo.internal.core.executor.SqlExecutor;
-import io.jutil.jdo.internal.core.executor.connection.ConnectionHolder;
-import io.jutil.jdo.internal.core.executor.connection.JdoConnectionHolder;
-import io.jutil.jdo.internal.core.executor.connection.JdoTransactionManager;
 import io.jutil.jdo.internal.core.executor.metadata.TableChecker;
 import io.jutil.jdo.internal.core.parser.ParserFacade;
 import io.jutil.jdo.internal.core.path.ClassScanner;
+import io.jutil.jdo.internal.core.plugin.JdoConnectionHolder;
+import io.jutil.jdo.internal.core.plugin.JdoTransactionManager;
+import io.jutil.jdo.internal.core.util.AssertUtil;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +30,9 @@ import java.util.List;
 public class DefaultJdoBuilder implements JdoBuilder {
 	private static Logger logger = LoggerFactory.getLogger(DefaultJdoBuilder.class);
 
-	private DataSourceOptions dataSourceOptions;
-	private DataSourceFactory dataSourceFactory;
+	private DataSourceHolder dataSourceHolder;
 	private JdoTemplate jdoTemplate;
+	private ConnectionHolder connectionHolder;
 	private TransactionManager transactionManager;
 	private ParserFacade parserFacade;
 	private final List<Class<?>> clazzList = new ArrayList<>();
@@ -41,17 +41,18 @@ public class DefaultJdoBuilder implements JdoBuilder {
 
 	@Override
 	public Jdo build() {
-		this.dataSourceFactory = new DataSourceFactory(dataSourceOptions);
-		var dataSource = dataSourceFactory.getDateSource();
+		AssertUtil.notNull(dataSourceHolder, "数据源");
+
+		var dataSource = dataSourceHolder.getDataSource();
 		var dialect = DetectDialect.dialect(dataSource);
 		this.parserFacade = new ParserFacade(dialect, true);
 
-		var connectionHolder = this.getConnectionHolder(dataSource);
+		this.initConnectionHolder(dataSource);
 		var sqlExecutor = new SqlExecutor(connectionHolder, parserFacade);
 		this.jdoTemplate = new DefaultJdoTemplate(parserFacade, sqlExecutor);
 
 		this.parseClazz();
-		var tableChecker = new TableChecker(dataSourceFactory.getDateSource(), parserFacade.getMetadataCache());
+		var tableChecker = new TableChecker(dataSource, parserFacade.getMetadataCache());
 		tableChecker.check();
 
 		DefaultJdo jdo = new DefaultJdo(this);
@@ -59,8 +60,8 @@ public class DefaultJdoBuilder implements JdoBuilder {
 	}
 
 	@Override
-	public JdoBuilder setDataSourceOptions(DataSourceOptions options) {
-		this.dataSourceOptions = options;
+	public JdoBuilder setDataSourceHolder(DataSourceHolder holder) {
+		this.dataSourceHolder = holder;
 		return this;
 	}
 
@@ -84,10 +85,20 @@ public class DefaultJdoBuilder implements JdoBuilder {
 		return this;
 	}
 
-	private ConnectionHolder getConnectionHolder(DataSource dataSource) {
+	@Override
+	public JdoBuilder setConnectionHolder(ConnectionHolder holder) {
+		this.connectionHolder = holder;
+		return this;
+	}
+
+	private void initConnectionHolder(DataSource dataSource) {
+		if (connectionHolder != null) {
+			return;
+		}
+
 		var holder = new JdoConnectionHolder(dataSource);
+		this.connectionHolder = holder;
 		this.transactionManager = new JdoTransactionManager(holder);
-		return holder;
 	}
 
 	private void parseClazz() {
@@ -98,8 +109,8 @@ public class DefaultJdoBuilder implements JdoBuilder {
 		scanner.scan(pkgList);
 	}
 
-	public DataSourceFactory getDataSourceFactory() {
-		return dataSourceFactory;
+	public DataSourceHolder getDataSourceHolder() {
+		return dataSourceHolder;
 	}
 
 	public JdoTemplate getJdoTemplate() {

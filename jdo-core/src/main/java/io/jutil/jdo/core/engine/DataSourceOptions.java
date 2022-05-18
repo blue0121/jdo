@@ -1,5 +1,7 @@
 package io.jutil.jdo.core.engine;
 
+import io.jutil.jdo.core.plugin.DataSourceHolder;
+import io.jutil.jdo.internal.core.plugin.JdoDataSourceHolder;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,30 +17,28 @@ public class DataSourceOptions {
 	private String username;
 	private String password;
 
-	private int initialSize = 1;
-	private int minIdle = 1;
-	private int maxActive = 20;
-	private int maxWait = 6000;
+	private int minimumIdle = 10;
+	private int maximumPoolSize = 10;
+	private String poolName;
 
-	private int timeBetweenEvictionRunsMillis = 60000;
-	private int minEvictableIdleTimeMillis = 600000;
-	private int maxEvictableIdleTimeMillis = 900000;
+	private boolean autoCommit = true;
+	private int connectionTimeout = 30_000;
+	private int idleTimeout = 600_000;
+	private int keepaliveTime = 0;
+	private int maxLifetime = 1_800_000;
 
-	private String validationQuery = "select 1";
-	private boolean testWhileIdle = true;
-	private boolean testOnBorrow = false;
-	private boolean testOnReturn = false;
-	private boolean keepAlive = true;
-	private boolean poolPreparedStatements = false;
-	private boolean asyncInit = true;
+	private volatile DataSourceHolder holder;
 
-	private String filters = "stat";
-
-	/**
-	 * 检查验证配置
-	 */
-	public void check() {
+	public DataSourceHolder getDataSourceHolder() {
 		AssertUtil.notEmpty(url, "DataSource url");
+		if (holder == null) {
+			synchronized (this) {
+				if (holder == null) {
+					this.holder = new JdoDataSourceHolder(this);
+				}
+			}
+		}
+		return holder;
 	}
 
 	public DataSourceOptions setUrl(String url) {
@@ -56,78 +56,44 @@ public class DataSourceOptions {
 		return this;
 	}
 
-	public DataSourceOptions setInitialSize(int initialSize) {
-		this.initialSize = initialSize;
+	public DataSourceOptions setMinimumIdle(int minimumIdle) {
+		this.minimumIdle = minimumIdle;
 		return this;
 	}
 
-	public DataSourceOptions setMinIdle(int minIdle) {
-		this.minIdle = minIdle;
+	public DataSourceOptions setMaximumPoolSize(int maximumPoolSize) {
+		this.maximumPoolSize = maximumPoolSize;
 		return this;
 	}
 
-	public DataSourceOptions setMaxActive(int maxActive) {
-		this.maxActive = maxActive;
+	public DataSourceOptions setPoolName(String poolName) {
+		this.poolName = poolName;
 		return this;
 	}
 
-	public DataSourceOptions setMaxWait(int maxWait) {
-		this.maxWait = maxWait;
+	public DataSourceOptions setAutoCommit(boolean autoCommit) {
+		this.autoCommit = autoCommit;
 		return this;
 	}
 
-	public DataSourceOptions setTimeBetweenEvictionRunsMillis(int timeBetweenEvictionRunsMillis) {
-		this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
+	public DataSourceOptions setConnectionTimeout(int connectionTimeout) {
+		this.connectionTimeout = connectionTimeout;
 		return this;
 	}
 
-	public DataSourceOptions setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
-		this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+	public DataSourceOptions setIdleTimeout(int idleTimeout) {
+		this.idleTimeout = idleTimeout;
 		return this;
 	}
 
-	public DataSourceOptions setMaxEvictableIdleTimeMillis(int maxEvictableIdleTimeMillis) {
-		this.maxEvictableIdleTimeMillis = maxEvictableIdleTimeMillis;
+	public DataSourceOptions setKeepaliveTime(int keepaliveTime) {
+		this.keepaliveTime = keepaliveTime;
 		return this;
 	}
 
-	public DataSourceOptions setValidationQuery(String validationQuery) {
-		this.validationQuery = validationQuery;
+	public DataSourceOptions setMaxLifetime(int maxLifetime) {
+		this.maxLifetime = maxLifetime;
 		return this;
 	}
 
-	public DataSourceOptions setTestWhileIdle(boolean testWhileIdle) {
-		this.testWhileIdle = testWhileIdle;
-		return this;
-	}
-
-	public DataSourceOptions setTestOnBorrow(boolean testOnBorrow) {
-		this.testOnBorrow = testOnBorrow;
-		return this;
-	}
-
-	public DataSourceOptions setTestOnReturn(boolean testOnReturn) {
-		this.testOnReturn = testOnReturn;
-		return this;
-	}
-
-	public DataSourceOptions setKeepAlive(boolean keepAlive) {
-		this.keepAlive = keepAlive;
-		return this;
-	}
-
-	public DataSourceOptions setPoolPreparedStatements(boolean poolPreparedStatements) {
-		this.poolPreparedStatements = poolPreparedStatements;
-		return this;
-	}
-
-	public DataSourceOptions setAsyncInit(boolean asyncInit) {
-		this.asyncInit = asyncInit;
-		return this;
-	}
-
-	public DataSourceOptions setFilters(String filters) {
-		this.filters = filters;
-		return this;
-	}
 }
