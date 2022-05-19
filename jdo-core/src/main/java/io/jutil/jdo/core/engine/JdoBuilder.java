@@ -1,8 +1,9 @@
 package io.jutil.jdo.core.engine;
 
 import io.jutil.jdo.core.plugin.ConnectionHolder;
-import io.jutil.jdo.core.plugin.DataSourceHolder;
 import io.jutil.jdo.internal.core.engine.DefaultJdoBuilder;
+
+import javax.sql.DataSource;
 
 /**
  * @author Jin Zheng
@@ -26,12 +27,12 @@ public interface JdoBuilder {
 	Jdo build();
 
 	/**
-	 * 设置 DataSourceOptions
+	 * 设置 DataSource
 	 *
-	 * @param holder
+	 * @param dataSource
 	 * @return
 	 */
-	JdoBuilder setDataSourceHolder(DataSourceHolder holder);
+	JdoBuilder setDataSource(DataSource dataSource);
 
 	/**
 	 * 添加类解析, 比如@Entity, @Mapper

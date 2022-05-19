@@ -1,11 +1,8 @@
-package io.jutil.jdo.internal.core.plugin;
+package io.jutil.jdo.internal.core.engine;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.jutil.jdo.core.engine.DataSourceOptions;
-import io.jutil.jdo.core.plugin.DataSourceHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 
@@ -13,9 +10,7 @@ import javax.sql.DataSource;
  * @author Jin Zheng
  * @since 2022-05-18
  */
-public class JdoDataSourceHolder implements DataSourceHolder {
-	private static Logger logger = LoggerFactory.getLogger(JdoDataSourceHolder.class);
-
+public class JdoDataSourceHolder {
 	private final HikariDataSource dataSource;
 
 	public JdoDataSourceHolder(DataSourceOptions options) {
@@ -41,16 +36,8 @@ public class JdoDataSourceHolder implements DataSourceHolder {
 		return new HikariDataSource(config);
 	}
 
-	@Override
 	public DataSource getDataSource() {
 		return dataSource;
 	}
 
-    @Override
-    public void close() {
-		if (dataSource != null && !dataSource.isClosed()) {
-			dataSource.close();
-			logger.info("Hikari 数据源关闭");
-		}
-    }
 }

@@ -5,7 +5,6 @@ import io.jutil.jdo.core.engine.JdoBuilder;
 import io.jutil.jdo.core.engine.JdoTemplate;
 import io.jutil.jdo.core.engine.TransactionManager;
 import io.jutil.jdo.core.plugin.ConnectionHolder;
-import io.jutil.jdo.core.plugin.DataSourceHolder;
 import io.jutil.jdo.internal.core.dialect.DetectDialect;
 import io.jutil.jdo.internal.core.executor.SqlExecutor;
 import io.jutil.jdo.internal.core.executor.metadata.TableChecker;
@@ -30,7 +29,7 @@ import java.util.List;
 public class DefaultJdoBuilder implements JdoBuilder {
 	private static Logger logger = LoggerFactory.getLogger(DefaultJdoBuilder.class);
 
-	private DataSourceHolder dataSourceHolder;
+	private DataSource dataSource;
 	private JdoTemplate jdoTemplate;
 	private ConnectionHolder connectionHolder;
 	private TransactionManager transactionManager;
@@ -41,9 +40,8 @@ public class DefaultJdoBuilder implements JdoBuilder {
 
 	@Override
 	public Jdo build() {
-		AssertUtil.notNull(dataSourceHolder, "数据源");
+		AssertUtil.notNull(dataSource, "数据源");
 
-		var dataSource = dataSourceHolder.getDataSource();
 		var dialect = DetectDialect.dialect(dataSource);
 		this.parserFacade = new ParserFacade(dialect, true);
 
@@ -60,8 +58,8 @@ public class DefaultJdoBuilder implements JdoBuilder {
 	}
 
 	@Override
-	public JdoBuilder setDataSourceHolder(DataSourceHolder holder) {
-		this.dataSourceHolder = holder;
+	public JdoBuilder setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 		return this;
 	}
 
@@ -109,8 +107,8 @@ public class DefaultJdoBuilder implements JdoBuilder {
 		scanner.scan(pkgList);
 	}
 
-	public DataSourceHolder getDataSourceHolder() {
-		return dataSourceHolder;
+	public DataSource getDataSource() {
+		return dataSource;
 	}
 
 	public JdoTemplate getJdoTemplate() {

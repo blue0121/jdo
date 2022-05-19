@@ -1,10 +1,11 @@
 package io.jutil.jdo.core.engine;
 
-import io.jutil.jdo.core.plugin.DataSourceHolder;
-import io.jutil.jdo.internal.core.plugin.JdoDataSourceHolder;
+import io.jutil.jdo.internal.core.engine.JdoDataSourceHolder;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.sql.DataSource;
 
 /**
  * @author Jin Zheng
@@ -27,18 +28,19 @@ public class DataSourceOptions {
 	private int keepaliveTime = 0;
 	private int maxLifetime = 1_800_000;
 
-	private volatile DataSourceHolder holder;
+	private volatile DataSource dataSource;
 
-	public DataSourceHolder getDataSourceHolder() {
+	public DataSource getDataSource() {
 		AssertUtil.notEmpty(url, "DataSource url");
-		if (holder == null) {
+		if (dataSource == null) {
 			synchronized (this) {
-				if (holder == null) {
-					this.holder = new JdoDataSourceHolder(this);
+				if (dataSource == null) {
+					var holder = new JdoDataSourceHolder(this);
+					this.dataSource = holder.getDataSource();
 				}
 			}
 		}
-		return holder;
+		return dataSource;
 	}
 
 	public DataSourceOptions setUrl(String url) {
