@@ -64,6 +64,12 @@
 			<version>${spring.boot.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -81,6 +87,11 @@
 				</dependencies>
 				<configuration>
 					<argLine>
+						--add-exports jdo.spring.boot.starter/test.jutil.jdo.spring.model=jdo.core,spring.beans
+						--add-exports jdo.spring.boot.starter/test.jutil.jdo.spring.it=spring.beans,spring.core,spring.context
+						--add-opens jdo.spring.boot.starter/test.jutil.jdo.spring.model=spring.core,jdo.core
+						--add-opens jdo.spring.boot.starter/test.jutil.jdo.spring.it=spring.core
+						
 						${argLine}
 					</argLine>
 				</configuration>

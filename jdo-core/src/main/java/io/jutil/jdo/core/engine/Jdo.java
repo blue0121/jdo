@@ -8,8 +8,8 @@ public interface Jdo {
 
 	/**
 	 * 获取JdoTemplate
-	 * <p>
-	 * return
+	 *
+	 * @return
 	 */
 	JdoTemplate getJdoTemplate();
 

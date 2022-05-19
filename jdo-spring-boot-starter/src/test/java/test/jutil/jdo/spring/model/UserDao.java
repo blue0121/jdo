@@ -1,0 +1,60 @@
+package test.jutil.jdo.spring.model;
+
+import io.jutil.jdo.core.engine.Expression;
+import io.jutil.jdo.core.engine.OrderBy;
+import io.jutil.jdo.spring.engine.BaseDao;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * @author Jin Zheng
+ * @since 1.0 2021-12-21
+ */
+@Repository
+public class UserDao extends BaseDao<UserEntity> {
+	public UserDao() {
+	}
+
+	@Override
+	protected StringBuilder selectCount() {
+		StringBuilder sql = new StringBuilder("""
+				select count(*) group_name from "usr_user" a \
+				left join "group" g on g."id"=a."group_id" """);
+		return sql;
+	}
+
+	@Override
+	protected StringBuilder select() {
+		StringBuilder sql = new StringBuilder("""
+				select a.*, g."name" group_name from "usr_user" a \
+				left join "group" g on g."id"=a."group_id" """);
+		return sql;
+	}
+
+	@Override
+	protected void query(Expression exp, UserEntity object, List<Object> paramList) {
+		if (object.getGroupId() != null) {
+			exp.add("""
+					a."group_id"=? """);
+			paramList.add(object.getGroupId());
+		}
+		if (object.getName() != null && !object.getName().isEmpty()) {
+			exp.add("""
+					a."name" like ? """);
+			paramList.add("%" + object.getName() + "%");
+		}
+		if (object.getState() != null) {
+			exp.add("""
+					a."state"=? """);
+			paramList.add(object.getState());
+		}
+	}
+
+	@Override
+	protected void orderBy(OrderBy order, UserEntity object) {
+		order.add("""
+				a."id" asc """);
+	}
+
+}

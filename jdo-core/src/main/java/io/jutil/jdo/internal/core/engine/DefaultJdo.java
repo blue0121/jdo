@@ -5,35 +5,30 @@ import io.jutil.jdo.core.engine.Jdo;
 import io.jutil.jdo.core.engine.JdoTemplate;
 import io.jutil.jdo.core.engine.TransactionManager;
 
-import javax.sql.DataSource;
-
 /**
  * @author Jin Zheng
  * @since 2022-02-28
  */
 public class DefaultJdo implements Jdo, AutoCloseable {
-	private final DataSource dataSource;
-	private final JdoTemplate jdoTemplate;
-	private final TransactionManager transactionManager;
+	private final DefaultJdoBuilder jdoBuilder;
 
 	public DefaultJdo(DefaultJdoBuilder builder) {
-		this.dataSource = builder.getDataSource();
-		this.jdoTemplate = builder.getJdoTemplate();
-		this.transactionManager = builder.getTransactionManager();
+		this.jdoBuilder = builder;
 	}
 
 	@Override
 	public JdoTemplate getJdoTemplate() {
-		return jdoTemplate;
+		return jdoBuilder.getJdoTemplate();
 	}
 
 	@Override
 	public TransactionManager getTransactionManager() {
-		return transactionManager;
+		return jdoBuilder.getTransactionManager();
 	}
 
 	@Override
 	public void close() {
+		var dataSource = jdoBuilder.getDataSource();
 		if (dataSource instanceof HikariDataSource ds) {
 			if (!ds.isClosed()) {
 				ds.close();
