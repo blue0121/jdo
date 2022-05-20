@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "jdo")
 public class JdoProperties implements InitializingBean {
 	private String[] scanPackages;
-	private boolean escape = true;
+	private boolean escape = false;
 
 	@Override
 	public void afterPropertiesSet() {

@@ -29,6 +29,7 @@ import java.util.List;
 public class DefaultJdoBuilder implements JdoBuilder {
 	private static Logger logger = LoggerFactory.getLogger(DefaultJdoBuilder.class);
 
+	private boolean escape = false;
 	private DataSource dataSource;
 	private JdoTemplate jdoTemplate;
 	private ConnectionHolder connectionHolder;
@@ -43,7 +44,7 @@ public class DefaultJdoBuilder implements JdoBuilder {
 		AssertUtil.notNull(dataSource, "数据源");
 
 		var dialect = DetectDialect.dialect(dataSource);
-		this.parserFacade = new ParserFacade(dialect, true);
+		this.parserFacade = new ParserFacade(dialect, escape);
 
 		this.initConnectionHolder(dataSource);
 		var sqlExecutor = new SqlExecutor(connectionHolder, parserFacade);
@@ -86,6 +87,12 @@ public class DefaultJdoBuilder implements JdoBuilder {
 	@Override
 	public JdoBuilder setConnectionHolder(ConnectionHolder holder) {
 		this.connectionHolder = holder;
+		return this;
+	}
+
+	@Override
+	public JdoBuilder setEscape(boolean escape) {
+		this.escape = escape;
 		return this;
 	}
 

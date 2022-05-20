@@ -26,6 +26,7 @@ public abstract class BaseTest {
 		jdo = JdoBuilder.create()
 				.setDataSource(dsOptions.getDataSource())
 				.addScanPackages("test.jutil.jdo.model")
+				.setEscape(true)
 				.build();
 		jdoTemplate = jdo.getJdoTemplate();
 		createTable();

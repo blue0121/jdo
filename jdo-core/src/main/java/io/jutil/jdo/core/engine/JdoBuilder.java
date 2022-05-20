@@ -57,4 +57,12 @@ public interface JdoBuilder {
 	 * @return
 	 */
 	JdoBuilder setConnectionHolder(ConnectionHolder holder);
+
+	/**
+	 * 设置生成SQL是否需要转义
+	 *
+	 * @param escape
+	 * @return
+	 */
+	JdoBuilder setEscape(boolean escape);
 }
