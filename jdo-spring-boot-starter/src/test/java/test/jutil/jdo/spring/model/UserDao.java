@@ -2,7 +2,7 @@ package test.jutil.jdo.spring.model;
 
 import io.jutil.jdo.core.engine.Expression;
 import io.jutil.jdo.core.engine.OrderBy;
-import io.jutil.jdo.spring.engine.BaseDao;
+import io.jutil.jdo.spring.engine.SpringBaseDao;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @since 1.0 2021-12-21
  */
 @Repository
-public class UserDao extends BaseDao<UserEntity> {
+public class UserDao extends SpringBaseDao<UserEntity> {
 	public UserDao() {
 	}
 

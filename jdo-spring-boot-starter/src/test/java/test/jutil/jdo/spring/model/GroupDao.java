@@ -1,7 +1,7 @@
 package test.jutil.jdo.spring.model;
 
 import io.jutil.jdo.core.engine.Expression;
-import io.jutil.jdo.spring.engine.BaseDao;
+import io.jutil.jdo.spring.engine.SpringBaseDao;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * @since 1.0 2021-12-21
  */
 @Repository
-public class GroupDao extends BaseDao<GroupEntity> {
+public class GroupDao extends SpringBaseDao<GroupEntity> {
 	public GroupDao() {
 	}
 
