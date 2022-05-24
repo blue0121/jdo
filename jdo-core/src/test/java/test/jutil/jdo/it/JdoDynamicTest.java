@@ -114,7 +114,7 @@ public class JdoDynamicTest extends BaseTest {
 	@Test
 	public void testInc2() {
 		var user = UserEntity.create(1, "blue", "blue", State.ACTIVE);
-		int n = jdoTemplate.save(user, false);
+		int n = jdoTemplate.insert(user, false);
 		Assertions.assertEquals(1, n);
 
 		Map<String, Integer> param = new HashMap<>();
@@ -129,13 +129,13 @@ public class JdoDynamicTest extends BaseTest {
 	@Test
 	public void testSaveObject() {
 		Map<String, Object> map = Map.of("id", 3, "name", "red", "count", 1);
-		int n = jdoTemplate.saveObject(GroupEntity.class, map);
+		int n = jdoTemplate.insertObject(GroupEntity.class, map);
 		Assertions.assertEquals(1, n);
 		var group = jdoTemplate.get(GroupEntity.class, 3);
 		GroupEntity.verify(group, 3, "red", 1);
 
 		map = Map.of("groupId", 1, "name", "blue", "password", "blue", "state", State.ACTIVE);
-		n = jdoTemplate.saveObject(UserEntity.class, map);
+		n = jdoTemplate.insertObject(UserEntity.class, map);
 		Assertions.assertEquals(1, n);
 		var user = jdoTemplate.getObject(UserEntity.class, Map.of("name", "blue"));
 		System.out.println("userId: " + user.getId());
@@ -145,7 +145,7 @@ public class JdoDynamicTest extends BaseTest {
 	@Test
 	public void testSave() {
 		UserEntity user = UserEntity.create(1, "blue", "blue", State.ACTIVE);
-		int n = jdoTemplate.save(user, true);
+		int n = jdoTemplate.insert(user, true);
 		Assertions.assertEquals(1, n);
 		Assertions.assertNotNull(user.getId());
 		user = jdoTemplate.get(UserEntity.class, user.getId());
@@ -161,7 +161,7 @@ public class JdoDynamicTest extends BaseTest {
 		GroupEntity.verify(group, 1, "blueblue", 1);
 
 		var user = UserEntity.create(1, "blue", "blue", State.ACTIVE);
-		n = jdoTemplate.save(user);
+		n = jdoTemplate.insert(user);
 		Assertions.assertEquals(1, n);
 		map = Map.of("name", "blueblue", "version", 1);
 		n = jdoTemplate.updateObject(UserEntity.class, user.getId(), map);
@@ -186,7 +186,7 @@ public class JdoDynamicTest extends BaseTest {
 		GroupEntity.verify(group, 1, "blueblue", 1);
 
 		var user = UserEntity.create(1, "blue", "blue", State.ACTIVE);
-		n = jdoTemplate.save(user);
+		n = jdoTemplate.insert(user);
 		Assertions.assertEquals(1, n);
 		user = jdoTemplate.get(UserEntity.class, user.getId());
 		user.setName("blueblue");

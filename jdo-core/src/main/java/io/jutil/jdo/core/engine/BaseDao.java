@@ -22,7 +22,7 @@ public class BaseDao<T> extends QueryDao<T, T> {
 	 * @return 影响记录数
 	 */
 	public int save(T object) {
-		return jdoTemplate.save(object);
+		return jdoTemplate.insert(object);
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class BaseDao<T> extends QueryDao<T, T> {
 	 * @return 影响记录数
 	 */
 	public int save(T object, boolean dynamic) {
-		return jdoTemplate.save(object, dynamic);
+		return jdoTemplate.insert(object, dynamic);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class BaseDao<T> extends QueryDao<T, T> {
 	 * @return 影响记录数
 	 */
 	public int saveObject(Map<String, Object> param) {
-		return jdoTemplate.saveObject(returnClazz, param);
+		return jdoTemplate.insertObject(returnClazz, param);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class BaseDao<T> extends QueryDao<T, T> {
 	 * @return 影响记录数
 	 */
 	public int[] saveList(List<T> objectList) {
-		return jdoTemplate.saveList(objectList);
+		return jdoTemplate.insertList(objectList);
 	}
 
 	/**

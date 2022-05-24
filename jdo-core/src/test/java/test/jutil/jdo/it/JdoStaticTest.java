@@ -74,12 +74,12 @@ public class JdoStaticTest extends BaseTest {
 	@Test
 	public void testSave() {
 		var group = GroupEntity.create(3, "red", 3);
-		jdoTemplate.save(group, false);
+		jdoTemplate.insert(group, false);
 		var group2 = jdoTemplate.get(GroupEntity.class, 3);
 		GroupEntity.verify(group2, 3, "red", 3);
 
 		var user = UserEntity.create(1, "group1", "pass1", State.ACTIVE);
-		int c = jdoTemplate.save(user, false);
+		int c = jdoTemplate.insert(user, false);
 		Assertions.assertTrue(c > 0);
 		Assertions.assertNotNull(user.getId());
 		System.out.println("userId: " + user.getId());
@@ -100,7 +100,7 @@ public class JdoStaticTest extends BaseTest {
 			idList.add(id);
 			groupList.add(GroupEntity.create(id, "red_" + id, id));
 		}
-		int[] groupRs = jdoTemplate.saveList(groupList);
+		int[] groupRs = jdoTemplate.insertList(groupList);
 		Assertions.assertArrayEquals(expectRs, groupRs);
 		int j = 1;
 		for (var group : groupList) {
@@ -128,7 +128,7 @@ public class JdoStaticTest extends BaseTest {
 			int id = i + 1;
 			userList.add(UserEntity.create(id, "red_" + id, "pwd_" + id, State.ACTIVE));
 		}
-		int[] userRs = jdoTemplate.saveList(userList);
+		int[] userRs = jdoTemplate.insertList(userList);
 		Assertions.assertArrayEquals(expectRs, userRs);
 		List<Integer> idList = new ArrayList<>();
 		for (var user : userList) {
@@ -168,7 +168,7 @@ public class JdoStaticTest extends BaseTest {
 		GroupEntity.verify(group1, 1, name, 1);
 
 		var user1 = UserEntity.create(1, "blue", "pwd", State.INACTIVE);
-		Assertions.assertEquals(1, jdoTemplate.save(user1, false));
+		Assertions.assertEquals(1, jdoTemplate.insert(user1, false));
 		user1 = jdoTemplate.get(UserEntity.class, user1.getId());
 		UserEntity.verify(user1, 1, 1, "blue", "pwd", State.INACTIVE);
 		user1.setName(name);

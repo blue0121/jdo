@@ -46,7 +46,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	}
 
 	@Override
-	public int save(Object object, boolean dynamic) {
+	public int insert(Object object, boolean dynamic) {
 		AssertUtil.notNull(object, "对象");
 
 		var config = configCache.loadEntityMetadata(object.getClass());
@@ -60,7 +60,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	}
 
 	@Override
-	public int saveObject(Class<?> clazz, Map<String, ?> param) {
+	public int insertObject(Class<?> clazz, Map<String, ?> param) {
 		AssertUtil.notNull(clazz, "类型");
 		AssertUtil.notEmpty(param, "Map");
 
@@ -72,7 +72,7 @@ public class DefaultJdoTemplate implements JdoTemplate {
 	}
 
 	@Override
-	public int[] saveList(List<?> objectList) {
+	public int[] insertList(List<?> objectList) {
 		AssertUtil.notEmpty(objectList, "ObjectList");
 
 		var config = configCache.loadEntityMetadata(objectList.get(0).getClass());

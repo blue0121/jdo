@@ -17,8 +17,8 @@ public interface JdoTemplate {
 	 * @param object 对象
 	 * @return 影响记录数
 	 */
-	default int save(Object object) {
-		return this.save(object, true);
+	default int insert(Object object) {
+		return this.insert(object, true);
 	}
 
 	/**
@@ -28,7 +28,7 @@ public interface JdoTemplate {
 	 * @param dynamic 空字段是否也写进SQL语句中
 	 * @return 影响记录数
 	 */
-	int save(Object object, boolean dynamic);
+	int insert(Object object, boolean dynamic);
 
 	/**
 	 * 保存对象
@@ -37,7 +37,7 @@ public interface JdoTemplate {
 	 * @param param <字段名, 字段值>
 	 * @return 影响记录数
 	 */
-	int saveObject(Class<?> clazz, Map<String, ?> param);
+	int insertObject(Class<?> clazz, Map<String, ?> param);
 
 	/**
 	 * 保存对象列表，默认不产生主键
@@ -45,7 +45,7 @@ public interface JdoTemplate {
 	 * @param objectList 对象列表
 	 * @return 影响记录数
 	 */
-	int[] saveList(List<?> objectList);
+	int[] insertList(List<?> objectList);
 
 	/**
 	 * 更新对象
