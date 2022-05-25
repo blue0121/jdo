@@ -15,15 +15,18 @@ import java.util.List;
 public class TableChecker {
 	private static Logger logger = LoggerFactory.getLogger(TableChecker.class);
 
+	private final DataSource dataSource;
 	private final io.jutil.jdo.internal.core.parser.MetadataCache configCache;
 	private final MetadataCache metadataCache;
 
 	public TableChecker(DataSource ds, io.jutil.jdo.internal.core.parser.MetadataCache cache) {
+		this.dataSource = ds;
 		this.configCache = cache;
 		this.metadataCache = new MetadataCache();
 	}
 
 	public void check() {
+		new MetadataParser(dataSource, metadataCache);
 		List<String> lackList = new ArrayList<>();
 		for (var entry : configCache.allEntityMetadata().entrySet()) {
 			var config = entry.getValue();
