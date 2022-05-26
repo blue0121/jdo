@@ -3,7 +3,7 @@ package io.jutil.jdo.internal.core.sql.map;
 import io.jutil.jdo.core.exception.EntityFieldException;
 import io.jutil.jdo.core.parser.IdMetadata;
 import io.jutil.jdo.core.parser.IdType;
-import io.jutil.jdo.internal.core.id.IdGenerator;
+import io.jutil.jdo.internal.core.id.IdGeneratorFactory;
 import io.jutil.jdo.internal.core.id.SnowflakeId;
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
@@ -40,14 +40,14 @@ public class InsertIdSqlHandler extends AbstractSqlHandler {
 
     private void handleAuto(SqlResponse response, String field, IdType idType) {
         switch (idType) {
-            case STRING -> response.putParam(field, IdGenerator.uuid32bit());
+            case STRING -> response.putParam(field, IdGeneratorFactory.uuid32bit());
             default -> response.removeParam(field);
         }
     }
 
     private void handleUuid(SqlResponse response, String field, IdType idType) {
         switch (idType) {
-            case STRING -> response.putParam(field, IdGenerator.uuid32bit());
+            case STRING -> response.putParam(field, IdGeneratorFactory.uuid32bit());
             case LONG -> response.putParam(field, snowflakeId.nextId());
             default -> throw new UnsupportedOperationException("不支持主键类型: " + idType);
         }

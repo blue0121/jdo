@@ -6,8 +6,8 @@ package io.jutil.jdo.internal.core.id;
  * @author Jin Zheng
  * @since 2022-02-18
  */
-public class IdGenerator {
-	private IdGenerator() {
+public class IdGeneratorFactory {
+	private IdGeneratorFactory() {
 	}
 
 	/**
