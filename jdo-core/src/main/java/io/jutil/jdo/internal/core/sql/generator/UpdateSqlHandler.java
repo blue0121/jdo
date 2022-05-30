@@ -7,6 +7,7 @@ import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 import io.jutil.jdo.internal.core.util.StringUtil;
+import io.jutil.jdo.internal.core.util.VersionUtil;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -25,6 +26,14 @@ public class UpdateSqlHandler extends AbstractSqlHandler {
 		var config = request.getMetadata();
 		var map = response.toParamMap();
 		AssertUtil.notEmpty(map, "参数");
+
+		if (!request.isDynamic()) {
+			var sql = config.getSqlMetadata();
+			var sqlItem = VersionUtil.isForce(config) ? sql.getUpdateByIdAndVersion() : sql.getUpdateById();
+			response.setSql(sqlItem.getSql());
+			sqlItem.getParameterNameList().forEach(response::addName);
+			return;
+		}
 
 		var idMap = config.getIdMap();
 		var columnMap = config.getColumnMap();

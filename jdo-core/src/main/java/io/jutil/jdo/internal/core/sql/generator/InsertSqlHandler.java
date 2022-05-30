@@ -25,6 +25,13 @@ public class InsertSqlHandler extends AbstractSqlHandler {
 		var map = response.toParamMap();
 		AssertUtil.notEmpty(map, "参数");
 
+		if (!request.isDynamic()) {
+			var sqlItem = config.getSqlMetadata().getInsert();
+			response.setSql(sqlItem.getSql());
+			sqlItem.getParameterNameList().forEach(response::addName);
+			return;
+		}
+
 		var idMap = config.getIdMap();
 		var columnMap = config.getColumnMap();
 		var version = config.getVersionMetadata();
