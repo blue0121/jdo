@@ -40,6 +40,8 @@ public interface EntityMetadata extends MapperMetadata {
 
 	/**
 	 * 版本元数据
+	 *
+	 * @return
 	 */
 	VersionMetadata getVersionMetadata();
 
@@ -48,7 +50,7 @@ public interface EntityMetadata extends MapperMetadata {
 	 *
 	 * @return Map<字段名, 额外字段元数据>
 	 */
-	Map<String, ColumnMetadata> getExtraMap();
+	Map<String, TransientMetadata> getTransientMap();
 
 	/**
 	 * 自动生成的SQL元数据

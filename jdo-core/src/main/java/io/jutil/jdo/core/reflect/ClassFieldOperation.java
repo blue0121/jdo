@@ -44,6 +44,7 @@ public interface ClassFieldOperation extends FieldOperation {
 	 * 2. field.setAccessible(true) & field.set(target, value)
 	 *
 	 * @param target
+	 * @param value
 	 * @return
 	 */
 	boolean setFieldValue(Object target, Object value);

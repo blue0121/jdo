@@ -8,15 +8,18 @@ import io.jutil.jdo.core.annotation.Transient;
 import io.jutil.jdo.core.annotation.Version;
 import io.jutil.jdo.core.exception.JdbcException;
 import io.jutil.jdo.core.parser.ColumnMetadata;
+import io.jutil.jdo.core.parser.FieldMetadata;
 import io.jutil.jdo.core.parser.IdMetadata;
 import io.jutil.jdo.core.parser.IdType;
 import io.jutil.jdo.core.parser.MapperMetadata;
+import io.jutil.jdo.core.parser.TransientMetadata;
 import io.jutil.jdo.core.reflect.ClassFieldOperation;
 import io.jutil.jdo.core.reflect.ReflectFactory;
 import io.jutil.jdo.internal.core.dialect.Dialect;
 import io.jutil.jdo.internal.core.parser.model.DefaultColumnMetadata;
 import io.jutil.jdo.internal.core.parser.model.DefaultEntityMetadata;
 import io.jutil.jdo.internal.core.parser.model.DefaultIdMetadata;
+import io.jutil.jdo.internal.core.parser.model.DefaultTransientMetadata;
 import io.jutil.jdo.internal.core.parser.model.DefaultVersionMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,24 +57,29 @@ public class EntityParser extends AbstractParser {
 	    entityMetadata.setClassOperation(classOperation);
 	    Map<String, IdMetadata> idMap = new LinkedHashMap<>();
 	    Map<String, ColumnMetadata> columnMap = new LinkedHashMap<>();
-	    Map<String, ColumnMetadata> extraMap = new LinkedHashMap<>();
+	    Map<String, TransientMetadata> transientMap = new LinkedHashMap<>();
+		Map<String, FieldMetadata> fieldMap = new LinkedHashMap<>();
 
-	    var fieldMap = classOperation.getAllFields();
-	    for (var entry : fieldMap.entrySet()) {
+	    var fields = classOperation.getAllFields();
+	    for (var entry : fields.entrySet()) {
 		    var field = entry.getValue();
-		    if (this.parseFieldId(field, idMap)) {
+		    if (this.parseFieldId(field, idMap, fieldMap)) {
 			    continue;
 		    }
-			if (this.parseFieldVersion(field, entityMetadata)) {
+			if (this.parseFieldVersion(field, entityMetadata, fieldMap)) {
+				continue;
+			}
+			if (this.parseFieldTransient(field, transientMap, fieldMap)) {
 				continue;
 			}
 
-			this.parseFieldColumn(field, columnMap, extraMap);
+			this.parseFieldColumn(field, columnMap, fieldMap);
 	    }
 
 	    entityMetadata.setIdMap(idMap);
 	    entityMetadata.setColumnMap(columnMap);
-	    entityMetadata.setExtraMap(extraMap);
+	    entityMetadata.setTransientMap(transientMap);
+		entityMetadata.setFieldMap(fieldMap);
 
 	    var generator = new DefaultSqlGenerator(entityMetadata);
 	    generator.generate();
@@ -80,7 +88,8 @@ public class EntityParser extends AbstractParser {
         return entityMetadata;
     }
 
-	private boolean parseFieldId(ClassFieldOperation field, Map<String, IdMetadata> idMap) {
+	private boolean parseFieldId(ClassFieldOperation field, Map<String, IdMetadata> idMap,
+	                             Map<String, FieldMetadata> fieldMap) {
 		Id annotationId = field.getAnnotation(Id.class);
 		if (annotationId == null) {
 			return false;
@@ -107,11 +116,13 @@ public class EntityParser extends AbstractParser {
 		metadata.setGeneratorType(generatorType);
 
 		idMap.put(metadata.getFieldName(), metadata);
+		fieldMap.put(metadata.getFieldName(), metadata);
 		logger.debug("主键字段: {} <==> {}", metadata.getFieldName(), metadata.getColumnName());
 		return true;
 	}
 
-	private boolean parseFieldVersion(ClassFieldOperation field, DefaultEntityMetadata entityMetadata) {
+	private boolean parseFieldVersion(ClassFieldOperation field, DefaultEntityMetadata entityMetadata,
+	                                  Map<String, FieldMetadata> fieldMap) {
 		Version annotationVersion = field.getAnnotation(Version.class);
 		if (annotationVersion == null) {
 			return false;
@@ -127,12 +138,28 @@ public class EntityParser extends AbstractParser {
 		metadata.setForce(annotationVersion.force());
 		metadata.setDefaultValue(annotationVersion.defaultValue());
 		entityMetadata.setVersionMetadata(metadata);
+		fieldMap.put(metadata.getFieldName(), metadata);
 		logger.debug("版本字段: {} <==> {}", metadata.getFieldName(), metadata.getColumnName());
 		return true;
 	}
 
+	private boolean parseFieldTransient(ClassFieldOperation field, Map<String, TransientMetadata> transientMap,
+	                                 Map<String, FieldMetadata> fieldMap) {
+		Transient annotationTransient = field.getAnnotation(Transient.class);
+		if (annotationTransient == null) {
+			return false;
+		}
+
+		var metadata = new DefaultTransientMetadata();
+		this.setFieldMetadata(field, metadata);
+		transientMap.put(metadata.getFieldName(), metadata);
+		fieldMap.put(metadata.getFieldName(), metadata);
+		logger.debug("额外字段: {} <==> {}", metadata.getFieldName(), metadata.getColumnName());
+		return true;
+	}
+
 	private void parseFieldColumn(ClassFieldOperation field, Map<String, ColumnMetadata> columnMap,
-	                              Map<String, ColumnMetadata> extraMap) {
+	                              Map<String, FieldMetadata> fieldMap) {
 		var metadata = new DefaultColumnMetadata();
 		this.setFieldMetadata(field, metadata);
 
@@ -142,13 +169,8 @@ public class EntityParser extends AbstractParser {
 			metadata.setMustInsert(annotation.update());
 		}
 
-		Transient annotationTransient = field.getAnnotation(Transient.class);
-		if (annotationTransient != null) {
-			extraMap.put(metadata.getFieldName(), metadata);
-			logger.debug("额外字段: {} <==> {}", metadata.getFieldName(), metadata.getColumnName());
-		} else {
-			columnMap.put(metadata.getFieldName(), metadata);
-			logger.debug("普通字段: {} <==> {}", metadata.getFieldName(), metadata.getColumnName());
-		}
+		columnMap.put(metadata.getFieldName(), metadata);
+		fieldMap.put(metadata.getFieldName(), metadata);
+		logger.debug("普通字段: {} <==> {}", metadata.getFieldName(), metadata.getColumnName());
 	}
 }

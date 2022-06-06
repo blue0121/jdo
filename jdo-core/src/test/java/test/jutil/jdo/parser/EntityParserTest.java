@@ -38,10 +38,12 @@ public class EntityParserTest extends ParserTest {
 
 		var idMap = metadata.getIdMap();
 		var columnMap = metadata.getColumnMap();
-		var extraMap = metadata.getExtraMap();
+		var transientMap = metadata.getTransientMap();
+		var fieldMap = metadata.getFieldMap();
 		Assertions.assertEquals(1, idMap.size());
 		Assertions.assertEquals(2, columnMap.size());
-		Assertions.assertEquals(1, extraMap.size());
+		Assertions.assertEquals(1, transientMap.size());
+		Assertions.assertEquals(5, fieldMap.size());
 
 		this.checkId(idMap.get("id"), IdType.INT, GeneratorType.INCREMENT,
 				"id", "id", this.escape("id", isEscape));
@@ -53,7 +55,7 @@ public class EntityParserTest extends ParserTest {
 				"groupId", "group_id", this.escape("group_id", isEscape));
 		this.checkColumn(columnMap.get("username"), false, false,
 				"username", "username", this.escape("username", isEscape));
-		this.checkField(extraMap.get("groupName"), "groupName", "group_name",
+		this.checkField(transientMap.get("groupName"), "groupName", "group_name",
 				this.escape("group_name", isEscape));
 
 		var sql = metadata.getSqlMetadata();

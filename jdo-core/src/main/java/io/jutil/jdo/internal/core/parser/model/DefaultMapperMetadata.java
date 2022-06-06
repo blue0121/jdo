@@ -19,6 +19,7 @@ public class DefaultMapperMetadata implements MapperMetadata {
 	protected Class<?> targetClass;
 	protected ClassOperation classOperation;
 	protected Map<String, ColumnMetadata> columnMap;
+	protected Map<String, FieldMetadata> fieldMap;
 
 	public DefaultMapperMetadata() {
 		this.metadataType = MetadataType.MAPPER;
@@ -58,6 +59,11 @@ public class DefaultMapperMetadata implements MapperMetadata {
 		return columnMap;
 	}
 
+	@Override
+	public Map<String, FieldMetadata> getFieldMap() {
+		return fieldMap;
+	}
+
 	public void setClassOperation(ClassOperation classOperation) {
 		AssertUtil.notNull(classOperation, "JavaBean");
 		this.targetClass = classOperation.getTargetClass();
@@ -69,6 +75,14 @@ public class DefaultMapperMetadata implements MapperMetadata {
 			this.columnMap = Map.of();
 		} else {
 			this.columnMap = Collections.unmodifiableMap(columnMap);
+		}
+	}
+
+	public void setFieldMap(Map<String, FieldMetadata> fieldMap) {
+		if (fieldMap == null || fieldMap.isEmpty()) {
+			this.fieldMap = Map.of();
+		} else {
+			this.fieldMap = Collections.unmodifiableMap(fieldMap);
 		}
 	}
 }

@@ -1,11 +1,9 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import io.jutil.jdo.core.exception.JdbcException;
-import io.jutil.jdo.core.parser.EntityMetadata;
-import io.jutil.jdo.core.parser.FieldMetadata;
+import io.jutil.jdo.core.parser.MapperMetadata;
 import io.jutil.jdo.core.reflect.ClassFieldOperation;
 import io.jutil.jdo.core.reflect.ClassOperation;
-import io.jutil.jdo.internal.core.parser.MetadataCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,22 +34,21 @@ public class ObjectBindFactory implements ParameterBindFactory<Object> {
 		private static Logger logger = LoggerFactory.getLogger(ObjectBindFactory.class);
 
 		private final ParameterBinderFacade binderFacade;
-		private final MetadataCache metadataCache;
+		private final MapperMetadata metadata;
 		private final Class<Object> clazz;
 		private final ClassOperation classOperation;
 		private final Map<String, ClassFieldOperation> fieldMap = new HashMap<>();
 
 		public ObjectBinder(ParameterBinderFacade binderFacade, Class<Object> clazz) {
 			this.binderFacade = binderFacade;
-			this.metadataCache = binderFacade.getParserFacade().getMetadataCache();
+			this.metadata = binderFacade.getParserFacade().getMetadataCache().load(clazz);
 			this.clazz = clazz;
-			var config = metadataCache.load(clazz);
-			this.classOperation = config.getClassOperation();
-			config.getColumnMap().forEach((k, v) -> this.setFieldMap(v));
-			if (config instanceof EntityMetadata c) {
-				c.getIdMap().forEach((k, v) -> this.setFieldMap(v));
-				this.setFieldMap(c.getVersionMetadata());
-				c.getExtraMap().forEach((k, v) -> this.setFieldMap(v));
+			this.classOperation = metadata.getClassOperation();
+
+			for (var entry : metadata.getFieldMap().entrySet()) {
+				var field = entry.getValue();
+				fieldMap.put(field.getColumnName().toLowerCase(), field.getFieldOperation());
+				fieldMap.put(field.getColumnName().toUpperCase(), field.getFieldOperation());
 			}
 		}
 
@@ -63,15 +60,6 @@ public class ObjectBindFactory implements ParameterBindFactory<Object> {
 		@Override
 		public void bind(PreparedStatement pstmt, int i, Object val) throws SQLException {
 			throw new UnsupportedOperationException("不支持类型: " + clazz.getName());
-		}
-
-		private void setFieldMap(FieldMetadata field) {
-			if (field == null) {
-				return;
-			}
-
-			fieldMap.put(field.getColumnName().toLowerCase(), field.getFieldOperation());
-			fieldMap.put(field.getColumnName().toUpperCase(), field.getFieldOperation());
 		}
 
 		@Override

@@ -1,11 +1,11 @@
 package io.jutil.jdo.internal.core.parser.model;
 
 import io.jutil.jdo.core.exception.JdbcException;
-import io.jutil.jdo.core.parser.ColumnMetadata;
 import io.jutil.jdo.core.parser.EntityMetadata;
 import io.jutil.jdo.core.parser.IdMetadata;
 import io.jutil.jdo.core.parser.MetadataType;
 import io.jutil.jdo.core.parser.SqlMetadata;
+import io.jutil.jdo.core.parser.TransientMetadata;
 import io.jutil.jdo.core.parser.VersionMetadata;
 import io.jutil.jdo.internal.core.util.AssertUtil;
 
@@ -22,7 +22,7 @@ public class DefaultEntityMetadata extends DefaultMapperMetadata implements Enti
     private IdMetadata idMetadata;
     private Map<String, IdMetadata> idMap;
     private VersionMetadata versionMetadata;
-    private Map<String, ColumnMetadata> extraMap;
+    private Map<String, TransientMetadata> transientMap;
     private SqlMetadata sqlMetadata;
 
 	public DefaultEntityMetadata() {
@@ -35,11 +35,11 @@ public class DefaultEntityMetadata extends DefaultMapperMetadata implements Enti
         AssertUtil.notEmpty(tableName, "表名");
         AssertUtil.notEmpty(escapeTableName, "转义表名");
         AssertUtil.notEmpty(idMap, "主键配置");
-        AssertUtil.notNull(extraMap, "额外字段配置");
+        AssertUtil.notNull(transientMap, "额外字段配置");
         AssertUtil.notNull(sqlMetadata, "SQL配置");
 
         idMap.forEach((k, v) -> this.check(v));
-        extraMap.forEach((k, v) -> this.check(v));
+        transientMap.forEach((k, v) -> this.check(v));
         if (sqlMetadata instanceof DefaultSqlMetadata s) {
             s.check();
         }
@@ -71,8 +71,8 @@ public class DefaultEntityMetadata extends DefaultMapperMetadata implements Enti
     }
 
     @Override
-    public Map<String, ColumnMetadata> getExtraMap() {
-        return extraMap;
+    public Map<String, TransientMetadata> getTransientMap() {
+        return transientMap;
     }
 
     @Override
@@ -107,11 +107,11 @@ public class DefaultEntityMetadata extends DefaultMapperMetadata implements Enti
         this.versionMetadata = versionMetadata;
     }
 
-    public void setExtraMap(Map<String, ColumnMetadata> extraMap) {
-        if (extraMap == null || extraMap.isEmpty()) {
-            this.extraMap = Map.of();
+    public void setTransientMap(Map<String, TransientMetadata> transientMap) {
+        if (transientMap == null || transientMap.isEmpty()) {
+            this.transientMap = Map.of();
         } else {
-            this.extraMap = Collections.unmodifiableMap(extraMap);
+            this.transientMap = Collections.unmodifiableMap(transientMap);
         }
     }
 

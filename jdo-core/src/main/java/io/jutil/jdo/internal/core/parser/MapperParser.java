@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.parser;
 
 import io.jutil.jdo.core.parser.ColumnMetadata;
+import io.jutil.jdo.core.parser.FieldMetadata;
 import io.jutil.jdo.core.parser.MapperMetadata;
 import io.jutil.jdo.core.reflect.ReflectFactory;
 import io.jutil.jdo.internal.core.dialect.Dialect;
@@ -29,16 +30,19 @@ public class MapperParser extends AbstractParser {
 		var metadata = new DefaultMapperMetadata();
 	    metadata.setClassOperation(classOperation);
 	    Map<String, ColumnMetadata> columnMap = new LinkedHashMap<>();
+		Map<String, FieldMetadata> fieldMap = new LinkedHashMap<>();
 
-	    var fieldMap = classOperation.getAllFields();
-	    for (var entry : fieldMap.entrySet()) {
+	    var fields = classOperation.getAllFields();
+	    for (var entry : fields.entrySet()) {
 		    var column = new DefaultColumnMetadata();
 		    this.setFieldMetadata(entry.getValue(), column);
 		    columnMap.put(column.getFieldName(), column);
+			fieldMap.put(column.getFieldName(), column);
 		    logger.debug("普通字段: {} <==> {}", column.getFieldName(), column.getColumnName());
 	    }
 
 	    metadata.setColumnMap(columnMap);
+		metadata.setFieldMap(fieldMap);
 	    metadata.check();
         return metadata;
     }

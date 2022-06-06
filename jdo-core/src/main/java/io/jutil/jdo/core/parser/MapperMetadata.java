@@ -40,4 +40,11 @@ public interface MapperMetadata {
 	 */
 	Map<String, ColumnMetadata> getColumnMap();
 
+	/**
+	 * 所有字段元数据，包括IdMetadata, ColumnMetadata, VersionMetadata, TransientMetadata
+	 *
+	 * @return Map<字段名, 字段元数据>
+	 */
+	Map<String, FieldMetadata> getFieldMap();
+
 }
