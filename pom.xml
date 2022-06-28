@@ -25,14 +25,14 @@
 		<lombok.version>1.18.24</lombok.version>
 
 		<!-- spring -->
-		<spring.version>5.3.20</spring.version>
-		<spring.boot.version>2.6.7</spring.boot.version>
+		<spring.version>5.3.21</spring.version>
+		<spring.boot.version>2.7.1</spring.boot.version>
 
 		<!-- test -->
-		<h2.version>2.1.212</h2.version>
+		<h2.version>2.1.214</h2.version>
 		<junit.platform.version>1.8.2</junit.platform.version>
 		<junit.jupiter.version>5.8.2</junit.jupiter.version>
-		<mockito.version>4.5.1</mockito.version>
+		<mockito.version>4.6.1</mockito.version>
 		
 		<!-- maven plugins -->
 		<compiler.version>3.8.1</compiler.version>
