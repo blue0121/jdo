@@ -19,6 +19,8 @@ public class SqlResponse {
 	private final List<String> nameList = new ArrayList<>();
 	private final List<Object> paramList = new ArrayList<>();
 	private final List<List<?>> batchParamList = new ArrayList<>();
+	private final List<SqlParameter> parameterList = new ArrayList<>();
+	private final List<List<SqlParameter>> batchParameterList = new ArrayList<>();
 
 	public SqlResponse(EntityMetadata metadata) {
 		this.metadata = metadata;
@@ -72,12 +74,28 @@ public class SqlResponse {
 		return paramList;
 	}
 
+	public void addParameter(SqlParameter parameter) {
+		parameterList.add(parameter);
+	}
+
+	public List<SqlParameter> toParameterList() {
+		return parameterList;
+	}
+
 	public void addBatchParam(List<?> paramList) {
 		batchParamList.add(paramList);
 	}
 
 	public List<List<?>> toBatchParamList() {
 		return batchParamList;
+	}
+
+	public void addBatchParameter(List<SqlParameter> parameterList) {
+		batchParameterList.add(parameterList);
+	}
+
+	public List<List<SqlParameter>> toBatchParameterList() {
+		return batchParameterList;
 	}
 
 }

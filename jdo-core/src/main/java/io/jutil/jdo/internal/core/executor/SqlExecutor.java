@@ -20,6 +20,9 @@ import java.util.List;
  */
 public class SqlExecutor {
 	private static Logger logger = LoggerFactory.getLogger(SqlExecutor.class);
+	private static Logger sqlLogger = LoggerFactory.getLogger("SQL");
+
+	private static final int ONE = 1;
 
 	private final ConnectionHolder connectionHolder;
 	private final ParameterBinderFacade binderFacade;
@@ -28,6 +31,8 @@ public class SqlExecutor {
 		this.connectionHolder = connectionHolder;
 		this.binderFacade = new ParameterBinderFacade(parserFacade);
 	}
+
+	
 
 	public <T> List<T> query(Class<T> clazz, String sql, List<?> paramList) {
 		this.logParam(sql, paramList);
@@ -98,11 +103,11 @@ public class SqlExecutor {
 	private void logParam(String sql, List<?> paramList) {
 		if (logger.isDebugEnabled()) {
 			if (sql == null || sql.isEmpty()) {
-				logger.debug("SQL param: {}", paramList);
+				sqlLogger.info("parameters: {}", paramList);
 			} else if (paramList == null) {
-				logger.debug("SQL: {}", sql);
+				sqlLogger.info("{}", sql);
 			} else {
-				logger.debug("SQL: {}, param: {}", sql, paramList);
+				sqlLogger.info("{}, parameters: {}", sql, paramList);
 			}
 		}
 	}
