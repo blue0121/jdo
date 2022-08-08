@@ -2,9 +2,6 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import lombok.NoArgsConstructor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -38,15 +35,4 @@ public class DateBinder implements ParameterBinder<Date> {
 		return rs.wasNull() ? null : new Date(d.getTime());
 	}
 
-    @Override
-    public void bind(PreparedStatement pstmt, int i, Date val) throws SQLException {
-		var times = val.getTime();
-		pstmt.setTimestamp(i, new Timestamp(times));
-    }
-
-	@Override
-	public Date fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
-		var d = rs.getTimestamp(i);
-		return rs.wasNull() ? null : new Date(d.getTime());
-	}
 }

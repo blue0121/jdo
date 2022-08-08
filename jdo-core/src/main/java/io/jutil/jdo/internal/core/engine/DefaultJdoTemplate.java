@@ -317,7 +317,8 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> T getObject(Class<T> clazz, String sql, List<?> paramList) {
-		List<T> list = sqlExecutor.query(clazz, sql, paramList);
+		var context = ExecuteContext.create(sql, paramList);
+		List<T> list = sqlExecutor.query(clazz, context);
 		if (list.isEmpty()) {
 			throw null;
 		}
@@ -338,7 +339,8 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
 	@Override
 	public <T> List<T> list(Class<T> clazz, String sql, List<?> paramList) {
-		return sqlExecutor.query(clazz, sql, paramList);
+		var context = ExecuteContext.create(sql, paramList);
+		return sqlExecutor.query(clazz, context);
 	}
 
 	@Override
@@ -351,8 +353,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(field, param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, request);
+		var context = ExecuteContext.create(response);
 
-		return sqlExecutor.query(target, response.getSql(), response.toParamList());
+		return sqlExecutor.query(target, context);
 	}
 
 	@Override
@@ -363,8 +366,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET, request);
+		var context = ExecuteContext.create(response);
 
-		return sqlExecutor.query(clazz, response.getSql(), response.toParamList());
+		return sqlExecutor.query(clazz, context);
 	}
 
     @Override

@@ -1,5 +1,6 @@
 package test.jutil.jdo.executor.parameter;
 
+import io.jutil.jdo.internal.core.sql.SqlParameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,7 +24,7 @@ public class ObjectBinderTest extends BaseBinderTest {
 	@Test
 	public void testString() throws SQLException {
 		var str = "123";
-		facade.bind(pstmt, List.of(str));
+		facade.bind(pstmt, List.of(SqlParameter.create(str)));
 		Mockito.verify(pstmt).setString(Mockito.eq(ONE), Mockito.eq(str));
 
 		Mockito.doReturn(str).when(rs).getString(Mockito.eq(ONE));
@@ -35,7 +36,7 @@ public class ObjectBinderTest extends BaseBinderTest {
 	@Test
 	public void testEnum() throws SQLException {
 		var state = State.ACTIVE;
-		facade.bind(pstmt, List.of(state));
+		facade.bind(pstmt, List.of(SqlParameter.create(state)));
 		Mockito.verify(pstmt).setString(Mockito.eq(ONE), Mockito.eq(state.name()));
 
 		Mockito.doReturn(state.name()).when(rs).getString(Mockito.eq(ONE));
@@ -46,8 +47,8 @@ public class ObjectBinderTest extends BaseBinderTest {
 
 	@Test
 	public void testNull() throws SQLException {
-		List<Object> list = new ArrayList<>();
-		list.add(null);
+		List<SqlParameter> list = new ArrayList<>();
+		list.add(SqlParameter.create(null));
 		facade.bind(pstmt, list);
 		Mockito.verify(pstmt).setObject(Mockito.eq(ONE), Mockito.eq(null));
 
@@ -59,11 +60,11 @@ public class ObjectBinderTest extends BaseBinderTest {
 	@Test
 	public void testList() throws SQLException {
 		var now = LocalDateTime.now();
-		List<Object> list = new ArrayList<>();
-		list.add(null);
-		list.add(123);
-		list.add(123.0d);
-		list.add(now);
+		List<SqlParameter> list = new ArrayList<>();
+		list.add(SqlParameter.create(null));
+		list.add(SqlParameter.create(123));
+		list.add(SqlParameter.create(123.0d));
+		list.add(SqlParameter.create(now));
 		facade.bind(pstmt, list);
 		Mockito.verify(pstmt).setObject(Mockito.eq(1), Mockito.eq(null));
 		Mockito.verify(pstmt).setInt(Mockito.eq(2), Mockito.eq(123));

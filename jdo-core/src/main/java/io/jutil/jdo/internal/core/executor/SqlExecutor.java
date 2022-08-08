@@ -22,8 +22,6 @@ public class SqlExecutor {
 	private static Logger logger = LoggerFactory.getLogger(SqlExecutor.class);
 	private static Logger sqlLogger = LoggerFactory.getLogger("SQL");
 
-	private static final int ONE = 1;
-
 	private final ConnectionHolder connectionHolder;
 	private final ParameterBinderFacade binderFacade;
 
@@ -50,28 +48,6 @@ public class SqlExecutor {
 		}
 	}
 
-	public <T> List<T> query(Class<T> clazz, String sql, List<?> paramList) {
-		this.logParam(sql, paramList);
-		Connection conn = null;
-		ResultSet rs = null;
-		PreparedStatement pstmt = null;
-		try {
-			conn = connectionHolder.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			binderFacade.bind(pstmt, paramList);
-			rs = pstmt.executeQuery();
-			return binderFacade.fetch(rs, clazz);
-		} catch (Exception e) {
-			throw new JdbcException(e);
-		} finally {
-			connectionHolder.close(rs, pstmt, conn);
-		}
-	}
-
-	public int execute(String sql, List<?> paramList) {
-		return this.execute(sql, paramList, null);
-	}
-
 	public int execute(ExecuteContext context) {
 		return this.execute(context, null);
 	}
@@ -94,28 +70,6 @@ public class SqlExecutor {
 		}
 	}
 
-	public int execute(String sql, List<?> paramList, KeyHolder holder) {
-		this.logParam(sql, paramList);
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		try {
-			conn = connectionHolder.getConnection();
-			pstmt = this.createPreparedStatement(conn, sql, holder);
-			binderFacade.bind(pstmt, paramList);
-			int count = pstmt.executeUpdate();
-			this.handleKeyHolder(pstmt, holder);
-			return count;
-		} catch (Exception e) {
-			throw new JdbcException(e);
-		} finally {
-			connectionHolder.close(null, pstmt, conn);
-		}
-	}
-
-	public int[] executeBatch(String sql, List<List<?>> batchList) {
-		return executeBatch(sql, batchList, null);
-	}
-
 	public int[] executeBatch(ExecuteContext context) {
 		return executeBatch(context, null);
 	}
@@ -128,28 +82,6 @@ public class SqlExecutor {
 			conn = connectionHolder.getConnection();
 			pstmt = this.createPreparedStatement(conn, context.getSql(), holder);
 			for (var paramList : context.getBatchParameterList()) {
-				this.logParam(null, paramList);
-				binderFacade.bind(pstmt, paramList);
-				pstmt.addBatch();
-			}
-			int[] count = pstmt.executeBatch();
-			this.handleKeyHolder(pstmt, holder);
-			return count;
-		} catch (Exception e) {
-			throw new JdbcException(e);
-		} finally {
-			connectionHolder.close(null, pstmt, conn);
-		}
-	}
-
-	public int[] executeBatch(String sql, List<List<?>> batchList, KeyHolder holder) {
-		this.logParam(sql, null);
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		try {
-			conn = connectionHolder.getConnection();
-			pstmt = this.createPreparedStatement(conn, sql, holder);
-			for (var paramList : batchList) {
 				this.logParam(null, paramList);
 				binderFacade.bind(pstmt, paramList);
 				pstmt.addBatch();

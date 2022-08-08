@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +30,8 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ParameterBinderFacade {
 	private static Logger logger = LoggerFactory.getLogger(ParameterBinderFacade.class);
+
+	private static final int ONE = 1;
 
 	private final ParserFacade parserFacade;
 	private final ConcurrentMap<Class<?>, ParameterBinder<?>> binderMap = new ConcurrentHashMap<>();
@@ -106,33 +107,12 @@ public class ParameterBinderFacade {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void bind(PreparedStatement pstmt, Collection<?> paramList) throws SQLException {
-		if (paramList == null || paramList.isEmpty()) {
-			return;
-		}
-		int i = 1;
-		for (var param : paramList) {
-			if (ObjectUtil.isEmpty(param)) {
-				pstmt.setObject(i, null);
-			} else {
-				var binder = this.getBinder(param.getClass());
-				if (logger.isDebugEnabled()) {
-					logger.debug("找到 [{}] ParameterBinder: {}", param.getClass().getSimpleName(),
-							binder.getClass().getSimpleName());
-				}
-				binder.bind(pstmt, i, param);
-			}
-			i++;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
 	public <T> List<T> fetch(ResultSet rs, Class<T> clazz) throws SQLException {
 		var binder = this.getBinder(clazz);
 		List<T> objectList = new ArrayList<>();
 		var rsmd = rs.getMetaData();
 		while (rs.next()) {
-			var context = FetchContext.create(rsmd, rs, 1, null);
+			var context = FetchContext.create(rsmd, rs, ONE, null);
 			T object = (T) binder.fetch(context);
 			if (object != null) {
 				objectList.add(object);

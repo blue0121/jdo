@@ -7,9 +7,6 @@ import io.jutil.jdo.core.reflect.ClassOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +74,8 @@ public class ObjectBindFactory implements ParameterBindFactory<Object> {
 				if (field != null) {
 					Class<?> type = field.getType();
 					var binder = binderFacade.getBinder(type);
-					var value = binder.fetch(rsmd, rs, j);
+					var ctx = FetchContext.create(rsmd, rs, j, null);
+					var value = binder.fetch(ctx);
 					field.setFieldValue(object, value);
 				}
 			}
@@ -85,33 +83,5 @@ public class ObjectBindFactory implements ParameterBindFactory<Object> {
 			return object;
 		}
 
-		@Override
-		public void bind(PreparedStatement pstmt, int i, Object val) throws SQLException {
-			throw new UnsupportedOperationException("不支持类型: " + clazz.getName());
-		}
-
-		@Override
-		public Object fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
-			Object object = classOperation.newInstanceQuietly();
-			if (object == null) {
-				throw new JdbcException("无法实例化: " + classOperation.getName());
-			}
-
-			for (int j = 1; j <= rsmd.getColumnCount(); j++) {
-				String label = rsmd.getColumnLabel(j);
-				var field = fieldMap.get(label);
-				if (field != null) {
-					Class<?> type = field.getType();
-					var binder = binderFacade.getBinder(type);
-					if (logger.isDebugEnabled()) {
-						logger.debug("找到 [{}] ParameterBinder: {}", type.getSimpleName(), binder.getClass().getSimpleName());
-					}
-					var value = binder.fetch(rsmd, rs, j);
-					field.setFieldValue(object, value);
-				}
-			}
-
-			return object;
-		}
 	}
 }

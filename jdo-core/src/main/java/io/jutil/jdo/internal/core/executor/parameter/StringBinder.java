@@ -2,9 +2,6 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import lombok.NoArgsConstructor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -35,13 +32,4 @@ public class StringBinder implements ParameterBinder<String> {
 		return rs.getString(i);
 	}
 
-	@Override
-	public void bind(PreparedStatement pstmt, int i, String val) throws SQLException {
-		pstmt.setString(i, val);
-	}
-
-	@Override
-	public String fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
-		return rs.getString(i);
-	}
 }

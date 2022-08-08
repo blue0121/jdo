@@ -2,9 +2,6 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import lombok.NoArgsConstructor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -36,14 +33,4 @@ public class ShortBinder implements ParameterBinder<Short> {
 		return rs.wasNull() ? null : n;
 	}
 
-	@Override
-	public void bind(PreparedStatement pstmt, int i, Short val) throws SQLException {
-		pstmt.setShort(i, val);
-	}
-
-	@Override
-	public Short fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
-		var n = rs.getShort(i);
-		return rs.wasNull() ? null : n;
-	}
 }

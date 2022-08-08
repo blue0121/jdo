@@ -3,9 +3,6 @@ package io.jutil.jdo.internal.core.executor.parameter;
 import io.jutil.jdo.internal.core.util.EnumUtil;
 import lombok.NoArgsConstructor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -49,15 +46,5 @@ public class EnumBindFactory implements ParameterBindFactory<Enum<?>> {
 			return EnumUtil.fromString(clazz, str);
 		}
 
-		@Override
-		public void bind(PreparedStatement pstmt, int i, Enum<?> val) throws SQLException {
-			pstmt.setString(i, val.name());
-		}
-
-		@Override
-		public Enum<?> fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
-			var str = rs.getString(i);
-			return EnumUtil.fromString(clazz, str);
-		}
 	}
 }

@@ -2,9 +2,6 @@ package io.jutil.jdo.internal.core.executor.parameter;
 
 import lombok.NoArgsConstructor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -35,13 +32,4 @@ public class ByteArrayBinder implements ParameterBinder<byte[]> {
 		return rs.getBytes(i);
 	}
 
-	@Override
-	public void bind(PreparedStatement pstmt, int i, byte[] val) throws SQLException {
-		pstmt.setBytes(i, val);
-	}
-
-	@Override
-	public byte[] fetch(ResultSetMetaData rsmd, ResultSet rs, int i) throws SQLException {
-		return rs.getBytes(i);
-	}
 }
