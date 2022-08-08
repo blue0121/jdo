@@ -23,6 +23,22 @@ public class LocalDateBinder implements ParameterBinder<LocalDate> {
 	}
 
 	@Override
+	public void bind(BindContext<LocalDate> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setDate(i, Date.valueOf(value));
+	}
+
+	@Override
+	public LocalDate fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		var d = rs.getDate(i);
+		return rs.wasNull() ? null : d.toLocalDate();
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, LocalDate val) throws SQLException {
 		pstmt.setDate(i, Date.valueOf(val));
 	}

@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.parameter;
 
 import io.jutil.jdo.internal.core.parser.ParserFacade;
+import io.jutil.jdo.internal.core.sql.SqlParameter;
 import io.jutil.jdo.internal.core.util.ObjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class ParameterBinderFacade {
 
 	private void init() {
 		binderMap.put(BigDecimal.class, new BigDecimalBinder());
-		binderMap.put(BigInteger.class, new BingIntegerBinder());
+		binderMap.put(BigInteger.class, new BigIntegerBinder());
 		binderMap.put(byte[].class, new ByteArrayBinder());
 		binderMap.put(Byte.class, new ByteBinder());
 		binderMap.put(Date.class, new DateBinder());
@@ -86,6 +87,25 @@ public class ParameterBinderFacade {
 	}
 
 	@SuppressWarnings("unchecked")
+	public void bind(PreparedStatement pstmt, List<SqlParameter> parameterList) throws SQLException {
+		if (parameterList == null || parameterList.isEmpty()) {
+			return;
+		}
+		int i = 1;
+		for (var parameter : parameterList) {
+			var value = parameter.getValue();
+			if (ObjectUtil.isEmpty(value)) {
+				pstmt.setObject(i, null);
+			} else {
+				var binder = this.getBinder(value.getClass());
+				var context = BindContext.create(pstmt, i, parameter);
+				binder.bind(context);
+			}
+			i++;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	public void bind(PreparedStatement pstmt, Collection<?> paramList) throws SQLException {
 		if (paramList == null || paramList.isEmpty()) {
 			return;
@@ -109,13 +129,11 @@ public class ParameterBinderFacade {
 	@SuppressWarnings("unchecked")
 	public <T> List<T> fetch(ResultSet rs, Class<T> clazz) throws SQLException {
 		var binder = this.getBinder(clazz);
-		if (logger.isDebugEnabled()) {
-			logger.debug("找到 [{}] ParameterBinder: {}", clazz.getSimpleName(), binder.getClass().getSimpleName());
-		}
 		List<T> objectList = new ArrayList<>();
 		var rsmd = rs.getMetaData();
 		while (rs.next()) {
-			T object = (T) binder.fetch(rsmd, rs, 1);
+			var context = FetchContext.create(rsmd, rs, 1, null);
+			T object = (T) binder.fetch(context);
 			if (object != null) {
 				objectList.add(object);
 			}

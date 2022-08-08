@@ -20,6 +20,22 @@ public class ByteBinder implements ParameterBinder<Byte> {
         return Byte.class;
     }
 
+	@Override
+	public void bind(BindContext<Byte> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setByte(i, value);
+	}
+
+	@Override
+	public Byte fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		var n = rs.getByte(i);
+		return rs.wasNull() ? null : n;
+	}
+
     @Override
     public void bind(PreparedStatement pstmt, int i, Byte val) throws SQLException {
 		pstmt.setByte(i, val);

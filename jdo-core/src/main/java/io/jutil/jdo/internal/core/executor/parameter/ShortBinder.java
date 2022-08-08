@@ -21,6 +21,22 @@ public class ShortBinder implements ParameterBinder<Short> {
 	}
 
 	@Override
+	public void bind(BindContext<Short> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setShort(i, value);
+	}
+
+	@Override
+	public Short fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		var n = rs.getShort(i);
+		return rs.wasNull() ? null : n;
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, Short val) throws SQLException {
 		pstmt.setShort(i, val);
 	}

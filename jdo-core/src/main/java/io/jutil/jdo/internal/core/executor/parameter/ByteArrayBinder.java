@@ -21,6 +21,21 @@ public class ByteArrayBinder implements ParameterBinder<byte[]> {
 	}
 
 	@Override
+	public void bind(BindContext<byte[]> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setBytes(i, value);
+	}
+
+	@Override
+	public byte[] fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		return rs.getBytes(i);
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, byte[] val) throws SQLException {
 		pstmt.setBytes(i, val);
 	}

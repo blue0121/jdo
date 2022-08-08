@@ -22,6 +22,22 @@ public class LocalTimeBinder implements ParameterBinder<LocalTime> {
         return LocalTime.class;
     }
 
+	@Override
+	public void bind(BindContext<LocalTime> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setTime(i, Time.valueOf(value));
+	}
+
+	@Override
+	public LocalTime fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		var d = rs.getTime(i);
+		return rs.wasNull() ? null : d.toLocalTime();
+	}
+
     @Override
     public void bind(PreparedStatement pstmt, int i, LocalTime val) throws SQLException {
 		pstmt.setTime(i, Time.valueOf(val));

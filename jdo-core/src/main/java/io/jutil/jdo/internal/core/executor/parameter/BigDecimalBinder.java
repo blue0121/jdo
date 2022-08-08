@@ -22,6 +22,21 @@ public class BigDecimalBinder implements ParameterBinder<BigDecimal> {
 	}
 
 	@Override
+	public void bind(BindContext<BigDecimal> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setBigDecimal(i, value);
+	}
+
+	@Override
+	public BigDecimal fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		return rs.getBigDecimal(i);
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, BigDecimal val) throws SQLException {
 		pstmt.setBigDecimal(i, val);
 	}

@@ -22,6 +22,21 @@ public class SqlDateBinder implements ParameterBinder<Date> {
 	}
 
 	@Override
+	public void bind(BindContext<Date> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setDate(i, value);
+	}
+
+	@Override
+	public Date fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		return rs.getDate(i);
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, Date val) throws SQLException {
 		pstmt.setDate(i, val);
 	}

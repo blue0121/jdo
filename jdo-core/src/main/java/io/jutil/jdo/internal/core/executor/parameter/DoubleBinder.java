@@ -21,6 +21,22 @@ public class DoubleBinder implements ParameterBinder<Double> {
 	}
 
 	@Override
+	public void bind(BindContext<Double> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setDouble(i, value);
+	}
+
+	@Override
+	public Double fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		var n = rs.getDouble(i);
+		return rs.wasNull() ? null : n;
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, Double val) throws SQLException {
 		pstmt.setDouble(i, val);
 	}

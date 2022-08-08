@@ -34,6 +34,22 @@ public class EnumBindFactory implements ParameterBindFactory<Enum<?>> {
 		}
 
 		@Override
+		public void bind(BindContext<Enum<?>> context) throws SQLException {
+			var pstmt = context.getPreparedStatement();
+			var i = context.getIndex();
+			var value = context.getValue();
+			pstmt.setString(i, value.name());
+		}
+
+		@Override
+		public Enum<?> fetch(FetchContext context) throws SQLException {
+			var rs = context.getResultSet();
+			var i = context.getIndex();
+			var str = rs.getString(i);
+			return EnumUtil.fromString(clazz, str);
+		}
+
+		@Override
 		public void bind(PreparedStatement pstmt, int i, Enum<?> val) throws SQLException {
 			pstmt.setString(i, val.name());
 		}

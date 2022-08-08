@@ -58,6 +58,34 @@ public class ObjectBindFactory implements ParameterBindFactory<Object> {
 		}
 
 		@Override
+		public void bind(BindContext<Object> context) throws SQLException {
+			throw new UnsupportedOperationException("不支持类型: " + clazz.getName());
+		}
+
+		@Override
+		public Object fetch(FetchContext context) throws SQLException {
+			Object object = classOperation.newInstanceQuietly();
+			if (object == null) {
+				throw new JdbcException("无法实例化: " + classOperation.getName());
+			}
+
+			var rsmd = context.getResultSetMetaData();
+			var rs = context.getResultSet();
+			for (int j = 1; j <= rsmd.getColumnCount(); j++) {
+				String label = rsmd.getColumnLabel(j);
+				var field = fieldMap.get(label);
+				if (field != null) {
+					Class<?> type = field.getType();
+					var binder = binderFacade.getBinder(type);
+					var value = binder.fetch(rsmd, rs, j);
+					field.setFieldValue(object, value);
+				}
+			}
+
+			return object;
+		}
+
+		@Override
 		public void bind(PreparedStatement pstmt, int i, Object val) throws SQLException {
 			throw new UnsupportedOperationException("不支持类型: " + clazz.getName());
 		}

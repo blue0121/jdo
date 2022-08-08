@@ -7,6 +7,7 @@ import io.jutil.jdo.core.exception.VersionException;
 import io.jutil.jdo.core.parser.EntityMetadata;
 import io.jutil.jdo.core.parser.MetadataType;
 import io.jutil.jdo.internal.core.dialect.Dialect;
+import io.jutil.jdo.internal.core.executor.ExecuteContext;
 import io.jutil.jdo.internal.core.executor.GenerateKeyHolder;
 import io.jutil.jdo.internal.core.executor.KeyHolder;
 import io.jutil.jdo.internal.core.executor.SqlExecutor;
@@ -52,9 +53,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(object.getClass());
 		var request = SqlRequest.create(object, config, dynamic);
 		var response = sqlHandlerFacade.handle(SqlType.INSERT, request);
+		var context = ExecuteContext.create(response);
 
 		KeyHolder holder = new GenerateKeyHolder();
-		int count = sqlExecutor.execute(response.getSql(), response.toParamList(), holder);
+		int count = sqlExecutor.execute(context, holder);
 		IdUtil.setId(holder, object, response.getMetadata());
 		return count;
 	}
@@ -67,8 +69,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.INSERT, request);
+		var context = ExecuteContext.create(response);
 
-		return sqlExecutor.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(context);
 	}
 
 	@Override
@@ -78,9 +81,10 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(objectList.get(0).getClass());
 		var request = SqlRequest.createForBatch(objectList, config);
 		var response = sqlHandlerFacade.handle(SqlType.BATCH_INSERT, request);
+		var context = ExecuteContext.create(response);
 
 		KeyHolder holder = new GenerateKeyHolder();
-		int[] count = sqlExecutor.executeBatch(response.getSql(), response.toBatchParamList(), holder);
+		int[] count = sqlExecutor.executeBatch(context, holder);
 		IdUtil.setId(holder, objectList, config);
 		return count;
 	}
@@ -92,8 +96,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(object.getClass());
 		var request = SqlRequest.create(object, config, dynamic);
 		var response = sqlHandlerFacade.handle(SqlType.UPDATE, request);
+		var context = ExecuteContext.create(response);
 
-		int count = sqlExecutor.execute(response.getSql(), response.toParamList());
+		int count = sqlExecutor.execute(context);
 		if (response.isForceVersion() && count <= 0) {
 			throw new VersionException(object.getClass());
 		}
@@ -111,8 +116,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var map = MapUtil.merge(param, idConfig.getFieldName(), id);
 		var request = SqlRequest.create(map, config);
 		var response = sqlHandlerFacade.handle(SqlType.UPDATE, request);
+		var context = ExecuteContext.create(response);
 
-		int count = sqlExecutor.execute(response.getSql(), response.toParamList());
+		int count = sqlExecutor.execute(context);
 		if (response.isForceVersion() && count <= 0) {
 			throw new VersionException(clazz);
 		}
@@ -127,8 +133,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.createForBatch(objectList, config);
 		var response = sqlHandlerFacade.handle(SqlType.BATCH_UPDATE, request);
+		var context = ExecuteContext.create(response);
 
-		int[] count = sqlExecutor.executeBatch(response.getSql(), response.toBatchParamList());
+		int[] count = sqlExecutor.executeBatch(context);
 		if (response.isForceVersion()) {
 			for (int c : count) {
 				if (c <= 0) {
@@ -150,8 +157,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var map = MapUtil.merge(param, idConfig.getFieldName(), id);
 		var request = SqlRequest.create(map, config);
 		var response = sqlHandlerFacade.handle(SqlType.INC, request);
+		var context = ExecuteContext.create(response);
 
-		return sqlExecutor.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(context);
 	}
 
 	@Override
@@ -162,8 +170,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(clazz, List.of(id), config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE, request);
+		var context = ExecuteContext.create(response);
 
-		return sqlExecutor.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(context);
 	}
 
 	@Override
@@ -174,8 +183,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(clazz, idList, config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE, request);
+		var context = ExecuteContext.create(response);
 
-		return sqlExecutor.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(context);
 	}
 
 	@Override
@@ -186,8 +196,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.DELETE_BY, request);
+		var context = ExecuteContext.create(response);
 
-		return sqlExecutor.execute(response.getSql(), response.toParamList());
+		return sqlExecutor.execute(context);
 	}
 
 	@Override
@@ -200,7 +211,8 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var response = sqlHandlerFacade.handle(SqlType.GET_ID, request);
 
 		var sql = dialect.lock(dialect.getOne(response.getSql()), type);
-		List<T> list = sqlExecutor.query(clazz, sql, response.toParamList());
+		var context = ExecuteContext.create(sql, response);
+		List<T> list = sqlExecutor.query(clazz, context);
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -216,8 +228,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(clazz, idList, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_ID, request);
+		var context = ExecuteContext.create(response);
 
-		List<T> list = sqlExecutor.query(clazz, response.getSql(), response.toParamList());
+		List<T> list = sqlExecutor.query(clazz, context);
 		if (list.isEmpty()) {
 			return Map.of();
 		}
@@ -241,8 +254,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(field, param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET_FIELD, request);
+		var context = ExecuteContext.create(response);
 
-		List<T> list = sqlExecutor.query(target, response.getSql(), response.toParamList());
+		List<T> list = sqlExecutor.query(target, context);
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -257,8 +271,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.GET, request);
+		var context = ExecuteContext.create(response);
 
-		List<T> list = sqlExecutor.query(clazz, response.getSql(), response.toParamList());
+		List<T> list = sqlExecutor.query(clazz, context);
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -272,8 +287,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(object.getClass());
 		var request = SqlRequest.create(object, Arrays.asList(names), config);
 		var response = sqlHandlerFacade.handle(SqlType.EXIST, request);
+		var context = ExecuteContext.create(response);
 
-		var list = sqlExecutor.query(Integer.class, response.getSql(), response.toParamList());
+		var list = sqlExecutor.query(Integer.class, context);
 		if (list.isEmpty()) {
 			return false;
 		}
@@ -289,8 +305,9 @@ public class DefaultJdoTemplate implements JdoTemplate {
 		var config = configCache.loadEntityMetadata(clazz);
 		var request = SqlRequest.create(param, config);
 		var response = sqlHandlerFacade.handle(SqlType.COUNT, request);
+		var context = ExecuteContext.create(response);
 
-		var list = sqlExecutor.query(Integer.class, response.getSql(), response.toParamList());
+		var list = sqlExecutor.query(Integer.class, context);
 		if (list.isEmpty()) {
 			logger.warn("No result");
 			return -1;

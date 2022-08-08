@@ -21,6 +21,22 @@ public class IntegerBinder implements ParameterBinder<Integer> {
 	}
 
 	@Override
+	public void bind(BindContext<Integer> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setInt(i, value);
+	}
+
+	@Override
+	public Integer fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		var n = rs.getInt(i);
+		return rs.wasNull() ? null : n;
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, Integer val) throws SQLException {
 		pstmt.setInt(i, val);
 	}

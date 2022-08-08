@@ -13,9 +13,31 @@ public interface ParameterBinder<T> {
 
 	/**
 	 * 绑定类型
+	 *
 	 * @return
 	 */
 	Class<T> getType();
+
+	/**
+	 * PreparedStatement 参数绑定
+	 *
+	 * @param context
+	 * @throws SQLException
+	 */
+	default void bind(BindContext<T> context) throws SQLException {
+	}
+
+	/**
+	 * 从ResultSet获取值
+	 *
+	 * @param context
+	 * @return
+	 * @throws SQLException
+	 */
+
+	default T fetch(FetchContext context) throws SQLException {
+		return null;
+	}
 
 	/**
 	 * PreparedStatement 参数绑定
@@ -27,8 +49,10 @@ public interface ParameterBinder<T> {
 	 */
 	void bind(PreparedStatement pstmt, int i, T val) throws SQLException;
 
+
 	/**
 	 * 从 ResultSet 获取值
+	 *
 	 * @param rsmd
 	 * @param rs
 	 * @param i

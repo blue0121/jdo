@@ -2,6 +2,7 @@ package io.jutil.jdo.internal.core.sql.generator;
 
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlConst;
+import io.jutil.jdo.internal.core.sql.SqlParameter;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.util.AssertUtil;
@@ -28,6 +29,7 @@ public class DeleteSqlHandler extends AbstractSqlHandler {
 			var sqlItem = config.getSqlMetadata().getDeleteById();
 			response.setSql(sqlItem.getSql());
 			response.addParam(args.get(0));
+			response.addParameter(SqlParameter.create(args.get(0)));
 			return;
 		}
 
@@ -36,6 +38,7 @@ public class DeleteSqlHandler extends AbstractSqlHandler {
 		response.setSql(sql);
 		for (var arg : args) {
 			response.addParam(arg);
+			response.addParameter(SqlParameter.create(arg));
 		}
 	}
 }

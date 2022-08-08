@@ -22,6 +22,21 @@ public class SqlTimeBinder implements ParameterBinder<Time> {
 	}
 
 	@Override
+	public void bind(BindContext<Time> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setTime(i, value);
+	}
+
+	@Override
+	public Time fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		return rs.getTime(i);
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, Time val) throws SQLException {
 		pstmt.setTime(i, val);
 	}

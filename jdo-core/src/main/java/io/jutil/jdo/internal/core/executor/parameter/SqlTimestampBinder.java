@@ -22,6 +22,21 @@ public class SqlTimestampBinder implements ParameterBinder<Timestamp> {
 	}
 
 	@Override
+	public void bind(BindContext<Timestamp> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setTimestamp(i, value);
+	}
+
+	@Override
+	public Timestamp fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		return rs.getTimestamp(i);
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, Timestamp val) throws SQLException {
 		pstmt.setTimestamp(i, val);
 	}

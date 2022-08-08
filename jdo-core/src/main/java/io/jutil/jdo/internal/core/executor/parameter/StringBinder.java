@@ -21,6 +21,21 @@ public class StringBinder implements ParameterBinder<String> {
 	}
 
 	@Override
+	public void bind(BindContext<String> context) throws SQLException {
+		var pstmt = context.getPreparedStatement();
+		var i = context.getIndex();
+		var value = context.getValue();
+		pstmt.setString(i, value);
+	}
+
+	@Override
+	public String fetch(FetchContext context) throws SQLException {
+		var rs = context.getResultSet();
+		var i = context.getIndex();
+		return rs.getString(i);
+	}
+
+	@Override
 	public void bind(PreparedStatement pstmt, int i, String val) throws SQLException {
 		pstmt.setString(i, val);
 	}
