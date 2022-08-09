@@ -33,8 +33,6 @@ public class BatchInsertSqlHandler extends AbstractSqlHandler {
 				resp.addName(name);
 			}
 			parameterSqlHandler.handle(req, resp);
-
-			response.addBatchParam(resp.toParamList());
 			response.addBatchParameter(resp.toParameterList());
 		}
     }

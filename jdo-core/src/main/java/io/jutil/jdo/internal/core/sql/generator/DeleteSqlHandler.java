@@ -28,7 +28,6 @@ public class DeleteSqlHandler extends AbstractSqlHandler {
 		if (args.size() == 1) {
 			var sqlItem = config.getSqlMetadata().getDeleteById();
 			response.setSql(sqlItem.getSql());
-			response.addParam(args.get(0));
 			response.addParameter(SqlParameter.create(args.get(0)));
 			return;
 		}
@@ -37,7 +36,6 @@ public class DeleteSqlHandler extends AbstractSqlHandler {
 		var sql = String.format(sqlItem.getSql(), StringUtil.repeat(SqlConst.PLACEHOLDER, args.size(), SqlConst.SEPARATOR));
 		response.setSql(sql);
 		for (var arg : args) {
-			response.addParam(arg);
 			response.addParameter(SqlParameter.create(arg));
 		}
 	}

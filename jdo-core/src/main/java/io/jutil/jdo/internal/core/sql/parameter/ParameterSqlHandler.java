@@ -24,7 +24,6 @@ public class ParameterSqlHandler extends AbstractSqlHandler {
 			var field = fieldMap.get(name);
 			var parameter = SqlParameter.create(field, value);
 			response.addParameter(parameter);
-			response.addParam(value);
 		}
 	}
 }

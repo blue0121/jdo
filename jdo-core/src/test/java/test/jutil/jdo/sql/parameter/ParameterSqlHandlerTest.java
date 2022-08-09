@@ -2,6 +2,7 @@ package test.jutil.jdo.sql.parameter;
 
 import io.jutil.jdo.core.parser.EntityMetadata;
 import io.jutil.jdo.internal.core.sql.SqlHandler;
+import io.jutil.jdo.internal.core.sql.SqlParameter;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.sql.parameter.ParameterSqlHandler;
@@ -38,8 +39,7 @@ public class ParameterSqlHandlerTest {
 
 		handler.handle(request, response);
 
-		var paramList = response.toParamList();
-	    Assertions.assertEquals(List.of("v2", "v1"), paramList);
+	    Assertions.assertEquals(List.of(SqlParameter.create("v2"), SqlParameter.create("v1")), response.toParameterList());
     }
 
 	@Test
@@ -50,8 +50,7 @@ public class ParameterSqlHandlerTest {
 
 		handler.handle(request, response);
 
-		var paramList = response.toParamList();
-		Assertions.assertEquals(List.of("v2"), paramList);
+		Assertions.assertEquals(List.of(SqlParameter.create("v2")), response.toParameterList());
 	}
 
 	@Test
@@ -62,8 +61,8 @@ public class ParameterSqlHandlerTest {
 
 		handler.handle(request, response);
 
-		var paramList = response.toParamList();
-		Assertions.assertEquals(1, paramList.size());
-		Assertions.assertEquals(null, paramList.get(0));
+		var parameterList = response.toParameterList();
+		Assertions.assertEquals(1, parameterList.size());
+		Assertions.assertNull(parameterList.get(0).getValue());
 	}
 }

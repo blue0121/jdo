@@ -17,8 +17,6 @@ public class SqlResponse {
 	private String sql;
 	private boolean isForceVersion;
 	private final List<String> nameList = new ArrayList<>();
-	private final List<Object> paramList = new ArrayList<>();
-	private final List<List<?>> batchParamList = new ArrayList<>();
 	private final List<SqlParameter> parameterList = new ArrayList<>();
 	private final List<List<SqlParameter>> batchParameterList = new ArrayList<>();
 
@@ -66,28 +64,12 @@ public class SqlResponse {
 		return nameList;
 	}
 
-	public void addParam(Object param) {
-		paramList.add(param);
-	}
-
-	public List<Object> toParamList() {
-		return paramList;
-	}
-
 	public void addParameter(SqlParameter parameter) {
 		parameterList.add(parameter);
 	}
 
 	public List<SqlParameter> toParameterList() {
 		return parameterList;
-	}
-
-	public void addBatchParam(List<?> paramList) {
-		batchParamList.add(paramList);
-	}
-
-	public List<List<?>> toBatchParamList() {
-		return batchParamList;
 	}
 
 	public void addBatchParameter(List<SqlParameter> parameterList) {

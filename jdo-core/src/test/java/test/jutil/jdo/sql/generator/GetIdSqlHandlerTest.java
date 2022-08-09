@@ -1,6 +1,7 @@
 package test.jutil.jdo.sql.generator;
 
 import io.jutil.jdo.internal.core.sql.SqlHandler;
+import io.jutil.jdo.internal.core.sql.SqlParameter;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
 import io.jutil.jdo.internal.core.sql.generator.GetIdSqlHandler;
@@ -29,7 +30,7 @@ public class GetIdSqlHandlerTest extends SqlHandlerTest {
 	    handler.handle(request, response);
 	    System.out.println(response.getSql());
 	    Assertions.assertEquals("select * from `group` where `id`=?", response.getSql());
-		Assertions.assertEquals(List.of(1), response.toParamList());
+		Assertions.assertEquals(List.of(SqlParameter.create(1)), response.toParameterList());
     }
 
 	@Test
@@ -39,7 +40,7 @@ public class GetIdSqlHandlerTest extends SqlHandlerTest {
 		handler.handle(request, response);
 		System.out.println(response.getSql());
 		Assertions.assertEquals("select * from `group` where `id` in (?,?)", response.getSql());
-		Assertions.assertEquals(List.of(1, 2), response.toParamList());
+		Assertions.assertEquals(List.of(SqlParameter.create(1), SqlParameter.create(2)), response.toParameterList());
 	}
 
 	@Test

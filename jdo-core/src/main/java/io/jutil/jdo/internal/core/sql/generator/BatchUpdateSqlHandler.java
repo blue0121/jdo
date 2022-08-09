@@ -39,7 +39,6 @@ public class BatchUpdateSqlHandler extends AbstractSqlHandler {
 			}
 			parameterSqlHandler.handle(req, resp);
 
-			response.addBatchParam(resp.toParamList());
 			response.addBatchParameter(resp.toParameterList());
 		}
     }
