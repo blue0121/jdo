@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -69,6 +70,18 @@ public class DateBinderTest extends BaseBinderTest {
 		List<LocalTime> list = facade.fetch(rs, LocalTime.class);
 		Assertions.assertEquals(ONE, list.size());
 		Assertions.assertEquals(date.truncatedTo(ChronoUnit.SECONDS), list.get(ZERO));
+	}
+
+	@Test
+	public void testInstant() throws SQLException {
+		var date = Instant.now();
+		facade.bind(pstmt, List.of(SqlParameter.create(date)));
+		Mockito.verify(pstmt).setTimestamp(Mockito.eq(ONE), Mockito.eq(Timestamp.from(date)));
+
+		Mockito.doReturn(Timestamp.from(date)).when(rs).getTimestamp(Mockito.eq(ONE));
+		List<Instant> list = facade.fetch(rs, Instant.class);
+		Assertions.assertEquals(ONE, list.size());
+		Assertions.assertEquals(date, list.get(ZERO));
 	}
 
 	@Test

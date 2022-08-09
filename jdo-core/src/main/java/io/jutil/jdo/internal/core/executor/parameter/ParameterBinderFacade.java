@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -47,19 +48,24 @@ public class ParameterBinderFacade {
 		binderMap.put(BigDecimal.class, new BigDecimalBinder());
 		binderMap.put(BigInteger.class, new BigIntegerBinder());
 		binderMap.put(byte[].class, new ByteArrayBinder());
+
 		binderMap.put(Byte.class, new ByteBinder());
-		binderMap.put(Date.class, new DateBinder());
-		binderMap.put(Double.class, new DoubleBinder());
-		binderMap.put(Float.class, new FloatBinder());
-		binderMap.put(Integer.class, new IntegerBinder());
-		binderMap.put(LocalDate.class, new LocalDateBinder());
-		binderMap.put(LocalDateTime.class, new LocalDateTimeBinder());
-		binderMap.put(LocalTime.class, new LocalTimeBinder());
-		binderMap.put(Long.class, new LongBinder());
 		binderMap.put(Short.class, new ShortBinder());
+		binderMap.put(Integer.class, new IntegerBinder());
+		binderMap.put(Long.class, new LongBinder());
+		binderMap.put(Float.class, new FloatBinder());
+		binderMap.put(Double.class, new DoubleBinder());
+
+		binderMap.put(LocalDate.class, new LocalDateBinder());
+		binderMap.put(LocalTime.class, new LocalTimeBinder());
+		binderMap.put(LocalDateTime.class, new LocalDateTimeBinder());
+		binderMap.put(Instant.class, new InstantBinder());
+
+		binderMap.put(Date.class, new DateBinder());
 		binderMap.put(java.sql.Date.class, new SqlDateBinder());
 		binderMap.put(Time.class, new SqlTimeBinder());
 		binderMap.put(Timestamp.class, new SqlTimestampBinder());
+
 		binderMap.put(String.class, new StringBinder());
 
 		factoryMap.put(Enum.class, new EnumBindFactory());
