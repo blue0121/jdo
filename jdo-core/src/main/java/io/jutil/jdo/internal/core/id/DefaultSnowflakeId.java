@@ -54,8 +54,7 @@ public class DefaultSnowflakeId implements SnowflakeId {
 		if (machineIdBits == 0L) {
 			return ((lastTimestamp - EPOCH) << timestampShift)
 					| (sequence << sequenceShift);
-		}
-		else {
+		} else {
 			return ((lastTimestamp - EPOCH) << timestampShift)
 					| (sequence << sequenceShift)
 					| machineId;
@@ -71,16 +70,12 @@ public class DefaultSnowflakeId implements SnowflakeId {
 			throw new IllegalArgumentException(String.format("系统时钟回退，在 %d 毫秒内拒绝生成 ID", lastTimestamp - timestamp));
 		}
 
-		if (lastTimestamp == timestamp) // 如果是同一时间生成的，则进行毫秒内序列
-		{
+		if (lastTimestamp == timestamp) {
 			sequence = (sequence + 1) & sequenceMask;
-			if (sequence == 0) // 毫秒内序列溢出
-			{
+			if (sequence == 0) {
 				lastTimestamp = this.tillNextTimeUnit(lastTimestamp);
 			}
-		}
-		else // 时间戳改变，毫秒内序列重置
-		{
+		} else {
 			lastTimestamp = timestamp;
 			sequence = 0L;
 		}
@@ -112,8 +107,7 @@ public class DefaultSnowflakeId implements SnowflakeId {
 		if (machineIdBits == 0L) {
 			sequence = id & sequenceMask;
 			timestamp = (id >> timestampShift) + EPOCH;
-		}
-		else {
+		} else {
 			long machineIdMask = ~(-1L << machineIdBits);
 			machineId = id & machineIdMask;
 			sequence = (id >> machineIdBits) & sequenceMask;
