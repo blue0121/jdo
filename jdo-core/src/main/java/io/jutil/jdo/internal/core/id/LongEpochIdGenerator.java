@@ -1,36 +1,51 @@
 package io.jutil.jdo.internal.core.id;
 
-import io.jutil.jdo.internal.core.util.ByteUtil;
-import io.jutil.jdo.internal.core.util.NetworkUtil;
+import io.jutil.jdo.internal.core.util.WaitUtil;
 
 /**
  * @author Jin Zheng
  * @since 2022-08-12
  */
-public class LongEpochIdGenerator extends AbstractEpochIdGenerator<Long> {
-    private final long ipBits = 16;
-    private final long sequenceBits = 12;
-    private final long ipMask = ~(-1L << ipBits);
-    private final long sequenceMask = ~(-1L << sequenceBits);
-    private final long sequenceShift = ipBits;
-    private final long timestampShift = ipBits + sequenceBits;
+public class LongEpochIdGenerator implements IdGenerator<Long> {
+    private final EpochOptions options;
+    private final long sequenceShift;
+    private final long timestampShift;
 
-    private final long ip = this.getIp();
+    private long sequence = 0L;
+    private long lastTimestamp;
 
-	public LongEpochIdGenerator() {
+    public LongEpochIdGenerator() {
+        this(new EpochOptions());
+    }
+
+	public LongEpochIdGenerator(EpochOptions options) {
+        this.options = options;
+        this.sequenceShift = options.getIpBits();
+        this.timestampShift = options.getIpBits() + options.getSequenceBits();
 	}
 
     @Override
-    public Long generate() {
-        return null;
+    public synchronized Long generate() {
+        long timestamp = System.currentTimeMillis();
+        if (timestamp < lastTimestamp) {
+            throw new IllegalArgumentException(String.format("系统时钟回退，在 %d 毫秒内拒绝生成 ID",
+                    lastTimestamp - timestamp));
+        }
+
+        if (lastTimestamp == timestamp) {
+            sequence = (sequence + 1) & options.getSequenceMask();
+            if (sequence == 0) {
+                WaitUtil.sleep(1);
+                lastTimestamp = System.currentTimeMillis();
+            }
+        } else {
+            lastTimestamp = timestamp;
+            sequence = 0L;
+        }
+
+        return ((lastTimestamp - options.getEpochMillis()) << timestampShift)
+                | (sequence << sequenceShift)
+                | (options.getIp());
     }
 
-    private long getIp() {
-        var bytes = NetworkUtil.getIpForByteArray();
-        if (bytes == null) {
-            throw new IllegalArgumentException("无法获取IP");
-        }
-        var addr = ByteUtil.readInt(bytes, 0);
-        return addr & ipMask;
-    }
 }
