@@ -1,5 +1,6 @@
 package test.jutil.jdo.util;
 
+import io.jutil.jdo.internal.core.codec.Hex;
 import io.jutil.jdo.internal.core.util.ByteUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,31 +14,22 @@ public class ByteUtilTest {
 	public ByteUtilTest() {
 	}
 
-    @CsvSource({"0xff, ff", "0x00, 00", "0xa0, a0", "0x0f, 0f", "0xf0, f0"})
-    @ParameterizedTest
-    public void testAppendHexString(int val, String hex) {
-        byte b = (byte)(val & 0xff);
-        StringBuilder builder = new StringBuilder();
-        ByteUtil.appendHexString(builder, b);
-        Assertions.assertEquals(hex, builder.toString());
-    }
-
     @CsvSource({"ff, 0xff", "a0, 0xa0", "00, 0x00", "0f, 0x0f"})
     @ParameterizedTest
     public void testToByte(String hex, int val) {
         byte b = (byte)(val & 0xff);
-        Assertions.assertEquals(b, ByteUtil.toByte(hex, 0));
+        Assertions.assertEquals(b, Hex.decode(hex)[0]);
     }
 
     @CsvSource({"0000ffff, 4", "00000000ffff0000, 8", "0, -1"})
     @ParameterizedTest
     public void testToBytes(String hex, int len) {
         if (len == -1) {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ByteUtil.toBytes(hex), "无效16进制字符串");
+            Assertions.assertThrows(IllegalArgumentException.class, () -> Hex.decode(hex), "无效16进制字符串");
             return;
         }
 
-        var bytes = ByteUtil.toBytes(hex);
+        var bytes = Hex.decode(hex);
         Assertions.assertEquals(len, bytes.length);
     }
 
@@ -46,10 +38,10 @@ public class ByteUtilTest {
     public void testToHexString(short val, String hex) {
         var bytes = new byte[2];
         ByteUtil.writeShort(bytes, 0, val);
-        var str = ByteUtil.toHexString(bytes);
+        var str = Hex.encode(bytes);
         Assertions.assertEquals(hex, str);
 
-        var buf = ByteUtil.toBytes(str);
+        var buf = Hex.decode(str);
         var bufVal = ByteUtil.readShort(buf, 0);
         Assertions.assertEquals(val, bufVal);
     }
@@ -59,10 +51,10 @@ public class ByteUtilTest {
     public void testToHexString(int val, String hex) {
         var bytes = new byte[4];
         ByteUtil.writeInt(bytes, 0, val);
-        var str = ByteUtil.toHexString(bytes);
+        var str = Hex.encode(bytes);
         Assertions.assertEquals(hex, str);
 
-        var buf = ByteUtil.toBytes(str);
+        var buf = Hex.decode(str);
         var bufVal = ByteUtil.readInt(buf, 0);
         Assertions.assertEquals(val, bufVal);
     }
@@ -72,10 +64,10 @@ public class ByteUtilTest {
     public void testToHexString(long val, String hex) {
         var bytes = new byte[8];
         ByteUtil.writeLong(bytes, 0, val);
-        var str = ByteUtil.toHexString(bytes);
+        var str = Hex.encode(bytes);
         Assertions.assertEquals(hex, str);
 
-        var buf = ByteUtil.toBytes(str);
+        var buf = Hex.decode(str);
         var bufVal = ByteUtil.readLong(buf, 0);
         Assertions.assertEquals(val, bufVal);
     }

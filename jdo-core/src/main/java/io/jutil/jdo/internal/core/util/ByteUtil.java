@@ -5,48 +5,8 @@ package io.jutil.jdo.internal.core.util;
  * @since 2022-08-09
  */
 public class ByteUtil {
-	private static final int RADIX = 16;
-	private static final int HEX_TO_BIT = 4;
-	private static final int SHIFT_BYTE_TO_BIT = 3;
-	private static final int BYTE_MASK = 0xff;
 
 	private ByteUtil() {
-	}
-
-	public static String toHexString(byte[] bytes) {
-		if (bytes == null || bytes.length == 0) {
-			return null;
-		}
-		var builder = new StringBuilder(bytes.length << 1);
-		for (var b : bytes) {
-			appendHexString(builder, b);
-		}
-		return builder.toString();
-	}
-
-	public static void appendHexString(StringBuilder builder, byte val) {
-		builder.append(Character.forDigit((val >>> HEX_TO_BIT) & 0xf, RADIX));
-		builder.append(Character.forDigit(val & 0xf, RADIX));
-	}
-
-	public static byte[] toBytes(String hex) {
-		var len = hex.length();
-		if ((len & 1) != 0) {
-			throw new IllegalArgumentException("无效16进制字符串");
-		}
-
-		var bytes = new byte[len >>> 1];
-		for (int i = 0, j = 0; i < len; i += 2, j++) {
-			var b = toByte(hex, i);
-			bytes[j] = b;
-		}
-		return bytes;
-	}
-
-	public static byte toByte(String hex, int startIndex) {
-		var high = Character.digit(hex.charAt(startIndex++), RADIX);
-		var low = Character.digit(hex.charAt(startIndex), RADIX);
-		return (byte) (((high << HEX_TO_BIT) | low) & BYTE_MASK);
 	}
 
 	public static void writeBytes(byte[] buffer, int startIndex, byte[] val) {
