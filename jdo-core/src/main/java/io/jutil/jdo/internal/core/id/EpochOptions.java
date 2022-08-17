@@ -68,9 +68,6 @@ public class EpochOptions {
 
     public static long generateIp() {
         var bytes = NetworkUtil.getIpForByteArray();
-        if (bytes == null) {
-            throw new IllegalArgumentException("无法获取IP");
-        }
         return ByteUtil.readInt(bytes, 0);
     }
 }

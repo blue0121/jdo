@@ -22,7 +22,7 @@ public class NetworkUtil {
     public static byte[] getIpForByteArray() {
         var list = getIpList();
         if (list.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("无法获取IP");
         }
         return list.get(0).getAddress();
     }
@@ -30,7 +30,7 @@ public class NetworkUtil {
     public static String getIpForString() {
         var list = getIpList();
         if (list.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("无法获取IP");
         }
         return list.get(0).getHostAddress();
     }
