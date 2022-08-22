@@ -26,7 +26,7 @@ public class String20IdGenerator extends AbstractIdGenerator<String> {
         var id = new byte[12];
         var timestamp = this.generateTimestamp();
         this.writeTimestamp(id, timestamp, 8);
-        System.arraycopy(this.ip, 0, id, 8, 3);
+        System.arraycopy(this.ip, 0, id, 8, 4);
         return Base32.encode(id);
     }
 
