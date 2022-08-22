@@ -9,12 +9,12 @@ import io.jutil.jdo.internal.core.util.NetworkUtil;
  * @since 2022-08-17
  */
 public class String24IdGenerator extends AbstractIdGenerator<String> {
-	private static final long SEQUENCE_BITS = 24;
+	private static final int SEQUENCE_BITS = 24;
 
     private final byte[] ip;
 
 	public String24IdGenerator() {
-        super(~(-1L << SEQUENCE_BITS));
+        super(SEQUENCE_BITS);
 		this.ip = NetworkUtil.getIpForByteArray();
 	}
 
@@ -29,13 +29,7 @@ public class String24IdGenerator extends AbstractIdGenerator<String> {
 	private synchronized void generateTimestamp(byte[] id) {
 		this.generateSequence();
 		ByteUtil.writeLong(id, 0, lastTimestamp);
-		this.writeSequence(id, sequence);
+		this.writeTimestamp(id, sequence, 3);
 	}
 
-	private void writeSequence(byte[] id, long sequence) {
-		var index = 8;
-		id[index++] = (byte) ((sequence >> 16) & 0xff);
-		id[index++] = (byte) ((sequence >> 8) & 0xff);
-		id[index] = (byte) (sequence & 0xff);
-	}
 }

@@ -1,5 +1,6 @@
 package io.jutil.jdo.internal.core.id;
 
+import io.jutil.jdo.internal.core.util.ByteUtil;
 import io.jutil.jdo.internal.core.util.WaitUtil;
 
 /**
@@ -12,8 +13,8 @@ public abstract class AbstractIdGenerator<T> implements IdGenerator<T> {
     protected long sequence = 0L;
     protected long lastTimestamp = 0L;
 
-    protected AbstractIdGenerator(long sequenceMask) {
-        this.sequenceMask = sequenceMask;
+    protected AbstractIdGenerator(int sequenceLength) {
+        this.sequenceMask = ByteUtil.maskForLong(sequenceLength);
     }
 
     protected void generateSequence() {
@@ -42,6 +43,13 @@ public abstract class AbstractIdGenerator<T> implements IdGenerator<T> {
             WaitUtil.sleep(interval);
         } else {
             throw new IllegalArgumentException(String.format("系统时钟回退，在 %d 毫秒内拒绝生成 ID", interval));
+        }
+    }
+
+    protected void writeTimestamp(byte[] id, long timestamp, int size) {
+        for (int i = 0; i < size; i++) {
+            var shift = (size - i - 1) << 3;
+            id[i] = (byte) ((timestamp >>> shift) & 0xff);
         }
     }
 

@@ -35,6 +35,14 @@ public class NetworkUtil {
         return list.get(0).getHostAddress();
     }
 
+    public static int getIpForInt() {
+        var list = getIpList();
+        if (list.isEmpty()) {
+            throw new IllegalArgumentException("无法获取IP");
+        }
+        return list.get(0).hashCode();
+    }
+
     public static List<Inet4Address> getIpList() {
         List<Inet4Address> list = new ArrayList<>();
         try {
