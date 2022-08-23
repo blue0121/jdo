@@ -25,55 +25,7 @@ public class InsertUuidIdSqlHandlerTest extends SqlHandlerTest {
 	private SqlHandler handler = new InsertIdSqlHandler(SnowflakeIdFactory.getSingleSnowflakeId());
 
 	public InsertUuidIdSqlHandlerTest() {
-		parserFacade.parse(UuidIntIdEntity.class);
-		parserFacade.parse(UuidLongIdEntity.class);
 		parserFacade.parse(UuidStringIdEntity.class);
-	}
-
-	@ParameterizedTest
-	@CsvSource({"true,-1","true,10","false,-1","false,10"})
-	public void testUuidInt(boolean isEntity, int id) {
-		var config = metadataCache.loadEntityMetadata(UuidIntIdEntity.class);
-		SqlRequest request = null;
-		if (isEntity) {
-			var entity = new UuidIntIdEntity();
-			if (id > 0) {
-				entity.id = id;
-			}
-			request = SqlRequest.create(entity, config, true);
-		} else {
-			Map<String, Object> map = new HashMap<>();
-			if (id > 0) {
-				map.put("id", id);
-			}
-			request = SqlRequest.create(map, config);
-		}
-		SqlRequest req = request;
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> handler.handle(req, response));
-	}
-
-	@ParameterizedTest
-	@CsvSource({"true,-1","true,10","false,-1","false,10"})
-	public void testUuidLong(boolean isEntity, long id) {
-		var config = metadataCache.loadEntityMetadata(UuidLongIdEntity.class);
-		SqlRequest request = null;
-		if (isEntity) {
-			var entity = new UuidLongIdEntity();
-			if (id > 0) {
-				entity.id = id;
-			}
-			request = SqlRequest.create(entity, config, true);
-		} else {
-			Map<String, Object> map = new HashMap<>();
-			if (id > 0) {
-				map.put("id", id);
-			}
-			request = SqlRequest.create(map, config);
-		}
-		handler.handle(request, response);
-		var param = response.toParamMap();
-		Assertions.assertEquals(1, param.size());
-		Assertions.assertTrue((Long)param.get("id") > 10);
 	}
 
 	@ParameterizedTest
@@ -98,20 +50,6 @@ public class InsertUuidIdSqlHandlerTest extends SqlHandlerTest {
 		var param = response.toParamMap();
 		Assertions.assertEquals(1, param.size());
 		Assertions.assertEquals(32, param.get("id").toString().length());
-	}
-
-	@Entity
-	public class UuidIntIdEntity {
-		@Id(generator = GeneratorType.UUID)
-		public Integer id;
-		public String name;
-	}
-
-	@Entity
-	public class UuidLongIdEntity {
-		@Id(generator = GeneratorType.UUID)
-		public Long id;
-		public String name;
 	}
 
 	@Entity

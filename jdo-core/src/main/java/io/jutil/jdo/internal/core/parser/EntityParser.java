@@ -102,13 +102,7 @@ public class EntityParser extends AbstractParser {
 			case "long", "Long" -> IdType.LONG;
 			default -> throw new UnsupportedOperationException("不支持主键类型: " + type.getSimpleName());
 		};
-		var generatorType = annotationId.generator();
-		if (generatorType == GeneratorType.AUTO) {
-			generatorType = switch (idType) {
-				case STRING -> GeneratorType.UUID;
-				default -> GeneratorType.INCREMENT;
-			};
-		}
+		var generatorType = this.getAndCheckGeneratorType(annotationId, idType);
 
 		var metadata = new DefaultIdMetadata();
 		this.setFieldMetadata(field, metadata);
@@ -119,6 +113,26 @@ public class EntityParser extends AbstractParser {
 		fieldMap.put(metadata.getFieldName(), metadata);
 		logger.debug("主键字段: {} <==> {}", metadata.getFieldName(), metadata.getColumnName());
 		return true;
+	}
+
+	private GeneratorType getAndCheckGeneratorType(Id annotation, IdType type) {
+		var generatorType = annotation.generator();
+		if (generatorType == GeneratorType.AUTO) {
+			generatorType = switch (type) {
+				case STRING -> GeneratorType.UUID;
+				default -> GeneratorType.INCREMENT;
+			};
+		}
+		if (type == IdType.STRING && generatorType == GeneratorType.INCREMENT) {
+			throw new IllegalArgumentException("主键类型 " + type + " 不支持 " + generatorType);
+		}
+		if (type == IdType.INT || type == IdType.LONG) {
+			if (generatorType == GeneratorType.UUID) {
+				throw new IllegalArgumentException("主键类型 " + type + " 不支持 " + generatorType);
+			}
+		}
+
+		return generatorType;
 	}
 
 	private boolean parseFieldVersion(ClassFieldOperation field, DefaultEntityMetadata entityMetadata,

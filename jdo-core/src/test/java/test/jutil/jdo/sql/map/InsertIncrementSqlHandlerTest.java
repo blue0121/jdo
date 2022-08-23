@@ -27,7 +27,6 @@ public class InsertIncrementSqlHandlerTest extends SqlHandlerTest {
 	public InsertIncrementSqlHandlerTest() {
         parserFacade.parse(IncrementIntIdEntity.class);
         parserFacade.parse(IncrementLongIdEntity.class);
-        parserFacade.parse(IncrementStringIdEntity.class);
 	}
 
     @ParameterizedTest
@@ -76,28 +75,6 @@ public class InsertIncrementSqlHandlerTest extends SqlHandlerTest {
         Assertions.assertTrue(param.isEmpty());
     }
 
-    @ParameterizedTest
-    @CsvSource({"true,","true,abc","false,","false,abc"})
-    public void testIncrementString(boolean isEntity, String id) {
-        var config = metadataCache.loadEntityMetadata(IncrementStringIdEntity.class);
-        SqlRequest request = null;
-        if (isEntity) {
-            var entity = new IncrementStringIdEntity();
-            if (id != null && !id.isEmpty()) {
-                entity.id = id;
-            }
-            request = SqlRequest.create(entity, config, true);
-        } else {
-            Map<String, Object> map = new HashMap<>();
-            if (id != null && !id.isEmpty()) {
-                map.put("id", id);
-            }
-            request = SqlRequest.create(map, config);
-        }
-        SqlRequest req = request;
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> handler.handle(req, response));
-    }
-
     @Entity
     public class IncrementIntIdEntity {
         @Id(generator = GeneratorType.INCREMENT)
@@ -112,10 +89,4 @@ public class InsertIncrementSqlHandlerTest extends SqlHandlerTest {
         public String name;
     }
 
-    @Entity
-    public class IncrementStringIdEntity {
-        @Id(generator = GeneratorType.INCREMENT)
-        public String id;
-        public String name;
-    }
 }
