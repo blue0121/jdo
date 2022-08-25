@@ -4,22 +4,19 @@ import io.jutil.jdo.core.exception.EntityFieldException;
 import io.jutil.jdo.core.parser.IdMetadata;
 import io.jutil.jdo.core.parser.IdType;
 import io.jutil.jdo.internal.core.id.IdGeneratorFactory;
-import io.jutil.jdo.internal.core.id.SnowflakeId;
 import io.jutil.jdo.internal.core.sql.AbstractSqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
-import io.jutil.jdo.internal.core.util.AssertUtil;
 
 /**
  * @author Jin Zheng
  * @since 2022-03-23
  */
 public class InsertIdSqlHandler extends AbstractSqlHandler {
-    private final SnowflakeId snowflakeId;
+    private final IdGeneratorFactory generatorFactory;
 
-	public InsertIdSqlHandler(SnowflakeId snowflakeId) {
-        AssertUtil.notNull(snowflakeId, "SnowflakeId");
-        this.snowflakeId = snowflakeId;
+	public InsertIdSqlHandler(IdGeneratorFactory generatorFactory) {
+        this.generatorFactory = generatorFactory;
 	}
 
     @Override
@@ -40,15 +37,14 @@ public class InsertIdSqlHandler extends AbstractSqlHandler {
 
     private void handleAuto(SqlResponse response, String field, IdType idType) {
         switch (idType) {
-            case STRING -> response.putParam(field, IdGeneratorFactory.uuid32bit());
+            case STRING -> response.putParam(field, generatorFactory.uuid());
             default -> response.removeParam(field);
         }
     }
 
     private void handleUuid(SqlResponse response, String field, IdType idType) {
         switch (idType) {
-            case STRING -> response.putParam(field, IdGeneratorFactory.uuid32bit());
-            case LONG -> response.putParam(field, snowflakeId.nextId());
+            case STRING -> response.putParam(field, generatorFactory.uuid());
             default -> throw new UnsupportedOperationException("不支持主键类型: " + idType);
         }
     }

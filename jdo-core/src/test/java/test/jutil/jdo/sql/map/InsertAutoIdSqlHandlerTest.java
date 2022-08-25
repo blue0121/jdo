@@ -2,7 +2,7 @@ package test.jutil.jdo.sql.map;
 
 import io.jutil.jdo.core.annotation.Entity;
 import io.jutil.jdo.core.annotation.Id;
-import io.jutil.jdo.internal.core.id.SnowflakeIdFactory;
+import io.jutil.jdo.internal.core.id.IdGeneratorFactory;
 import io.jutil.jdo.internal.core.sql.SqlHandler;
 import io.jutil.jdo.internal.core.sql.SqlRequest;
 import io.jutil.jdo.internal.core.sql.SqlResponse;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class InsertAutoIdSqlHandlerTest extends SqlHandlerTest {
 	private SqlResponse response = new SqlResponse(null);
-	private SqlHandler handler = new InsertIdSqlHandler(SnowflakeIdFactory.getSingleSnowflakeId());
+	private SqlHandler handler = new InsertIdSqlHandler(new IdGeneratorFactory());
 
 	public InsertAutoIdSqlHandlerTest() {
 		parserFacade.parse(AutoIntIdEntity.class);
@@ -96,7 +96,7 @@ public class InsertAutoIdSqlHandlerTest extends SqlHandlerTest {
 		handler.handle(request, response);
 		var param = response.toParamMap();
 		Assertions.assertEquals(1, param.size());
-		Assertions.assertEquals(32, param.get("id").toString().length());
+		Assertions.assertEquals(20, param.get("id").toString().length());
 	}
 
 	@Entity

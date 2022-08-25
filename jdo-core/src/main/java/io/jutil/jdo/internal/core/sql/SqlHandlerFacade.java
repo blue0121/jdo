@@ -1,7 +1,6 @@
 package io.jutil.jdo.internal.core.sql;
 
-import io.jutil.jdo.internal.core.id.SnowflakeId;
-import io.jutil.jdo.internal.core.id.SnowflakeIdFactory;
+import io.jutil.jdo.internal.core.id.IdGeneratorFactory;
 import io.jutil.jdo.internal.core.sql.generator.BatchInsertSqlHandler;
 import io.jutil.jdo.internal.core.sql.generator.BatchUpdateSqlHandler;
 import io.jutil.jdo.internal.core.sql.generator.CountSqlHandler;
@@ -36,7 +35,7 @@ import java.util.List;
 public class SqlHandlerFacade {
     private static Logger logger = LoggerFactory.getLogger(SqlHandlerFacade.class);
 
-	private final SnowflakeId snowflakeId = SnowflakeIdFactory.getSingleSnowflakeId();
+	private final IdGeneratorFactory generatorFactory = new IdGeneratorFactory();
 	private final EnumMap<SqlType, List<SqlHandler>> handlerMap = new EnumMap<>(SqlType.class);
 
 	public SqlHandlerFacade() {
@@ -44,7 +43,7 @@ public class SqlHandlerFacade {
 	}
 
 	private void init() {
-		var insertId = new InsertIdSqlHandler(snowflakeId);
+		var insertId = new InsertIdSqlHandler(generatorFactory);
 		var updateId = new UpdateIdSqlHandler();
 		var id = new IdSqlHandler();
 		var column = new ColumnSqlHandler();
@@ -78,9 +77,6 @@ public class SqlHandlerFacade {
 		var handlers = handlerMap.get(type);
 		if (handlers == null || handlers.isEmpty()) {
 			throw new UnsupportedOperationException("未知 SqlType: " + type);
-		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("找到 [{}] 处理器: {}", type.name(), handlers.getClass().getSimpleName());
 		}
 		return handlers;
 	}
