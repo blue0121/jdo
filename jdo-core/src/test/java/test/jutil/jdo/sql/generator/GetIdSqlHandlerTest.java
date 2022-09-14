@@ -29,7 +29,7 @@ public class GetIdSqlHandlerTest extends SqlHandlerTest {
 	    var request = SqlRequest.create(GroupEntity.class, List.of(1), config);
 	    handler.handle(request, response);
 	    System.out.println(response.getSql());
-	    Assertions.assertEquals("select * from `group` where `id`=?", response.getSql());
+	    Assertions.assertEquals("select * from usr_group where id=?", response.getSql());
 		Assertions.assertEquals(List.of(SqlParameter.create(1)), response.toParameterList());
     }
 
@@ -39,7 +39,7 @@ public class GetIdSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(GroupEntity.class, List.of(1, 2), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("select * from `group` where `id` in (?,?)", response.getSql());
+		Assertions.assertEquals("select * from usr_group where id in (?,?)", response.getSql());
 		Assertions.assertEquals(List.of(SqlParameter.create(1), SqlParameter.create(2)), response.toParameterList());
 	}
 

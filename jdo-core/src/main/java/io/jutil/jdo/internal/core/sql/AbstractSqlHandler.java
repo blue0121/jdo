@@ -28,13 +28,13 @@ public abstract class AbstractSqlHandler implements SqlHandler {
 	public String getColumnString(String name, Map<String, IdMetadata> idMap, Map<String, ColumnMetadata> columnMap,
 	                              VersionMetadata version) {
 		if (columnMap != null && columnMap.get(name) != null) {
-			return columnMap.get(name).getEscapeColumnName();
+			return columnMap.get(name).getColumnName();
 		}
 		if (idMap != null && idMap.get(name) != null) {
-			return idMap.get(name).getEscapeColumnName();
+			return idMap.get(name).getColumnName();
 		}
 		if (version != null && version.getFieldName().equals(name)) {
-			return version.getEscapeColumnName();
+			return version.getColumnName();
 		}
 		throw new EntityFieldException(name);
 	}

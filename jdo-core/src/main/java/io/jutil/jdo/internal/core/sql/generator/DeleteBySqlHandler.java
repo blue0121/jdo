@@ -34,7 +34,7 @@ public class DeleteBySqlHandler extends AbstractSqlHandler {
 			columnList.add(whereColumn + SqlConst.EQUAL_PLACEHOLDER);
 			response.addName(entry.getKey());
 		}
-		var sql = String.format(SqlConst.DELETE_BY_TPL, config.getEscapeTableName(), StringUtil.join(columnList, SqlConst.AND));
+		var sql = String.format(SqlConst.DELETE_BY_TPL, config.getTableName(), StringUtil.join(columnList, SqlConst.AND));
 		response.setSql(sql);
 	}
 }

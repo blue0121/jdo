@@ -20,8 +20,8 @@ import java.util.Map;
 public class MapperParser extends AbstractParser {
 	private static Logger logger = LoggerFactory.getLogger(MapperParser.class);
 
-	public MapperParser(Dialect dialect, boolean escape) {
-		super(dialect, escape);
+	public MapperParser(Dialect dialect) {
+		super(dialect);
 	}
 
     @Override

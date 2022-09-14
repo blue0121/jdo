@@ -36,8 +36,8 @@ public class EntityParser extends AbstractParser {
 	private static Logger logger = LoggerFactory.getLogger(EntityParser.class);
 	private static final Set<Class<?>> INT_TYPE_SET = Set.of(int.class, long.class, Integer.class, Long.class);
 
-	public EntityParser(Dialect dialect, boolean escape) {
-		super(dialect, escape);
+	public EntityParser(Dialect dialect) {
+		super(dialect);
 	}
 
     @Override
@@ -49,11 +49,9 @@ public class EntityParser extends AbstractParser {
 		    tableName = this.toColumnName(classOperation.getName());
 	    }
 
-	    String escapeTableName = escape ? dialect.escape(tableName) : tableName;
 	    logger.info("实体类映射: {} <==> {}", classOperation.getTargetClass().getName(), tableName);
 	    var entityMetadata = new DefaultEntityMetadata();
 	    entityMetadata.setTableName(tableName);
-	    entityMetadata.setEscapeTableName(escapeTableName);
 	    entityMetadata.setClassOperation(classOperation);
 	    Map<String, IdMetadata> idMap = new LinkedHashMap<>();
 	    Map<String, ColumnMetadata> columnMap = new LinkedHashMap<>();

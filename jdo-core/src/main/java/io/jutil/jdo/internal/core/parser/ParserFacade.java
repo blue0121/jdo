@@ -24,10 +24,10 @@ public class ParserFacade implements Parser {
     private final Map<Class<? extends Annotation>, Parser> parserMap = new HashMap<>();
     private final MetadataCache metadataCache = new MetadataCache();
 
-	public ParserFacade(Dialect dialect, boolean escape) {
+	public ParserFacade(Dialect dialect) {
         this.dialect = dialect;
-        parserMap.put(Entity.class, new EntityParser(dialect, escape));
-        parserMap.put(Mapper.class, new MapperParser(dialect, escape));
+        parserMap.put(Entity.class, new EntityParser(dialect));
+        parserMap.put(Mapper.class, new MapperParser(dialect));
 	}
 
     @Override

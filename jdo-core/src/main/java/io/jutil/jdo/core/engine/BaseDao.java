@@ -173,7 +173,7 @@ public class BaseDao<T> extends QueryDao<T, T> {
 		List<Object> paramList = new ArrayList<>();
 		paramList.add(id);
 		StringBuilder sql = this.select();
-		sql.append(" where a.").append(idConfig.getEscapeColumnName()).append("=?");
+		sql.append(" where a.").append(idConfig.getColumnName()).append("=?");
 		return jdoTemplate.getObject(returnClazz, sql.toString(), paramList);
 	}
 

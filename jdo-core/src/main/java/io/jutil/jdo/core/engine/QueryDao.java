@@ -129,7 +129,7 @@ public abstract class QueryDao<P, R> {
 	 */
 	protected StringBuilder selectCount() {
 		var entityConfig = jdoTemplate.checkEntityConfig(returnClazz);
-		StringBuilder sql = new StringBuilder(String.format(COUNT_TPL, entityConfig.getEscapeTableName()));
+		StringBuilder sql = new StringBuilder(String.format(COUNT_TPL, entityConfig.getTableName()));
 		return sql;
 	}
 
@@ -140,7 +140,7 @@ public abstract class QueryDao<P, R> {
 	 */
 	protected StringBuilder select() {
 		var entityConfig = jdoTemplate.checkEntityConfig(returnClazz);
-		StringBuilder sql = new StringBuilder(String.format(SELECT_TPL, entityConfig.getEscapeTableName()));
+		StringBuilder sql = new StringBuilder(String.format(SELECT_TPL, entityConfig.getTableName()));
 		return sql;
 	}
 
@@ -166,7 +166,7 @@ public abstract class QueryDao<P, R> {
 			return;
 		}
 
-		order.add("a." + id.getEscapeColumnName() + " desc");
+		order.add("a." + id.getColumnName() + " desc");
 	}
 
 	public void setJdoTemplate(JdoTemplate jdoTemplate) {

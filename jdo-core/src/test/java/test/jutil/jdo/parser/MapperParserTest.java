@@ -21,12 +21,10 @@ public class MapperParserTest extends ParserTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({"test.jutil.jdo.parser.MapperParserTest$CommonClass,true",
-			"test.jutil.jdo.parser.MapperParserTest$CommonClass2,true",
-			"test.jutil.jdo.parser.MapperParserTest$CommonClass,false",
-			"test.jutil.jdo.parser.MapperParserTest$CommonClass2,false"})
-	public void testParse(Class<?> clazz, boolean isEscape) {
-		var facade = new ParserFacade(new MySQLDialect(), isEscape);
+	@CsvSource({"test.jutil.jdo.parser.MapperParserTest$CommonClass",
+			"test.jutil.jdo.parser.MapperParserTest$CommonClass2"})
+	public void testParse(Class<?> clazz) {
+		var facade = new ParserFacade(new MySQLDialect());
 		var metadata = facade.parse(clazz);
 
 		Assertions.assertNotNull(metadata);
@@ -36,9 +34,9 @@ public class MapperParserTest extends ParserTest {
 		var columnMap = metadata.getColumnMap();
 		Assertions.assertEquals(3, columnMap.size());
 
-		this.checkField(columnMap.get("groupId"), "groupId", "group_id", this.escape("group_id", isEscape));
-		this.checkField(columnMap.get("username"), "username", "username", this.escape("username", isEscape));
-		this.checkField(columnMap.get("password"), "password", "pwd", this.escape("pwd", isEscape));
+		this.checkField(columnMap.get("groupId"), "groupId", "group_id");
+		this.checkField(columnMap.get("username"), "username", "username");
+		this.checkField(columnMap.get("password"), "password", "pwd");
 	}
 
     @Getter

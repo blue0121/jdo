@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 public class IdGeneratorFactory {
 	private static Logger logger = LoggerFactory.getLogger(IdGeneratorFactory.class);
 
-	private final EpochOptions options;
 	private final IdGenerator<String> generator;
 
 	public IdGeneratorFactory() {
@@ -20,9 +19,9 @@ public class IdGeneratorFactory {
 	}
 
 	public IdGeneratorFactory(EpochOptions options) {
-		this.options = options;
 		this.generator = new String20IdGenerator(options);
-		logger.info("初始化 IdGenerator: {}", generator.getClass().getSimpleName());
+		logger.info("初始化 IdGenerator: {}, EpochDate: {}", generator.getClass().getSimpleName(),
+				options.getEpoch());
 	}
 
 	public String uuid() {

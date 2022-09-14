@@ -22,7 +22,7 @@ public abstract class SqlHandlerTest {
 
 	public SqlHandlerTest() {
 		this.dialect = new MySQLDialect();
-		this.parserFacade = new ParserFacade(dialect, true);
+		this.parserFacade = new ParserFacade(dialect);
 		this.metadataCache = parserFacade.getMetadataCache();
 		this.facade = new SqlHandlerFacade();
 

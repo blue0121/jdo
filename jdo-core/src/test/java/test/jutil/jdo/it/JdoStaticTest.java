@@ -184,19 +184,19 @@ public class JdoStaticTest extends BaseTest {
 
 	@Test
 	public void testGetObject() {
-		String sql = "select count(*) from \"group\"";
+		String sql = "select count(*) from usr_group";
 		Integer n = jdoTemplate.getObject(Integer.class, sql);
 		Assertions.assertEquals(2, n.intValue());
 
-		sql += " where \"name\"=?";
+		sql += " where name=?";
 		n = jdoTemplate.getObject(Integer.class, sql, List.of("blue"));
 		Assertions.assertEquals(1, n.intValue());
 
-		sql = "select * from \"group\" where \"name\"=?";
+		sql = "select * from usr_group where name=?";
 		GroupMapper group = jdoTemplate.getObject(GroupMapper.class, sql, List.of("blue"));
 		GroupMapper.verify(group, 1, "blue", 1);
 
-		sql = "select \"id\" from \"group\" where \"name\"=?";
+		sql = "select id from usr_group where name=?";
 		GroupMapper group2 = jdoTemplate.getObject(GroupMapper.class, sql, List.of("blue"));
 		Assertions.assertNotNull(group2);
 		Assertions.assertEquals(1, group2.getId().intValue());
@@ -206,13 +206,13 @@ public class JdoStaticTest extends BaseTest {
 
 	@Test
 	public void testList() {
-		String sql = "select \"id\" from \"group\"";
+		String sql = "select id from usr_group";
 		List<Integer> list = jdoTemplate.list(Integer.class, sql);
 		Assertions.assertTrue(list != null && list.size() == 2);
 		Assertions.assertTrue(list.contains(1));
 		Assertions.assertTrue(list.contains(2));
 
-		sql = "select * from \"group\" order by \"id\"";
+		sql = "select * from usr_group order by id";
 		List<GroupMapper> groupList = jdoTemplate.list(GroupMapper.class, sql);
 		Assertions.assertTrue(groupList != null && groupList.size() == 2);
 		GroupMapper.verify(groupList.get(0), 1, "blue", 1);

@@ -28,7 +28,6 @@ public class JdoAutoConfiguration {
 				.setDataSource(dataSource)
 				.setConnectionHolder(connectionHolder)
 				.addScanPackages(prop.getScanPackages())
-				.setEscape(prop.isEscape())
 				.build();
 		return jdo.getJdoTemplate();
 	}

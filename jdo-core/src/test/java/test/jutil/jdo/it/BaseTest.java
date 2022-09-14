@@ -26,7 +26,6 @@ public abstract class BaseTest {
 		jdo = JdoBuilder.create()
 				.setDataSource(dsOptions.getDataSource())
 				.addScanPackages("test.jutil.jdo.model")
-				.setEscape(true)
 				.build();
 		jdoTemplate = jdo.getJdoTemplate();
 		createTable();
@@ -34,36 +33,32 @@ public abstract class BaseTest {
 
 	private static void createTable() {
 		jdoTemplate.execute("""
-				create table if not exists "group"
+				create table if not exists usr_group
 				(
-					"id" int4 primary key,
-					"name" varchar(20) not null,
-					"count" integer default 0 not null
+					id int4 primary key,
+					name varchar(20) not null,
+					count integer default 0 not null
 				)""");
 		jdoTemplate.execute("""
-				create table if not exists "usr_user"
+				create table if not exists usr_user
 				(
-					"id" int4 auto_increment primary key,
-					"group_id" int4,
-					"version" int4 default 0 not null,
-					"name" varchar(20) not null,
-					"password" varchar(50) not null,
-					"state" varchar(20) default 'ACTIVE' not null
+					id int4 auto_increment primary key,
+					group_id int4,
+					version int4 default 0 not null,
+					name varchar(20) not null,
+					password varchar(50) not null,
+					state varchar(20) default 'ACTIVE' not null
 				)""");
 	}
 
 	protected void beforeEach() {
-		jdoTemplate.execute("""
-				insert into "group" ("id","name","count") values (1,'blue',1) """);
-		jdoTemplate.execute("""
-				insert into "group" ("id","name","count") values (2,'green',1) """);
+		jdoTemplate.execute("insert into usr_group (id,name,count) values (1,'blue',1)");
+		jdoTemplate.execute("insert into usr_group (id,name,count) values (2,'green',1)");
 	}
 
 	protected void afterEach() {
-		jdoTemplate.execute("""
-				truncate table "group" """);
-		jdoTemplate.execute("""
-				truncate table "usr_user" """);
+		jdoTemplate.execute("truncate table usr_group");
+		jdoTemplate.execute("truncate table usr_user");
 	}
 
 	@AfterAll

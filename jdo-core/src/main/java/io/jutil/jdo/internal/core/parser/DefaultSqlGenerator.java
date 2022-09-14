@@ -114,9 +114,9 @@ public class DefaultSqlGenerator {
 		fieldList.add(version.getFieldName());
 
 		List<String> columnList = new ArrayList<>(updateColumnList);
-		columnList.add(version.getEscapeColumnName() + "=" + version.getEscapeColumnName() + "+1");
+		columnList.add(version.getColumnName() + "=" + version.getColumnName() + "+1");
 		List<String> whereList = new ArrayList<>(whereIdColumnList);
-		whereList.add(version.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER);
+		whereList.add(version.getColumnName() + SqlConst.EQUAL_PLACEHOLDER);
 
 		String sql = String.format(SqlConst.UPDATE_TPL, table,
 				StringUtil.join(columnList, SqlConst.SEPARATOR),
@@ -153,11 +153,11 @@ public class DefaultSqlGenerator {
 
 	private void init() {
 		className = entityMetadata.getTargetClass().getName();
-		table = entityMetadata.getEscapeTableName();
+		table = entityMetadata.getTableName();
 		var id = entityMetadata.getIdMetadata();
 		if (id != null) {
 			idField = id.getFieldName();
-			idColumn = id.getEscapeColumnName();
+			idColumn = id.getColumnName();
 		}
 
 		insertFieldList = new ArrayList<>();
@@ -174,27 +174,27 @@ public class DefaultSqlGenerator {
 
 			if (!config.isDbGenerated()) {
 				insertFieldList.add(entry.getKey());
-				insertColumnList.add(config.getEscapeColumnName());
+				insertColumnList.add(config.getColumnName());
 			}
 
 			whereIdFieldList.add(entry.getKey());
-			whereIdColumnList.add(config.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER);
+			whereIdColumnList.add(config.getColumnName() + SqlConst.EQUAL_PLACEHOLDER);
 		}
 
 		if (entityMetadata.getVersionMetadata() != null) {
 			var config = entityMetadata.getVersionMetadata();
 			insertFieldList.add(config.getFieldName());
-			insertColumnList.add(config.getEscapeColumnName());
+			insertColumnList.add(config.getColumnName());
 		}
 
 		for (var entry : entityMetadata.getColumnMap().entrySet()) {
 			var config = entry.getValue();
 
 			insertFieldList.add(entry.getKey());
-			insertColumnList.add(config.getEscapeColumnName());
+			insertColumnList.add(config.getColumnName());
 
 			updateFieldList.add(entry.getKey());
-			updateColumnList.add(config.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER);
+			updateColumnList.add(config.getColumnName() + SqlConst.EQUAL_PLACEHOLDER);
 		}
 
 	}

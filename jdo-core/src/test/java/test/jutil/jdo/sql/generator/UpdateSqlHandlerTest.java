@@ -32,7 +32,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 	    System.out.println(response.getSql());
-	    Assertions.assertEquals("update `group` set `name`=? where `id`=?", response.getSql());
+	    Assertions.assertEquals("update usr_group set name=? where id=?", response.getSql());
 		Assertions.assertEquals(List.of("name", "id"), response.toNameList());
     }
 
@@ -45,7 +45,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("update `group` set `name`=?,`count`=? where `id`=?", response.getSql());
+		Assertions.assertEquals("update usr_group set name=?,count=? where id=?", response.getSql());
 		Assertions.assertEquals(List.of("name", "count", "id"), response.toNameList());
 	}
 
@@ -58,7 +58,7 @@ public class UpdateSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("update `usr_user` set `name`=?,`version`=`version`+1 where `id`=? and `version`=?",
+		Assertions.assertEquals("update usr_user set name=?,version=version+1 where id=? and version=?",
 				response.getSql());
 		Assertions.assertEquals(List.of("name", "id", "version"), response.toNameList());
 	}

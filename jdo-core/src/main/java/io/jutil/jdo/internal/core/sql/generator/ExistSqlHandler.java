@@ -42,14 +42,14 @@ public class ExistSqlHandler extends AbstractSqlHandler {
 			var id = entry.getValue();
 			var value = map.get(entry.getKey());
 			if (!this.isEmpty(value)) {
-				columnList.add(id.getEscapeColumnName() + op);
+				columnList.add(id.getColumnName() + op);
 				response.addName(id.getFieldName());
 			}
 		}
 		if (columnList.isEmpty()) {
 			throw new JdbcException("@Column 或 @Id 不能为空");
 		}
-		var sql = String.format(SqlConst.COUNT_TPL, config.getEscapeTableName(), StringUtil.join(columnList, SqlConst.AND));
+		var sql = String.format(SqlConst.COUNT_TPL, config.getTableName(), StringUtil.join(columnList, SqlConst.AND));
 		response.setSql(sql);
 	}
 }

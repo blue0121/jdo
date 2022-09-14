@@ -41,15 +41,15 @@ public class IncSqlHandler extends AbstractSqlHandler {
 			if (!NumberUtil.isNumber(entry.getValue().getClass())) {
 				throw new EntityFieldException(entry.getKey(), "不是数字");
 			}
-			columnList.add(column.getEscapeColumnName() + "=" + column.getEscapeColumnName() + "+?");
+			columnList.add(column.getColumnName() + "=" + column.getColumnName() + "+?");
 			response.addName(entry.getKey());
 		}
 
 		var id = config.getIdMetadata();
-		var whereId = id.getEscapeColumnName() + SqlConst.EQUAL_PLACEHOLDER;
+		var whereId = id.getColumnName() + SqlConst.EQUAL_PLACEHOLDER;
 		response.addName(id.getFieldName());
 
-		var sql = String.format(SqlConst.UPDATE_TPL, config.getEscapeTableName(),
+		var sql = String.format(SqlConst.UPDATE_TPL, config.getTableName(),
 				StringUtil.join(columnList, SqlConst.SEPARATOR), whereId);
 		response.setSql(sql);
 	}

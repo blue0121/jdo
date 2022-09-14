@@ -31,7 +31,7 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
 	    var request = SqlRequest.create(null, config);
 	    handler.handle(request, response);
 	    System.out.println(response.getSql());
-	    Assertions.assertEquals("update `group` set `count`=`count`+? where `id`=?", response.getSql());
+	    Assertions.assertEquals("update usr_group set count=count+? where id=?", response.getSql());
 		Assertions.assertEquals(List.of("count", "id"), response.toNameList());
     }
 
@@ -42,7 +42,7 @@ public class IncSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("update `usr_user` set `group_id`=`group_id`+? where `id`=?", response.getSql());
+		Assertions.assertEquals("update usr_user set group_id=group_id+? where id=?", response.getSql());
 		Assertions.assertEquals(List.of("groupId", "id"), response.toNameList());
 	}
 

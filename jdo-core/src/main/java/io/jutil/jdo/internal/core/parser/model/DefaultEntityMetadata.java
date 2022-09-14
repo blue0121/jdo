@@ -18,7 +18,6 @@ import java.util.Map;
  */
 public class DefaultEntityMetadata extends DefaultMapperMetadata implements EntityMetadata {
     private String tableName;
-    private String escapeTableName;
     private IdMetadata idMetadata;
     private Map<String, IdMetadata> idMap;
     private VersionMetadata versionMetadata;
@@ -33,7 +32,6 @@ public class DefaultEntityMetadata extends DefaultMapperMetadata implements Enti
     public void check() {
         super.check();
         AssertUtil.notEmpty(tableName, "表名");
-        AssertUtil.notEmpty(escapeTableName, "转义表名");
         AssertUtil.notEmpty(idMap, "主键配置");
         AssertUtil.notNull(transientMap, "额外字段配置");
         AssertUtil.notNull(sqlMetadata, "SQL配置");
@@ -48,11 +46,6 @@ public class DefaultEntityMetadata extends DefaultMapperMetadata implements Enti
     @Override
     public String getTableName() {
         return tableName;
-    }
-
-    @Override
-    public String getEscapeTableName() {
-        return escapeTableName;
     }
 
     @Override
@@ -82,10 +75,6 @@ public class DefaultEntityMetadata extends DefaultMapperMetadata implements Enti
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
-    }
-
-    public void setEscapeTableName(String escapeTableName) {
-        this.escapeTableName = escapeTableName;
     }
 
     public void setIdMap(Map<String, IdMetadata> idMap) {

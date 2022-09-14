@@ -8,6 +8,5 @@ spring:
 
 jdo:
   enabled: true
-  escape: true
   scan-packages:
     - test.jutil.jdo.spring.model

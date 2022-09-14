@@ -64,7 +64,7 @@ public class UpdateSqlHandler extends AbstractSqlHandler {
 			throw new JdbcException("@Id 不能为空");
 		}
 
-		var sql = String.format(SqlConst.UPDATE_TPL, config.getEscapeTableName(),
+		var sql = String.format(SqlConst.UPDATE_TPL, config.getTableName(),
 				StringUtil.join(columnList, SqlConst.SEPARATOR),
 				StringUtil.join(idList, SqlConst.AND));
 		response.setSql(sql);

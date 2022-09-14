@@ -11,7 +11,6 @@ import io.jutil.jdo.internal.core.util.AssertUtil;
 public abstract class DefaultFieldMetadata implements FieldMetadata {
     protected String fieldName;
     protected String columnName;
-    protected String escapeColumnName;
     protected ClassFieldOperation fieldOperation;
 
 	protected DefaultFieldMetadata() {
@@ -20,7 +19,6 @@ public abstract class DefaultFieldMetadata implements FieldMetadata {
     public void check() {
         AssertUtil.notEmpty(fieldName, "字段名");
         AssertUtil.notEmpty(columnName, "列名");
-        AssertUtil.notEmpty(escapeColumnName, "转义列名");
         AssertUtil.notNull(fieldOperation, "字段操作");
     }
 
@@ -35,21 +33,12 @@ public abstract class DefaultFieldMetadata implements FieldMetadata {
     }
 
     @Override
-    public String getEscapeColumnName() {
-        return escapeColumnName;
-    }
-
-    @Override
     public ClassFieldOperation getFieldOperation() {
         return fieldOperation;
     }
 
     public void setColumnName(String columnName) {
         this.columnName = columnName;
-    }
-
-    public void setEscapeColumnName(String escapeColumnName) {
-        this.escapeColumnName = escapeColumnName;
     }
 
     public void setBeanField(ClassFieldOperation fieldOperation) {

@@ -25,13 +25,6 @@ public interface FieldMetadata {
 	String getColumnName();
 
 	/**
-	 * 转义后的数据表列名
-	 *
-	 * @return
-	 */
-	String getEscapeColumnName();
-
-	/**
 	 * Bean字段操作
 	 *
 	 * @return

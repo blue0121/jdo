@@ -32,7 +32,7 @@ public class InsertSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 	    System.out.println(response.getSql());
-	    Assertions.assertEquals("insert into `group` (`name`) values (?)", response.getSql());
+	    Assertions.assertEquals("insert into usr_group (name) values (?)", response.getSql());
 		Assertions.assertEquals(List.of("name"), response.toNameList());
     }
 
@@ -44,7 +44,7 @@ public class InsertSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("insert into `group` (`name`,`count`) values (?,?)", response.getSql());
+		Assertions.assertEquals("insert into usr_group (name,count) values (?,?)", response.getSql());
 		Assertions.assertEquals(List.of("name", "count"), response.toNameList());
 	}
 

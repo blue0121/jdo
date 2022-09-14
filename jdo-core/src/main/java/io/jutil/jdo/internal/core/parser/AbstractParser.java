@@ -14,11 +14,9 @@ import java.lang.reflect.Modifier;
  */
 public abstract class AbstractParser implements Parser {
     protected final Dialect dialect;
-    protected final boolean escape;
 
-    public AbstractParser(Dialect dialect, boolean escape) {
+    public AbstractParser(Dialect dialect) {
         this.dialect = dialect;
-        this.escape = escape;
     }
 
     protected String getColumnName(ClassFieldOperation field) {
@@ -63,9 +61,7 @@ public abstract class AbstractParser implements Parser {
 
     protected void setFieldMetadata(ClassFieldOperation field, DefaultFieldMetadata metadata) {
         String columnName = this.getColumnName(field);
-        String escapeColumnName = escape ? dialect.escape(columnName) : columnName;
         metadata.setColumnName(columnName);
-        metadata.setEscapeColumnName(escapeColumnName);
         metadata.setBeanField(field);
     }
 

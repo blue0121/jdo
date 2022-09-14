@@ -31,7 +31,7 @@ public class GetFieldSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create("name", Map.of(), config);
 		handler.handle(request, response);
 	    System.out.println(response.getSql());
-	    Assertions.assertEquals("select `name` from `group` where `id`=?", response.getSql());
+	    Assertions.assertEquals("select name from usr_group where id=?", response.getSql());
 		Assertions.assertEquals(List.of("id"), response.toNameList());
     }
 
@@ -43,7 +43,7 @@ public class GetFieldSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create("name", Map.of(), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("select `name` from `group` where `count`=? and `id`=?", response.getSql());
+		Assertions.assertEquals("select name from usr_group where count=? and id=?", response.getSql());
 		Assertions.assertEquals(List.of("count", "id"), response.toNameList());
 	}
 

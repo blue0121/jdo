@@ -20,45 +20,36 @@ public abstract class ParserTest {
 	protected ParserTest() {
 	}
 
-    protected String escape(String column, boolean escape) {
-        if (!escape) {
-            return column;
-        }
-        return "`" + column + "`";
-    }
-
-    protected void checkTable(EntityMetadata metadata, String table, String escape) {
+    protected void checkTable(EntityMetadata metadata, String table) {
         Assertions.assertNotNull(metadata);
         Assertions.assertEquals(table, metadata.getTableName());
-        Assertions.assertEquals(escape, metadata.getEscapeTableName());
     }
 
     protected void checkId(IdMetadata metadata, IdType idType, GeneratorType generatorType,
-                           String field, String column, String escape) {
-        this.checkField(metadata, field, column, escape);
+                           String field, String column) {
+        this.checkField(metadata, field, column);
         Assertions.assertEquals(idType, metadata.getIdType());
         Assertions.assertEquals(generatorType, metadata.getGeneratorType());
     }
 
     protected void checkColumn(ColumnMetadata metadata, boolean mustInsert, boolean mustUpdate,
-                               String field, String column, String escape) {
-        this.checkField(metadata, field, column, escape);
+                               String field, String column) {
+        this.checkField(metadata, field, column);
         Assertions.assertEquals(mustInsert, metadata.isMustInsert());
         Assertions.assertEquals(mustUpdate, metadata.isMustUpdate());
     }
 
     protected void checkVersion(VersionMetadata metadata, boolean force, int defaultValue,
-                                String field, String column, String escape) {
-        this.checkField(metadata, field, column, escape);
+                                String field, String column) {
+        this.checkField(metadata, field, column);
         Assertions.assertEquals(force, metadata.isForce());
         Assertions.assertEquals(defaultValue, metadata.getDefaultValue());
     }
 
-    protected void checkField(FieldMetadata metadata, String field, String column, String escape) {
+    protected void checkField(FieldMetadata metadata, String field, String column) {
         Assertions.assertNotNull(metadata);
         Assertions.assertEquals(field, metadata.getFieldName());
         Assertions.assertEquals(column, metadata.getColumnName());
-        Assertions.assertEquals(escape, metadata.getEscapeColumnName());
     }
 
     protected void checkSql(SqlItem item, String sql, List<String> parameterNameList) {

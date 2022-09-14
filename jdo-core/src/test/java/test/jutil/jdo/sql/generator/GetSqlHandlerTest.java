@@ -30,7 +30,7 @@ public class GetSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 	    System.out.println(response.getSql());
-	    Assertions.assertEquals("select * from `group` where `id`=?", response.getSql());
+	    Assertions.assertEquals("select * from usr_group where id=?", response.getSql());
 		Assertions.assertEquals(List.of("id"), response.toNameList());
     }
 
@@ -42,7 +42,7 @@ public class GetSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("select * from `group` where `count`=? and `id`=?", response.getSql());
+		Assertions.assertEquals("select * from usr_group where count=? and id=?", response.getSql());
 		Assertions.assertEquals(List.of("count", "id"), response.toNameList());
 	}
 

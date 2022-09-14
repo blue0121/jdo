@@ -18,13 +18,11 @@ public class GroupDao extends SpringBaseDao<GroupEntity> {
 	@Override
 	protected void query(Expression exp, GroupEntity object, List<Object> paramList) {
 		if (object.getName() != null && !object.getName().isEmpty()) {
-			exp.add("""
-					a."name" like ?""");
+			exp.add("a.name like ?");
 			paramList.add("%" + object.getName() + "%");
 		}
 		if (object.getCount() != null) {
-			exp.add("""
-					a."count"=?""");
+			exp.add("a.count=?");
 			paramList.add(object.getCount());
 		}
 	}

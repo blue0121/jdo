@@ -31,7 +31,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, List.of("name"), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("select count(*) from `group` where `name`=? and `id`!=?", response.getSql());
+		Assertions.assertEquals("select count(*) from usr_group where name=? and id!=?", response.getSql());
 		Assertions.assertEquals(List.of("name", "id"), response.toNameList());
 	}
 
@@ -43,7 +43,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, List.of(), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("select count(*) from `group` where `id`=?", response.getSql());
+		Assertions.assertEquals("select count(*) from usr_group where id=?", response.getSql());
 		Assertions.assertEquals(List.of("id"), response.toNameList());
 	}
 
@@ -54,7 +54,7 @@ public class ExistSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, List.of("name"), config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("select count(*) from `group` where `name`=?", response.getSql());
+		Assertions.assertEquals("select count(*) from usr_group where name=?", response.getSql());
 		Assertions.assertEquals(List.of("name"), response.toNameList());
 	}
 

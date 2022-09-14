@@ -18,13 +18,6 @@ public interface EntityMetadata extends MapperMetadata {
 	String getTableName();
 
 	/**
-	 * 转义后的表名
-	 *
-	 * @return
-	 */
-	String getEscapeTableName();
-
-	/**
 	 * 单个主键元数据
 	 *
 	 * @return

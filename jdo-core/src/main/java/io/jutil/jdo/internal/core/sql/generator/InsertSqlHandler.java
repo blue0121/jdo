@@ -41,7 +41,7 @@ public class InsertSqlHandler extends AbstractSqlHandler {
 			columnList.add(column);
 			response.addName(entry.getKey());
 		}
-		var sql = String.format(SqlConst.INSERT_TPL, config.getEscapeTableName(),
+		var sql = String.format(SqlConst.INSERT_TPL, config.getTableName(),
 				StringUtil.join(columnList, SqlConst.SEPARATOR),
 				StringUtil.repeat(SqlConst.PLACEHOLDER, columnList.size(), SqlConst.SEPARATOR));
 		response.setSql(sql);

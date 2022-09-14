@@ -30,7 +30,7 @@ public class CountSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("select count(*) from `group` where `name`=?", response.getSql());
+		Assertions.assertEquals("select count(*) from usr_group where name=?", response.getSql());
 		Assertions.assertEquals(List.of("name"), response.toNameList());
 	}
 
@@ -42,7 +42,7 @@ public class CountSqlHandlerTest extends SqlHandlerTest {
 		var request = SqlRequest.create(null, config);
 		handler.handle(request, response);
 		System.out.println(response.getSql());
-		Assertions.assertEquals("select count(*) from `group` where `name`=? and `count`=?", response.getSql());
+		Assertions.assertEquals("select count(*) from usr_group where name=? and count=?", response.getSql());
 		Assertions.assertEquals(List.of("name", "count"), response.toNameList());
 	}
 

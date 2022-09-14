@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Assertions;
  */
 @Getter
 @Setter
-@Entity(table = "group")
+@Entity(table = "usr_group")
 public class GroupEntity {
 	@Id(generator = GeneratorType.ASSIGNED)
 	private Integer id;
