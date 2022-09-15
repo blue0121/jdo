@@ -29,6 +29,7 @@ import java.util.List;
 public class DefaultJdoBuilder implements JdoBuilder {
 	private static Logger logger = LoggerFactory.getLogger(DefaultJdoBuilder.class);
 
+	private String sql;
 	private DataSource dataSource;
 	private JdoTemplate jdoTemplate;
 	private ConnectionHolder connectionHolder;
@@ -48,6 +49,8 @@ public class DefaultJdoBuilder implements JdoBuilder {
 		this.initConnectionHolder(dataSource);
 		var sqlExecutor = new SqlExecutor(connectionHolder, parserFacade);
 		this.jdoTemplate = new DefaultJdoTemplate(parserFacade, sqlExecutor);
+
+		this.executeSql();
 
 		this.parseClazz();
 		var tableChecker = new TableChecker(dataSource, parserFacade.getMetadataCache());
@@ -87,6 +90,23 @@ public class DefaultJdoBuilder implements JdoBuilder {
 	public JdoBuilder setConnectionHolder(ConnectionHolder holder) {
 		this.connectionHolder = holder;
 		return this;
+	}
+
+	@Override
+	public JdoBuilder setInitSql(String sql) {
+		this.sql = sql;
+		return this;
+	}
+
+	private void executeSql() {
+		if (sql == null || sql.isEmpty()) {
+			return;
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.info("使用 SQL 初始化数据库");
+		}
+		this.jdoTemplate.execute(sql);
 	}
 
 	private void initConnectionHolder(DataSource dataSource) {

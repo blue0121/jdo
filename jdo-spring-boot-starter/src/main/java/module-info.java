@@ -1,6 +1,7 @@
 module jdo.spring.boot.starter {
 	requires java.sql;
 	requires jdo.core;
+	requires org.slf4j;
 	requires spring.core;
 	requires spring.aop;
 	requires spring.beans;

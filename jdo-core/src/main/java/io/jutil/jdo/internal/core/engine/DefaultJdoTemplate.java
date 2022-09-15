@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * @author Jin Zheng
@@ -373,7 +374,18 @@ public class DefaultJdoTemplate implements JdoTemplate {
 
     @Override
     public int execute(String sql) {
-        return sqlExecutor.execute(sql);
+		AssertUtil.notEmpty(sql, "SQL");
+
+		int rs = 0;
+	    var scanner = new Scanner(sql).useDelimiter(";");
+	    while (scanner.hasNext()) {
+		    var s = scanner.next().trim();
+		    if (s.isEmpty()) {
+			    continue;
+		    }
+		    rs += this.sqlExecutor.execute(s);
+	    }
+        return rs;
     }
 
 	@Override

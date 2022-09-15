@@ -24,7 +24,8 @@ public class MetadataCache {
 	}
 
 	public void putTable(TableMetadata table) {
-		tableMap.put(table.getTableName(), table);
+		tableMap.put(table.getTableName().toLowerCase(), table);
+		tableMap.put(table.getTableName().toUpperCase(), table);
 	}
 
 }

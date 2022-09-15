@@ -58,4 +58,12 @@ public interface JdoBuilder {
 	 */
 	JdoBuilder setConnectionHolder(ConnectionHolder holder);
 
+	/**
+	 * 设置数据库初始化SQL
+	 *
+	 * @param sql
+	 * @return
+	 */
+	JdoBuilder setInitSql(String sql);
+
 }

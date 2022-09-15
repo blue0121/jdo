@@ -1,6 +1,7 @@
 package io.jutil.jdo.internal.core.executor.metadata;
 
 import io.jutil.jdo.core.parser.EntityMetadata;
+import io.jutil.jdo.core.parser.TransientMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,20 +44,15 @@ public class TableChecker {
 	}
 
 	private void checkColumn(TableMetadata table, EntityMetadata config) {
-		var idMap = table.getIdMap();
-		var columnMap = table.getColumnMap();
+		var fieldMap = config.getFieldMap();
+		var columnMap = table.getFieldMap();
 		List<String> lackList = new ArrayList<>();
 
-		var version = config.getVersionMetadata();
-		if (version != null && !columnMap.containsKey(version.getColumnName())) {
-			lackList.add(version.getColumnName());
-		}
-		for (var entry : config.getIdMap().entrySet()) {
-			if (!idMap.containsKey(entry.getValue().getColumnName())) {
-				lackList.add(entry.getValue().getColumnName());
+		for (var entry : fieldMap.entrySet()) {
+			if (entry.getValue() instanceof TransientMetadata) {
+				continue;
 			}
-		}
-		for (var entry : config.getColumnMap().entrySet()) {
+
 			if (!columnMap.containsKey(entry.getValue().getColumnName())) {
 				lackList.add(entry.getValue().getColumnName());
 			}

@@ -26,20 +26,19 @@ public abstract class BaseTest {
 		jdo = JdoBuilder.create()
 				.setDataSource(dsOptions.getDataSource())
 				.addScanPackages("test.jutil.jdo.model")
+				.setInitSql(initSql())
 				.build();
 		jdoTemplate = jdo.getJdoTemplate();
-		createTable();
 	}
 
-	private static void createTable() {
-		jdoTemplate.execute("""
-				create table if not exists usr_group
+	private static String initSql() {
+		return """
+                create table if not exists usr_group
 				(
 					id int4 primary key,
 					name varchar(20) not null,
 					count integer default 0 not null
-				)""");
-		jdoTemplate.execute("""
+				);
 				create table if not exists usr_user
 				(
 					id int4 auto_increment primary key,
@@ -48,7 +47,8 @@ public abstract class BaseTest {
 					name varchar(20) not null,
 					password varchar(50) not null,
 					state varchar(20) default 'ACTIVE' not null
-				)""");
+				)
+				""";
 	}
 
 	protected void beforeEach() {

@@ -10,3 +10,5 @@ jdo:
   enabled: true
   scan-packages:
     - test.jutil.jdo.spring.model
+  init-sql-paths:
+    - classpath:sql/test.sql
